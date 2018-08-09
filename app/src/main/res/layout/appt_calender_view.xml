@@ -15,15 +15,13 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:layout_weight="1"
             android:background="@drawable/arrow_left" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="9"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
-            android:gravity="center"
             android:text="약속 생성"
             android:textSize="40dp"
             android:textStyle="bold" />
@@ -58,30 +56,25 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/ic_date_range_black_24dp"/>
+            android:background="@drawable/ic_list_black_24dp"/>
 
     </LinearLayout>
 
-    <ScrollView
+    // 캘린더형, list형 fragment
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3">
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        //외부캘린더로 변경
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_centerInParent="true"/>
 
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-
-        </LinearLayout>
-
-    </ScrollView>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -98,4 +91,4 @@
 
 </LinearLayout>
 
-    
+

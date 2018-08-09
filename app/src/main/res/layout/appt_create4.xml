@@ -21,16 +21,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/arrow_left"/>
+                android:layout_weight="1"
+                android:background="@drawable/arrow_left" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
+                android:layout_weight="9"
                 android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:text="약속 생성"
                 android:textSize="40dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -71,6 +73,7 @@
                     android:hint="총 인원"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="20dp"/>
+
             </android.support.design.widget.TextInputLayout>
 
         </RelativeLayout>
@@ -96,75 +99,58 @@
                 android:orientation="vertical"/>
         </ScrollView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="시간대 설정"
-            android:textSize="25dp"
-            android:textStyle="bold"/>
-
-        <RelativeLayout
+        //page indicator로 변경 해야함
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="시간대 설정"
+                android:textSize="25dp"
+                android:textStyle="bold"/>
 
             <EditText
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:hint=""
                 android:background="@android:color/white"/>
 
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="모임 유형"
-            android:textSize="25dp"
-            android:textStyle="bold"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="모임 유형"
+                android:textSize="25dp"
+                android:textStyle="bold"/>
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:background="@android:color/white"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
                 android:background="@drawable/ic_color_lens_black_24dp"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:text="색 설정"
                 android:textStyle="bold"
                 android:textSize="15dp"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
