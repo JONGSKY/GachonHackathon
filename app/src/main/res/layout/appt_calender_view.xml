@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
-            android:text="약속 생성"
+            android:text="약속 보기"
             android:textSize="40dp"
             android:textStyle="bold" />
 

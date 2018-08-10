@@ -1,0 +1,18 @@
+package com.meet.now.apptsystem;
+
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class createApptActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.appt_create1);
+        ActionBar ab = getSupportActionBar() ;
+        ab.setTitle("약속 생성") ;
+
+    }
+
+}
