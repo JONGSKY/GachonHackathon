@@ -4,40 +4,54 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimaryMoreDark">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="추가하실 친구의 ID를 입력해주세요"
-        android:textColor="#ffffff"
-        android:layout_marginTop="10dp"
-        android:textSize="17dp"
-        android:gravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_height="90dp"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_search_black_24dp"/>
-
-        <EditText
-            android:id="@+id/findfriendID"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/edittext_login"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:text="추가하실 친구의 ID를 입력해주세요"
+            android:id="@+id/dialogmessage"
+            android:textColor="#ffffff"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:textSize="17dp"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp" />
+            android:id="@+id/dialogsearch">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_search_black_24dp"/>
+
+            <EditText
+                android:id="@+id/findfriendID"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/edittext_login"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

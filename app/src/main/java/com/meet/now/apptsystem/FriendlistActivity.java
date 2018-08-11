@@ -7,13 +7,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
-    Button searchfriend, closefriend;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,22 +42,57 @@ public class FriendlistActivity extends AppCompatActivity {
         addfriendDialog = new Dialog(FriendlistActivity.this);
         addfriendDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addfriendDialog.setContentView(R.layout.dialog_addfriend);
-        addfriendDialog.setTitle("TestCustomDialog");
 
-        searchfriend = (Button)addfriendDialog.findViewById(R.id.searchfriendButton);
-        closefriend = (Button)addfriendDialog.findViewById(R.id.closefriendButton);
+        final Button searchfriendButton = (Button)addfriendDialog.findViewById(R.id.searchfriendButton);
+        final Button closefriendButton = (Button)addfriendDialog.findViewById(R.id.closefriendButton);
+        final TextView dialogmessage = (TextView)addfriendDialog.findViewById(R.id.dialogmessage);
+        final EditText findfriendID = (EditText)addfriendDialog.findViewById(R.id.findfriendID);
+        final LinearLayout dialogsearch = (LinearLayout)addfriendDialog.findViewById(R.id.dialogsearch);
 
-        searchfriend.setEnabled(true);
-        closefriend.setEnabled(true);
+        searchfriendButton.setEnabled(true);
+        closefriendButton.setEnabled(true);
 
-        searchfriend.setOnClickListener(new View.OnClickListener() {
+        searchfriendButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Text CustomDialog", Toast.LENGTH_LONG).show();
+                final String friendID = findfriendID.getText().toString();
+                dialogsearch.setVisibility(View.GONE);
+
+                // 자기 자신을 검색했을때 코드 추가 필요
+
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                      try{
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean notUser = jsonResponse.getBoolean("success");
+                        if(notUser){
+                            dialogmessage.setText(friendID + " 님이 검색되지 않았습니다.");
+                            searchfriendButton.setText("다시 검색");
+                            searchfriendButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    addfriendDialog.cancel();
+                                    customAddfriendDialog();
+                                }
+                            });
+                        }else{
+                            dialogmessage.setText(friendID + " 님이 검색되었습니다. 친구로 추가하시겠습니까?");
+                            searchfriendButton.setText("추가");
+                        }
+                      }catch(JSONException e){
+                        e.printStackTrace();
+                      }
+                    }
+                };
+                ValidateRequest validateRequest = new ValidateRequest(friendID, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
+                queue.add(validateRequest);
             }
         });
 
-        closefriend.setOnClickListener(new View.OnClickListener() {
+        closefriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addfriendDialog.cancel();
