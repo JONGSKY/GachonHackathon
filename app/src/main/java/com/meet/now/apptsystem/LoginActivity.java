@@ -40,8 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 String userID = idText.getText().toString();
-                 String userPassword = passwordText.getText().toString();
+                 final String userID = idText.getText().toString();
+                 final String userPassword = passwordText.getText().toString();
 
                  Response.Listener<String> responseListener = new Response.Listener<String>() {
                      @Override
@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                  // 화면 전환
                                  Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                 loginIntent.putExtra("userID", userID);
                                  LoginActivity.this.startActivity(loginIntent);
                                  finish();
                              }else{
