@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -95,6 +96,38 @@ public class FriendlistActivity extends AppCompatActivity {
                                 } else {
                                     dialogmessage.setText(friendID + " 님이 검색되었습니다. 친구로 추가하시겠습니까?");
                                     searchfriendButton.setText("추가");
+                                    searchfriendButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try{
+                                                        JSONObject jsonResponse = new JSONObject(response);
+                                                        boolean success = jsonResponse.getBoolean("success");
+                                                        if(success){
+                                                            addfriendDialog.cancel();
+                                                        }else{
+                                                            dialogmessage.setText("친구 추가 도중 오류가 발생하였습니다. 다시 시도해주세요.");
+                                                            searchfriendButton.setText("다시 검색");
+                                                            searchfriendButton.setOnClickListener(new View.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View view) {
+                                                                    addfriendDialog.cancel();
+                                                                    customAddfriendDialog();
+                                                                }
+                                                            });
+                                                        }
+                                                    }catch(JSONException e){
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            };
+                                            AddfriendRequest addfriendRequest = new AddfriendRequest(userID, friendID, responseListener);
+                                            RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
+                                            queue.add(addfriendRequest);
+                                        }
+                                    });
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
