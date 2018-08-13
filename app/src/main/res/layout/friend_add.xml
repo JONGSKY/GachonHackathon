@@ -1,122 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#75d0f1">
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="@android:color/holo_blue_dark">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:background="@android:color/holo_blue_dark">
-
-            //친구ID 입력칸
-            <EditText
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:hint="ID 검색"/>
-
-            //profile layout으로 가는 버튼
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/ic_settings"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_weight="0.6"/>
-            
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        //친구ID 입력칸
+        <EditText
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:text="친구"
-                android:textSize="30dp"
-                android:textStyle="bold"/>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:hint="ID 검색"/>
 
-            //친구 추가 팝업창 뜨는 버튼
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/ic_add"/>
-            
-        </RelativeLayout>
-
-        //친구 item 추가 필요
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:text="그룹"
-                android:textSize="30dp"
-                android:textStyle="bold"/>
-
-            //그룹 추가 팝업창 뜨는 버튼
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/ic_add"/>
-
-        </RelativeLayout>
-
-        //그룹 item 추가 필요
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/item_home_apptlist"/>
-            <include layout="@layout/item_home_apptlist"/>
-
-        </LinearLayout>
-
-        //home layout으로 가는 버튼
+        //profile layout으로 가는 버튼
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="right"
+            android:background="@drawable/ic_settings"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/ic_home"/>
+            android:layout_weight="0.6"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="친구"
+            android:textSize="30dp"
+            android:textStyle="bold"/>
+
+        //친구 추가 팝업창 뜨는 버튼
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_add"/>
+
+    </RelativeLayout>
+
+    //친구 item 추가 필요
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical">
+
+        <include layout="@layout/item_home_apptlist"/>
+        <include layout="@layout/item_home_apptlist"/>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="그룹"
+            android:textSize="30dp"
+            android:textStyle="bold"/>
+
+        //그룹 추가 팝업창 뜨는 버튼
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_add"/>
+
+    </RelativeLayout>
+
+    //그룹 item 추가 필요
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical">
+
+        <include layout="@layout/item_home_apptlist" />
+
+        <include layout="@layout/item_home_apptlist" />
+
+    </ScrollView>
+
+    //home layout으로 가는 버튼
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/ic_home"/>
+
+</LinearLayout>

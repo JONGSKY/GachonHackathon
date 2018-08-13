@@ -60,6 +60,7 @@
             android:background="@android:color/white">
 
             //인원 수 입력칸
+            //플러스 마이너스
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,61 +93,19 @@
 
         </ScrollView>
 
-        //viewpager로 변경필요
-        //viewpager의 첫번째 화면
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="300dp"
+            android:layout_marginTop="30dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:text="자가용 유무"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-
-            //recylerview로 변경필요
-            <ScrollView
-                android:layout_width="320dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
-
-            </ScrollView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:text="연령대"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/white"/>
-
-        </LinearLayout>
+        </android.support.v4.view.ViewPager>
 
         //취소, 생성하기 버튼을 담고 있는 레이아웃
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="30dp">
 
             <Button
                 android:layout_width="wrap_content"
@@ -155,7 +114,7 @@
                 android:background="@android:color/darker_gray"
                 android:text="취소"
                 android:textColor="@android:color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -164,7 +123,7 @@
                 android:background="@android:color/darker_gray"
                 android:text="생성하기"
                 android:textColor="@android:color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
         </RelativeLayout>
 
