@@ -108,7 +108,7 @@ public class FriendlistActivity extends AppCompatActivity {
                                                         if(success){
                                                             addfriendDialog.cancel();
                                                         }else{
-                                                            dialogmessage.setText("친구 추가 도중 오류가 발생하였습니다. 다시 시도해주세요.");
+                                                            dialogmessage.setText("이미 추가된 친구입니다. 다시 검색해주세요.");
                                                             searchfriendButton.setText("다시 검색");
                                                             searchfriendButton.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
