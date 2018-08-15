@@ -53,11 +53,11 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/friendListView"
             android:layout_width="match_parent"
             android:layout_height="514dp"
-            android:divider="#d1d1d1"
-            android:dividerHeight="10dp"></ListView>
+            android:divider="#ffffff"
+            android:dividerHeight="5dp"></ListView>
 
     </LinearLayout>
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="#ffffff"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <ImageButton
+            android:id="@+id/userPhoto"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:text="삭제"
+            android:background="@drawable/image_profile"
+            android:textColor="#fff"
+            android:layout_marginRight="10dp">
+        </ImageButton>
+
+        <TextView
+            android:id="@+id/userNickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="아이디"
+            android:textSize="18dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#000000"/>
+
+        <Button
+            android:id="@+id/statusMsg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_statusmsg"
+            android:text="상태 메시지"
+            android:textSize="17dp"
+            android:textColor="#000000"/>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -1,7 +1,9 @@
 package com.meet.now.apptsystem;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,18 +23,42 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
     String userID;
 
+    private ListView friendListView;
+    private FriendListAdapter adapter;
+    private List<Friend> friendList;
+    private Activity FriendlistActivity;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
+
+
+        friendListView = (ListView) findViewById(R.id.friendListView);
+        friendList = new ArrayList<Friend>();
+        adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
+        friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
         Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
@@ -43,6 +70,8 @@ public class FriendlistActivity extends AppCompatActivity {
                 customAddfriendDialog();
             }
         });
+
+        new BackgroundTask().execute();
     }
 
     public void customAddfriendDialog() {
@@ -123,6 +152,7 @@ public class FriendlistActivity extends AppCompatActivity {
                                                     }
                                                 }
                                             };
+
                                             AddfriendRequest addfriendRequest = new AddfriendRequest(userID, friendID, responseListener);
                                             RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
                                             queue.add(addfriendRequest);
@@ -149,6 +179,87 @@ public class FriendlistActivity extends AppCompatActivity {
         });
 
         addfriendDialog.show();
+    }
+
+    class BackgroundTask extends AsyncTask<Void, Void, String>{
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            target = "http://brad903.cafe24.com/FriendList.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try{
+                URL url = new URL(target);
+                Map<String,Object> params = new LinkedHashMap<>();
+                params.put("userID", "brad903@naver.com");
+
+                StringBuilder postData = new StringBuilder();
+                for (Map.Entry<String,Object> param : params.entrySet()) {
+                    if (postData.length() != 0) postData.append('&');
+                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                    postData.append('=');
+                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                }
+                byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
+                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+                conn.setDoOutput(true);
+                conn.getOutputStream().write(postDataBytes);
+
+                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+
+                StringBuilder sb = new StringBuilder();
+                for (int c; (c = in.read()) >= 0;)
+                    sb.append((char)c);
+                String response = sb.toString().trim();
+
+                in.close();
+                conn.disconnect();
+                return response;
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {   // 결과 처리부분
+            try{
+
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = jsonObject.getJSONArray("response");
+
+                int count = 0;
+                String userID, userPhoto, friendNickname, userNickname, userStatusmsg;
+                while(count < jsonArray.length()) {
+                    JSONObject object = jsonArray.getJSONObject(count);
+                    userID = object.getString("friendID");
+                    userPhoto = object.getString("userPhoto");
+                    friendNickname = object.getString("friendNickname");
+                    userNickname = object.getString("userNickname");
+                    userStatusmsg = object.getString("userStatusmsg");
+                    Friend friend = new Friend(userID, userPhoto, friendNickname, userNickname, userStatusmsg);
+                    friendList.add(friend);
+                    count++;
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
     }
 
 }
