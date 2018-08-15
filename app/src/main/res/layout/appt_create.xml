@@ -94,79 +94,62 @@
 
         //viewpager로 변경필요
         //viewpager의 첫번째 화면
+        <android.support.v4.view.ViewPager
+            android:id="@+id/appt_create_pager"
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <fragment
+                android:id="@+id/fragment"
+                android:name="com.meet.now.apptsystem.appt_create_fragment1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment2"
+                android:name="com.meet.now.apptsystem.appt_create_fragment2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment3"
+                android:name="com.meet.now.apptsystem.appt_create_fragment3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment4"
+                android:name="com.meet.now.apptsystem.appt_create_fragment4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </android.support.v4.view.ViewPager>
+
+        //취소, 생성하기 버튼을 담고 있는 레이아웃
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:text="자가용 유무"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-
-            //recylerview로 변경필요
-            <ScrollView
-                android:layout_width="320dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
-
-            </ScrollView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:text="연령대"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/white"/>
-
-        </LinearLayout>
-
-        //취소, 생성하기 버튼을 담고 있는 레이아웃
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
                 android:background="@android:color/darker_gray"
                 android:text="취소"
                 android:textColor="@android:color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:background="@android:color/darker_gray"
                 android:text="생성하기"
                 android:textColor="@android:color/white"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
