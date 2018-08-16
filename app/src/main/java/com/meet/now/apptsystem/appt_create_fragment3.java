@@ -35,8 +35,4 @@ public class appt_create_fragment3 extends Fragment {
 
         return rootView;
     }
-
-    public String age_spinner_text(){
-        return selected_spinner_text;
-    }
 }

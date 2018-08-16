@@ -1,36 +1,26 @@
 package com.meet.now.apptsystem;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.appt_create);
+        setContentView(R.layout.activity_main);
 
-        ViewPager pager = (ViewPager)findViewById(R.id.appt_create_pager);
-        pager.setOffscreenPageLimit(4);
-
-        appt_create_fragment_adapter appt_adapter = new appt_create_fragment_adapter(getSupportFragmentManager());
-
-        appt_create_fragment1 fragment1 = new appt_create_fragment1();
-        appt_adapter.addItem(fragment1);
-
-        appt_create_fragment2 fragment2 = new appt_create_fragment2();
-        appt_adapter.addItem(fragment2);
-
-        appt_create_fragment3 fragment3 = new appt_create_fragment3();
-        appt_adapter.addItem(fragment3);
-
-        appt_create_fragment4 fragment4 = new appt_create_fragment4();
-        appt_adapter.addItem(fragment4);
-
-        pager.setAdapter(appt_adapter);
+        Button button = (Button)findViewById(R.id.login_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), appt_create_activity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

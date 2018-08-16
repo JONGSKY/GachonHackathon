@@ -23,22 +23,6 @@ android:orientation="vertical">
         android:layout_gravity="center_horizontal"
         android:background="@android:color/white"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="색 설정"
-        android:textSize="30dp"
-        android:textStyle="bold"/>
-
     //색 설정 버튼
-    <ImageButton
-        android:id="@+id/color_select_button"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/ic_color_lens"/>
 
 </LinearLayout>

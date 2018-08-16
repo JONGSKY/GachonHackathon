@@ -10,12 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-public class appt_create_fragment4 extends Fragment {
+public class appt_create_fragment4 extends Fragment implements TimePicker.OnTimeChangedListener{
 
     private Spinner spinner;
     private String selected_spinner_text;
     private TimePicker timePicker;
+    private int mHour, mMinute;
+    private String time_string;
 
 
     @Nullable
@@ -29,11 +32,18 @@ public class appt_create_fragment4 extends Fragment {
 
         selected_spinner_text = spinner.getSelectedItem().toString();
 
+        timePicker = (TimePicker)rootView.findViewById(R.id.timepicker);
+        timePicker.setOnTimeChangedListener(this);
+
         return rootView;
     }
 
-    public String meeting_type_spinner_text(){
-        return selected_spinner_text;
+    @Override
+    public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute) {
+        mHour = hourOfDay;
+        mMinute = minute;
+        time_string = String.valueOf(mHour) + String.valueOf(mMinute);
+        Toast.makeText(getContext(), ""+mHour+"시"+mMinute+"분을 선택하였습니다.", Toast.LENGTH_SHORT).show();
     }
 
 }
