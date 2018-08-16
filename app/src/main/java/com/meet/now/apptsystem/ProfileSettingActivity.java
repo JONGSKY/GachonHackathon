@@ -95,6 +95,7 @@ public class ProfileSettingActivity extends AppCompatActivity {
     private final int GALLERY_CODE = 1112;
     File file = null;
 
+    // 임시경로 생성
     private File createFile() throws IOException {
         String imageFileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
         File storageDir = Environment.getExternalStorageDirectory();
@@ -105,17 +106,15 @@ public class ProfileSettingActivity extends AppCompatActivity {
 
     private void getProfileImg() {
         Intent getProfileImgIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+        File file = null;
         try {
             file = createFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         getProfileImgIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-        if (getProfileImgIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(getProfileImgIntent, CAMERA_CODE);
-        }
+
     }
 
     private void GalleryPhoto() {
@@ -204,11 +203,11 @@ public class ProfileSettingActivity extends AppCompatActivity {
 
     private Bitmap rotate(Bitmap src, float degree) {
         Log.d("비트맵 이미지 수정", "이미지 회전");
-// Matrix 객체 생성
+        // Matrix 객체 생성
         Matrix matrix = new Matrix();
-// 회전 각도 셋팅
+        // 회전 각도 셋팅
         matrix.postRotate(degree);
-// 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
         return Bitmap.createBitmap(src, 0, 0, src.getWidth(),
                 src.getHeight(), matrix, true);
     }
