@@ -136,13 +136,9 @@ public class FriendlistActivity extends AppCompatActivity {
                                                         JSONObject jsonResponse = new JSONObject(response);
                                                         boolean success = jsonResponse.getBoolean("success");
                                                         if(success){
+                                                            new BackgroundTask().execute();
                                                             addfriendDialog.cancel();
-                                                            runOnUiThread(new Runnable(){
-                                                                @Override
-                                                                public void run() {
-                                                                    adapter.notifyDataSetChanged();
-                                                                }
-                                                            });
+
                                                         }else{
                                                             dialogmessage.setText("이미 추가된 친구입니다. 다시 검색해주세요.");
                                                             searchfriendButton.setText("다시 검색");
@@ -244,6 +240,7 @@ public class FriendlistActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {   // 결과 처리부분
             try{
+                friendList.clear();
 
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
@@ -261,6 +258,8 @@ public class FriendlistActivity extends AppCompatActivity {
                     friendList.add(friend);
                     count++;
                 }
+
+                adapter.notifyDataSetChanged();
 
             }catch(Exception e){
                 e.printStackTrace();
