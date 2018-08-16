@@ -43,6 +43,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:id="@+id/ib_profile_load"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentRight="true"

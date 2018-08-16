@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +27,20 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(addfreindintent);
             }
         });
+
+        // 프로필로드 테스트중
+        ImageButton profileLoadBtn = findViewById(R.id.ib_profile_load);
+        profileLoadBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent profileLoadIntent = new Intent(MainActivity.this, ProfileLoadActivity.class);
+                profileLoadIntent.putExtra("userID", userID);
+                MainActivity.this.startActivity(profileLoadIntent);
+            }
+        });
+        //////////////////////////////////////////////////////////////////////////////
+
+
     }
 
 
