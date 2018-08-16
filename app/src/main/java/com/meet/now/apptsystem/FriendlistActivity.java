@@ -39,6 +39,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.security.AccessController.getContext;
+
 public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
@@ -47,7 +49,6 @@ public class FriendlistActivity extends AppCompatActivity {
     private ListView friendListView;
     private FriendListAdapter adapter;
     private List<Friend> friendList;
-    private Activity FriendlistActivity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,6 +137,12 @@ public class FriendlistActivity extends AppCompatActivity {
                                                         boolean success = jsonResponse.getBoolean("success");
                                                         if(success){
                                                             addfriendDialog.cancel();
+                                                            runOnUiThread(new Runnable(){
+                                                                @Override
+                                                                public void run() {
+                                                                    adapter.notifyDataSetChanged();
+                                                                }
+                                                            });
                                                         }else{
                                                             dialogmessage.setText("이미 추가된 친구입니다. 다시 검색해주세요.");
                                                             searchfriendButton.setText("다시 검색");
@@ -194,7 +201,7 @@ public class FriendlistActivity extends AppCompatActivity {
             try{
                 URL url = new URL(target);
                 Map<String,Object> params = new LinkedHashMap<>();
-                params.put("userID", "brad903@naver.com");
+                params.put("userID", userID);
 
                 StringBuilder postData = new StringBuilder();
                 for (Map.Entry<String,Object> param : params.entrySet()) {
