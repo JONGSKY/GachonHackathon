@@ -36,8 +36,8 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".FriendlistActivity" />
         <activity android:name=".ProfileSettingActivity" />
-        <activity android:name=".ProfilePthotoActivity" />
-        <activity android:name=".ProfileLoadActivity"></activity>
+        <activity android:name=".ProfileLoadActivity" />
+        <activity android:name=".CreateApptSubActivity"></activity>
     </application>
 
 </manifest>

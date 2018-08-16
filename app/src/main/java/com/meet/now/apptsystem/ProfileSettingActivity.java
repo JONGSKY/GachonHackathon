@@ -37,7 +37,7 @@ public class ProfileSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_setting);
 
-
+/*
         // 프로필 사진 등록하기
         ImageButton button = findViewById(R.id.ib_edit_userimg);
         ivImage = findViewById(R.id.iv_user);
@@ -50,7 +50,7 @@ public class ProfileSettingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 show();
             }
-        });
+        });*/
     }
 
     void show() {
@@ -225,3 +225,4 @@ public class ProfileSettingActivity extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 }
+

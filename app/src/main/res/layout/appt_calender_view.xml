@@ -11,18 +11,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        //뒤로가기 버튼
+        <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:background="@drawable/arrow_left" />
+            android:background="@drawable/ic_arrow_left" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
-            android:text="약속 보기"
+            android:text="약속 목록"
             android:textSize="40dp"
             android:textStyle="bold" />
 
@@ -34,29 +35,30 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
+        //년도
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_marginLeft="20dp"
             android:text="2018"
             android:textSize="32dp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:textStyle="bold" />
 
+        //월
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_marginLeft="25dp"
             android:text="september"
             android:textSize="32dp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:textStyle="bold"/>
 
+        //appt_list_view layout으로 가는 버튼
         <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:background="@drawable/ic_list_black_24dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/ic_list"/>
 
     </LinearLayout>
 
@@ -67,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp">
 
-        //외부캘린더로 변경
+        //외부 캘린더로 변경 필요
         <CalendarView
             android:id="@+id/calendarView"
             android:layout_width="wrap_content"
@@ -76,18 +78,13 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    //appt_create layout으로 가는 버튼
+    <ImageButton
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center">
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/ic_add_black_24dp"/>
-
-    </RelativeLayout>
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/ic_add"/>
 
 </LinearLayout>
 

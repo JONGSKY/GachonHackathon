@@ -20,7 +20,7 @@
                 android:layout_height="125dp"
                 android:layout_gravity="center"
                 android:layout_margin="15dp"
-                android:background="@drawable/login_ic" />
+                android:background="@drawable/ic_person" />
             
             <TextView
                 android:layout_width="wrap_content"
@@ -48,8 +48,7 @@
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
                 android:id="@+id/idText"
-                android:drawableStart="@drawable/ic_person_black_24dp"
-                android:drawableLeft="@drawable/ic_person_black_24dp"
+                android:drawableStart="@drawable/ic_person"
                 android:layout_marginTop="50dp"
                 android:background="@color/colorPrimary"/>
 

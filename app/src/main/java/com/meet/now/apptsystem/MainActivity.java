@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String userID = intent.getStringExtra("userID");
 
+
+
         Button addfriendButton = (Button)findViewById(R.id.addfriendButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,6 +29,17 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(addfreindintent);
             }
         });
+
+        Button makeapptButton = (Button)findViewById(R.id.makeapptButton);
+        makeapptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent makeapptIntent = new Intent(MainActivity.this, CreateApptSubActivity.class);
+                makeapptIntent.putExtra("userID", userID);
+                MainActivity.this.startActivity(makeapptIntent);
+            }
+        });
+
 
         // 프로필로드 테스트중
         ImageButton profileLoadBtn = findViewById(R.id.ib_profile_load);
@@ -38,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(profileLoadIntent);
             }
         });
-        //////////////////////////////////////////////////////////////////////////////
+
 
 
     }

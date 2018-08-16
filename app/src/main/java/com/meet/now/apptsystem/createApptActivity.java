@@ -9,7 +9,7 @@ public class createApptActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.appt_create1);
+        setContentView(R.layout.appt_create);
         ActionBar ab = getSupportActionBar() ;
         ab.setTitle("약속 생성") ;
 
