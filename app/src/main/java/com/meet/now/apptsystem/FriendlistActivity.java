@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -49,6 +51,7 @@ public class FriendlistActivity extends AppCompatActivity {
     private ListView friendListView;
     private FriendListAdapter adapter;
     private List<Friend> friendList;
+    private List<Friend> saveList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class FriendlistActivity extends AppCompatActivity {
 
         friendListView = (ListView) findViewById(R.id.friendListView);
         friendList = new ArrayList<Friend>();
+        saveList = new ArrayList<Friend>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
@@ -73,6 +77,35 @@ public class FriendlistActivity extends AppCompatActivity {
         });
 
         new BackgroundTask().execute();
+
+        EditText search = (EditText)findViewById(R.id.searchFriend);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchFriend(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+    }
+
+    public void searchFriend(String search){
+        friendList.clear();
+        for(int i=0; i<saveList.size(); i++){
+            if(saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)){
+                friendList.add(saveList.get(i));
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     public void customAddfriendDialog() {
@@ -241,6 +274,7 @@ public class FriendlistActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {   // 결과 처리부분
             try{
                 friendList.clear();
+                saveList.clear();
 
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
@@ -256,6 +290,7 @@ public class FriendlistActivity extends AppCompatActivity {
                     userStatusmsg = object.getString("userStatusmsg");
                     Friend friend = new Friend(userID, userPhoto, friendNickname, userNickname, userStatusmsg);
                     friendList.add(friend);
+                    saveList.add(friend);
                     count++;
                 }
 
