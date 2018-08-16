@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class FriendListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = View.inflate(context, R.layout.friend, null);
-        ImageButton userPhoto = (ImageButton) v.findViewById(R.id.userPhoto);
+        ImageView userPhoto = (ImageView) v.findViewById(R.id.userPhoto);
         TextView userNickname = (TextView) v.findViewById(R.id.userNickname);
         TextView statusMsg = (TextView) v.findViewById(R.id.statusMsg);
 
