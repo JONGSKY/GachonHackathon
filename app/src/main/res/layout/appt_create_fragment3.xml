@@ -4,29 +4,6 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="30dp"
-        android:text="자가용 유무"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
-
-    //recylerview로 변경필요
-    <ScrollView
-        android:layout_width="320dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@android:color/white">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
-
-    </ScrollView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,11 +15,14 @@ android:orientation="vertical">
         android:textSize="20dp"
         android:textStyle="bold"/>
 
+    //연령대 설정 스피너
     <Spinner
-        android:id="@+id/agespinner"
+        android:id="@+id/age_spinner"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/white"/>
+
+    //색 설정 버튼
 
 </LinearLayout>

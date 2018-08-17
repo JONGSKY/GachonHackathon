@@ -15,10 +15,10 @@ android:orientation="vertical">
         android:textSize="20dp"
         android:textStyle="bold" />
 
-    //recylerview로 변경필요
+    //그리드뷰로 변경필요
     <ScrollView
         android:layout_width="320dp"
-        android:layout_height="50dp"
+        android:layout_height="150dp"
         android:background="@android:color/white"
         android:layout_gravity="center_horizontal">
 

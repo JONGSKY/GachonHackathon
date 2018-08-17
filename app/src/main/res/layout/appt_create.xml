@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            //뒤로가기 버튼
+            <!--뒤로가기 버튼-->
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -44,8 +44,9 @@
             android:layout_marginTop="20dp"
             android:background="@android:color/white">
 
-            //약속이름 입력칸
+            <!--약속이름 입력칸-->
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/appt_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="약속 이름"
@@ -59,9 +60,9 @@
             android:layout_marginTop="10dp"
             android:background="@android:color/white">
 
-            //인원 수 입력칸
-            //플러스 마이너스
+            <!--인원 수 입력칸-->
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/numberOfmember_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="총 인원"
@@ -79,7 +80,7 @@
             android:textSize="20dp"
             android:textStyle="bold" />
 
-        //recylerview로 변경필요
+        <!--recylerview로 변경필요-->
         <ScrollView
             android:layout_width="320dp"
             android:layout_height="50dp"
@@ -93,24 +94,49 @@
 
         </ScrollView>
 
+        <!--viewpager로 변경필요-->
+        <!--viewpager의 첫번째 화면-->
         <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+            android:id="@+id/appt_create_pager"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="30dp">
+            android:layout_height="300dp">
 
+            <fragment
+                android:id="@+id/fragment"
+                android:name="com.meet.now.apptsystem.appt_create_fragment1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment2"
+                android:name="com.meet.now.apptsystem.appt_create_fragment2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment3"
+                android:name="com.meet.now.apptsystem.appt_create_fragment3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <fragment
+                android:id="@+id/fragment4"
+                android:name="com.meet.now.apptsystem.appt_create_fragment4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </android.support.v4.view.ViewPager>
 
-        //취소, 생성하기 버튼을 담고 있는 레이아웃
-        <RelativeLayout
+        <!--취소, 생성하기 버튼을 담고 있는 레이아웃-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
                 android:background="@android:color/darker_gray"
                 android:text="취소"
                 android:textColor="@android:color/white"
@@ -118,14 +144,14 @@
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:background="@android:color/darker_gray"
                 android:text="생성하기"
                 android:textColor="@android:color/white"
                 android:textSize="20dp" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

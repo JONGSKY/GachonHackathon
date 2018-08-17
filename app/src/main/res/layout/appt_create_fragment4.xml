@@ -15,12 +15,11 @@ android:orientation="vertical">
         android:textStyle="bold"/>
 
     //시간 선택 Spinner
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@android:color/white"/>
+    <TimePicker
+        android:id="@+id/timepicker"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:timePickerMode="spinner"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,28 +32,11 @@ android:orientation="vertical">
         android:textStyle="bold"/>
 
     //모임 유형 선택Spinner
-
     <Spinner
-        android:id="@+id/spinner3"
+        android:id="@+id/meeting_type_spinner"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@android:color/white" />
-
-    //색 선택하는 버튼
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:background="@drawable/ic_color_lens"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="색 설정"
-        android:textStyle="bold"
-        android:textSize="15dp"/>
+        android:background="@android:color/white"/>
 
 </LinearLayout>
