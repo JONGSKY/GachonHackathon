@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,13 +49,29 @@ public class RegisterActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         final EditText idText = (EditText) findViewById(R.id.idText);
+        final Button validateButton = (Button) findViewById(R.id.validateButton);
         final EditText passwordText = (EditText) findViewById(R.id.passwordText);
         final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
         final EditText addressText = (EditText) findViewById(R.id.addressText);
 
-        RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
+        Intent intent = getIntent();
+        idText.setText(intent.getStringExtra("userID"));
+        passwordText.setText(intent.getStringExtra("userPassword"));
+        nicknameText.setText(intent.getStringExtra("userNickname"));
+        addressText.setText(intent.getStringExtra("userAddress"));
+        if(intent.getBooleanExtra("validate", false) == true){
+            validate = true;
+            idText.setEnabled(false);
+            idText.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            validateButton.setBackgroundColor(getResources().getColor(R.color.colorGray));
+        };
+        spinner.setSelection(intent.getIntExtra("userAge", 0));
+
+        final RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
         int genderGroupID = genderGroup.getCheckedRadioButtonId();
         userGender = ((RadioButton)findViewById(genderGroupID)).getText().toString();
+
+        ((RadioButton)genderGroup.getChildAt(intent.getIntExtra("userGender",0))).setChecked(true);
 
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -64,7 +81,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        final Button validateButton = (Button) findViewById(R.id.validateButton);
         validateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -112,6 +128,24 @@ public class RegisterActivity extends AppCompatActivity {
                     RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                     queue.add(validateRequest);
                 }
+            }
+        });
+
+        Button addressButton = (Button) findViewById(R.id.addressButton);
+        addressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int genderIndex = genderGroup.indexOfChild(genderGroup.findViewById(genderGroup.getCheckedRadioButtonId()));
+                Intent addressIntent = new Intent(RegisterActivity.this, DaumWebViewActivity.class);
+                addressIntent.putExtra("userID", idText.getText().toString());
+                addressIntent.putExtra("userPassword", passwordText.getText().toString());
+                addressIntent.putExtra("userNickname", nicknameText.getText().toString());
+                addressIntent.putExtra("userAddress", addressText.getText().toString());
+                addressIntent.putExtra("userAge", spinner.getSelectedItemPosition());
+                addressIntent.putExtra("userGender", genderIndex);
+                addressIntent.putExtra("validate", validate);
+                RegisterActivity.this.startActivity(addressIntent);
+                finish();
             }
         });
 
