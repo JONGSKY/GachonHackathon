@@ -1,47 +1,181 @@
 package com.meet.now.apptsystem;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
-public class appt_create_activity extends AppCompatActivity{
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Date;
 
-    private String appt_name;
-    private String NumberOfMember;
-    private EditText Eappt_name;
-    private EditText ENumberOfMember;
+import static java.security.AccessController.getContext;
+
+public class appt_create_activity extends AppCompatActivity {
+
+    private EditText appt_name;
+    private CalendarView appt_date;
+    private Spinner appt_age;
+    private TimePicker appt_time;
+    private Spinner appt_meeting_type;
+    private String Name;
+    private String Date;
+    private String Age;
+    private String Time;
+    private String Meeting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_create);
 
-        Eappt_name = (EditText) findViewById(R.id.appt_edit);
-        ENumberOfMember = (EditText) findViewById(R.id.numberOfmember_edit);
+        appt_name = findViewById(R.id.appt_name_edit);
+        appt_date = findViewById(R.id.calendarView);
+        appt_age = findViewById(R.id.age_spinner);
+        appt_time = findViewById(R.id.appt_time_spinner);
+        appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
 
-        appt_name = Eappt_name.getText().toString();
-        NumberOfMember = ENumberOfMember.getText().toString();
 
-        ViewPager pager = (ViewPager)findViewById(R.id.appt_create_pager);
-        pager.setOffscreenPageLimit(4);
+        appt_date.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
+                Date = String.valueOf(year) + "-" + String.valueOf(month+1) + "-" + String.valueOf(day);
+            }
+        });
 
-        appt_create_fragment_adapter appt_adapter = new appt_create_fragment_adapter(getSupportFragmentManager());
+        appt_time.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
+                Time = String.valueOf(hour) + ":" + String.valueOf(minute) + ":00";
+            }
+        });
 
-        appt_create_fragment1 fragment1 = new appt_create_fragment1();
-        appt_adapter.addItem(fragment1);
+        ArrayAdapter appt_age_adapter = ArrayAdapter.createFromResource(this, R.array.age_array, android.R.layout.simple_spinner_item);
+        appt_age.setAdapter(appt_age_adapter);
 
-        appt_create_fragment2 fragment2 = new appt_create_fragment2();
-        appt_adapter.addItem(fragment2);
+        ArrayAdapter appt_meeting_type_adapter = ArrayAdapter.createFromResource(this, R.array.meeting_type_array, android.R.layout.simple_spinner_item);
+        appt_meeting_type.setAdapter(appt_meeting_type_adapter);
 
-        appt_create_fragment3 fragment3 = new appt_create_fragment3();
-        appt_adapter.addItem(fragment3);
 
-        appt_create_fragment4 fragment4 = new appt_create_fragment4();
-        appt_adapter.addItem(fragment4);
-
-        pager.setAdapter(appt_adapter);
-
+        Button button = (Button)findViewById(R.id.appt_create_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Async_Prepare();
+            }
+        });
     }
+
+    public void Appt_Name_Set_String(EditText editText){
+        Name = editText.getText().toString();
+    }
+
+
+    public void Appt_Age_Set_String(Spinner spinner){
+        Age = spinner.getSelectedItem().toString();
+    }
+
+
+    public void Appt_Meeting_Type_Set_String(Spinner spinner){
+        Meeting = spinner.getSelectedItem().toString();
+    }
+
+    public void Async_Prepare() {
+        Async_test async_test = new Async_test();
+        Appt_Name_Set_String(appt_name);
+        Appt_Age_Set_String(appt_age);
+        Appt_Meeting_Type_Set_String(appt_meeting_type);
+        Log.w("1",Name+Date+Age+Time+Meeting);
+        async_test.execute(Name, Date, Age, Time, Meeting);
+    }
+
+    class Async_test extends AsyncTask<String, Void, String> {
+
+        int cnt = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //textView.setText("I got Msg from Server! : " + s);// TextView에 보여줍니다.
+            Toast.makeText(getApplicationContext(),"i got a msg from server :"+s,Toast.LENGTH_LONG).show();
+    }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            Log.d("onProgress update", "" + cnt++);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpURLConnection httpURLConnection = null;
+
+            try {
+                String appt_name = params[0];
+                String Date_String = params[1];
+                String Age_String = params[2];
+                String Time_String = params[3];
+                String Meeting_Type_String = params[4];
+
+                String data = URLEncoder.encode("Appt_Name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
+                data += "&" + URLEncoder.encode("Date_String", "UTF-8") + "=" + URLEncoder.encode(Date_String, "UTF-8");
+                data += "&" + URLEncoder.encode("Age_String", "UTF-8") + "=" + URLEncoder.encode(Age_String, "UTF-8");
+                data += "&" + URLEncoder.encode("Time_String", "UTF-8") + "=" + URLEncoder.encode(Time_String, "UTF-8");
+                data += "&" + URLEncoder.encode("Meeting_Type_String", "UTF-8") + "=" + URLEncoder.encode(Meeting_Type_String, "UTF-8");
+
+                //String data2 = "tmsg="+testMsg+"&tmsg2="+testMsg2;
+
+                String link = "http://brad903.cafe24.com/" + "Appt_Create.php";// 요청하는 url 설정 ex)192.168.0.1/httpOnlineTest.php
+
+                URL url = new URL(link);
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();//httpURLConnection은 url.openconnection을 통해서 만 생성 가능 직접생성은 불가능하다.
+                httpURLConnection.setRequestMethod("POST");//post방식으로 설정
+
+                httpURLConnection.setDoInput(true);// server와의 통신에서 입력 가능한 상태로 만든다.
+                httpURLConnection.setDoOutput(true);//server와의 통신에서 출력 가능한 상태로 만든다.
+
+                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로 뿅 쏴줄라구용
+                wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
+                wr.flush();//flush!
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader
+                        (httpURLConnection.getInputStream(), "UTF-8"));//자 이제 받아옵시다.
+                StringBuilder sb = new StringBuilder();// String 값을 이제 스슥스슥 넣을 껍니다.
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);//
+
+                }
+
+                httpURLConnection.disconnect();//이거 꼭해주세요. 보통은 별일 없는데, 특정상황에서 문제가 생기는 경우가 있다고 합니다.
+                return sb.toString();//자 이렇게 리턴이되면 이제 post로 가겠습니다.
+            } catch (Exception e) {
+
+                httpURLConnection.disconnect();
+                return new String("Exception Occure" + e.getMessage());
+            }//try catch end
+        }//doInbackground end
+    }//asynctask  end
 }
