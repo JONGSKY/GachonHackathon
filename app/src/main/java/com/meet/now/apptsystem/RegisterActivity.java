@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String userGender;
     private AlertDialog dialog;
     private boolean validate = false;
+    EditText addressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +53,11 @@ public class RegisterActivity extends AppCompatActivity {
         final Button validateButton = (Button) findViewById(R.id.validateButton);
         final EditText passwordText = (EditText) findViewById(R.id.passwordText);
         final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
-        final EditText addressText = (EditText) findViewById(R.id.addressText);
-
-        Intent intent = getIntent();
-        idText.setText(intent.getStringExtra("userID"));
-        passwordText.setText(intent.getStringExtra("userPassword"));
-        nicknameText.setText(intent.getStringExtra("userNickname"));
-        addressText.setText(intent.getStringExtra("userAddress"));
-        if(intent.getBooleanExtra("validate", false) == true){
-            validate = true;
-            idText.setEnabled(false);
-            idText.setBackgroundColor(getResources().getColor(R.color.colorGray));
-            validateButton.setBackgroundColor(getResources().getColor(R.color.colorGray));
-        };
-        spinner.setSelection(intent.getIntExtra("userAge", 0));
+        addressText = (EditText) findViewById(R.id.addressText);
 
         final RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
         int genderGroupID = genderGroup.getCheckedRadioButtonId();
         userGender = ((RadioButton)findViewById(genderGroupID)).getText().toString();
-
-        ((RadioButton)genderGroup.getChildAt(intent.getIntExtra("userGender",0))).setChecked(true);
 
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -137,15 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 int genderIndex = genderGroup.indexOfChild(genderGroup.findViewById(genderGroup.getCheckedRadioButtonId()));
                 Intent addressIntent = new Intent(RegisterActivity.this, DaumWebViewActivity.class);
-                addressIntent.putExtra("userID", idText.getText().toString());
-                addressIntent.putExtra("userPassword", passwordText.getText().toString());
-                addressIntent.putExtra("userNickname", nicknameText.getText().toString());
-                addressIntent.putExtra("userAddress", addressText.getText().toString());
-                addressIntent.putExtra("userAge", spinner.getSelectedItemPosition());
-                addressIntent.putExtra("userGender", genderIndex);
-                addressIntent.putExtra("validate", validate);
-                RegisterActivity.this.startActivity(addressIntent);
-                finish();
+                startActivityForResult(addressIntent, 0);
             }
         });
 
@@ -209,6 +187,17 @@ public class RegisterActivity extends AppCompatActivity {
                 queue.add(registerRequest);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(resultCode){
+            case 1:
+                addressText.setText(data.getStringExtra("userAddress"));
+                break;
+            default:
+        }
     }
 
     @Override

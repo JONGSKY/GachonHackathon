@@ -62,19 +62,19 @@ public class DaumWebViewActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     String result = String.format("%s %s", arg1, arg2);
-                    Intent addressIntent = new Intent(DaumWebViewActivity.this, RegisterActivity.class);
-                    Intent regisintent = getIntent();
-                    addressIntent.putExtra("userID", regisintent.getStringExtra("userID"));
-                    addressIntent.putExtra("userPassword", regisintent.getStringExtra("userPassword"));
-                    addressIntent.putExtra("userNickname", regisintent.getStringExtra("userNickname"));
+                    Intent addressIntent = new Intent();
                     addressIntent.putExtra("userAddress", result);
-                    addressIntent.putExtra("userAge", regisintent.getIntExtra("userAge", 0));
-                    addressIntent.putExtra("userGender", regisintent.getIntExtra("userGender", 0));
-                    addressIntent.putExtra("validate", regisintent.getBooleanExtra("validate", false));
-                    startActivity(addressIntent);
+                    setResult(1, addressIntent);
                     finish();
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent addressIntent = new Intent();
+        setResult(0, addressIntent);
+        finish();
     }
 }

@@ -47,6 +47,7 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:background="@color/colorPrimary"
+                    android:singleLine="true"
                     android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
                     android:drawableStart="@drawable/ic_mail_outline_black_24dp"
                     android:hint="아이디(이메일)"
