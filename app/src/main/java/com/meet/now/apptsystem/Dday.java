@@ -29,7 +29,13 @@ public class Dday {
     }
 
     public String getdDay() {
-        return dDay+"";
+        if(dDay > 0){
+            return "D+" + dDay;
+        }else if(dDay < 0){
+            return "D" + dDay;
+        }else {
+            return "D-day";
+        }
     }
 
     public void setdDay(int dDay) {

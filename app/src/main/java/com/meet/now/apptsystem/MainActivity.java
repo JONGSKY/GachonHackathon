@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,18 +131,36 @@ public class MainActivity extends AppCompatActivity {
             try{
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
-
                 int count = 0;
+
+                Calendar today = Calendar.getInstance();
+                Calendar d_day = Calendar.getInstance();
+                long l_today = today.getTimeInMillis() / (1000*60*60*24);
+                long l_dday, substract;
+
                 String apptName, apptDate;
-                int dDay;
+                String[] apptDateArray;
+
                 while(count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     apptName = object.getString("apptName");
                     apptDate = object.getString("apptDate");
-                    Dday dday= new Dday(apptName, apptDate, 27);
-                    ddayList.add(dday);
+
+                    apptDateArray = apptDate.split("-");
+                    d_day.set(Integer.parseInt(apptDateArray[0]), Integer.parseInt(apptDateArray[1])-1, Integer.parseInt(apptDateArray[2]));
+
+                    l_dday = d_day.getTimeInMillis() / (1000*60*60*24);
+
+                    substract = l_today - l_dday;
+
+                    if(substract <= 0 && substract >= -7) {  // 일주일 이내 데이터만 가져올 수 있도록
+                        Dday dday = new Dday(apptName, apptDate, (int) substract);
+                        ddayList.add(dday);
+                    }
+
                     count++;
                 }
+
                 adapter.notifyDataSetChanged();
 
             }catch(Exception e){
