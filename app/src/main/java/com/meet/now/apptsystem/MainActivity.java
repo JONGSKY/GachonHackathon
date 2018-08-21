@@ -1,18 +1,26 @@
 package com.meet.now.apptsystem;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -24,6 +32,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new DdayAdapter(getApplicationContext(), ddayList);
         ddayListView.setAdapter(adapter);
 
-
-        Button addfriendButton = (Button)findViewById(R.id.addfriendButton);
+        Button addfriendButton = (Button) findViewById(R.id.addfriendButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,8 +65,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button makeapptButton = (Button) findViewById(R.id.makeapptButton);
+        makeapptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 민용이 부분 나중에 덮어씀
+            }
+        });
+
+        // 프로필로드 테스트중
+        ImageButton profileLoadBtn = findViewById(R.id.ib_profile_load);
+        profileLoadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileLoadIntent = new Intent(MainActivity.this, ProfileLoadActivity.class);
+                profileLoadIntent.putExtra("userID", userID);
+                MainActivity.this.startActivity(profileLoadIntent);
+            }
+        });
+
         new BackgroundTask().execute();
+
     }
+
 
     // 두번 뒤로가기 누르면 종료되도록
     private long lastTimeBackPressed;
@@ -128,32 +157,32 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            try{
+            try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
                 int count = 0;
 
                 Calendar today = Calendar.getInstance();
                 Calendar d_day = Calendar.getInstance();
-                long l_today = today.getTimeInMillis() / (1000*60*60*24);
+                long l_today = today.getTimeInMillis() / (1000 * 60 * 60 * 24);
                 long l_dday, substract;
 
                 String apptName, apptDate;
                 String[] apptDateArray;
 
-                while(count < jsonArray.length()) {
+                while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     apptName = object.getString("apptName");
                     apptDate = object.getString("apptDate");
 
                     apptDateArray = apptDate.split("-");
-                    d_day.set(Integer.parseInt(apptDateArray[0]), Integer.parseInt(apptDateArray[1])-1, Integer.parseInt(apptDateArray[2]));
+                    d_day.set(Integer.parseInt(apptDateArray[0]), Integer.parseInt(apptDateArray[1]) - 1, Integer.parseInt(apptDateArray[2]));
 
-                    l_dday = d_day.getTimeInMillis() / (1000*60*60*24);
+                    l_dday = d_day.getTimeInMillis() / (1000 * 60 * 60 * 24);
 
                     substract = l_today - l_dday;
 
-                    if(substract <= 0 && substract >= -7) {  // 일주일 이내 데이터만 가져올 수 있도록
+                    if (substract <= 0 && substract >= -7) {  // 일주일 이내 데이터만 가져올 수 있도록
                         Dday dday = new Dday(apptName, apptDate, (int) substract);
                         ddayList.add(dday);
                     }
@@ -163,11 +192,57 @@ public class MainActivity extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-
     }
+
+    public Context mContext;
+    final static int MY_PERMISSION_CAMERA = 1;
+    public boolean isCheck(String permission) {
+        switch (permission) {
+            case "camera":
+                // 권한없다면
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("알림")
+                                .setMessage("저장소 권한은 거부되었습니다.")
+                                // 권한설정
+                                .setNeutralButton("설정", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        intent.setData(Uri.parse("package:com.meet.now.apptsystem"));
+                                        mContext.startActivity(intent);
+                                    }
+                                })
+                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity) mContext).finish();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .create()
+                                .show();
+
+                        //권한 있다면 권한요구
+                    } else {
+                        ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.CAMERA,
+                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_CAMERA);
+                    }
+
+
+                } else {
+                    return true;
+                }
+                break;
+        }
+        return true;
+    }
+
 }
