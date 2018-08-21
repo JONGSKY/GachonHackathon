@@ -1,9 +1,11 @@
 package com.meet.now.apptsystem;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -45,8 +48,6 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     String userID = null;
     String userPhoto = null;
 
-    ImageView iv = null;
-
     public UpdateProfilePhoto() {
     }
 
@@ -54,8 +55,15 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        // 다이얼로그 뷰 생성
+        // 레이아웃 XML과 뷰 변수 연결
         View view = inflater.inflate(R.layout.dialog_profile_photo_edit, null);
+
+        // remove dialog title
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        // remove dialog background
+        getDialog().getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         return view;
     }
@@ -65,9 +73,6 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         super.onActivityCreated(savedInstanceState);
         // 유저아이디 받아옴
         userID = getArguments().getString("userID");
-
-        // 프로필 이미지 뷰
-        iv = getActivity().findViewById(R.id.iv_user);
 
         Button camera = (Button) getView().findViewById(R.id.camera_btn);
         camera.setOnClickListener(this);
@@ -101,72 +106,31 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
 
     }
 
-    File file = null;
+    static File file = null;
     void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         SAMPLEIMG = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg"; // 파일이름.
         file = new File(Environment.getExternalStorageDirectory(), SAMPLEIMG); // sdcard에 새로운 파일 생성. 경로, 이름
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-
-        startActivityForResult(intent, REQUEST_PICTURE);
-
+        getActivity().startActivityForResult(intent, REQUEST_PICTURE);
     }
 
     void photoAlbum() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_PHOTO_ALBUM);
+        getActivity().startActivityForResult(intent, REQUEST_PHOTO_ALBUM);
 
     }
 
 
-    Bitmap loadPicture() {
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
-        return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // 이미지 바로띄우기는 가능.
-        // 서버에 이미지를 업로드 -> db에 경로 뿌리기 -> dismiss()
-        // activity에서 db경로 가져오기 -> 서버의 이미지 가져오기 -> 이미지 뿌리기
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_PICTURE) {
-                // 이미지 바로 띄우기 -> 서버로 업로드하기로 변경
-                Async_ftp_Prepare(file); // 파일 서버에 저장.
-                iv.setImageBitmap(loadPicture());
-
-            }
-
-            if (requestCode == REQUEST_PHOTO_ALBUM) {
-                Log.d("data.getData()",data.getData().toString());
-                iv.setImageURI(data.getData());
-
-            }
-
-        }
-
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        getActivity().recreate();
-
-    }
+    //    @Override
+//    public void onDismiss(DialogInterface dialog) {
+//        super.onDismiss(dialog);
+//        getActivity().recreate();
+//    }
 
 
-    // 파일을 서버에 저장
-    public void Async_ftp_Prepare(File file) {
-        Async_ftp async_ftp = new Async_ftp();
-        async_ftp.execute();
-    }
     // 파일 서버 경로를 Db에 저장
     public void Async_db_Prepare() {
         Async_test async_test = new Async_test();
@@ -225,52 +189,7 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         }
     }
 
-    /*********  work only for Dedicated IP ***********/
-    static final String FTP_HOST = "http://brad903.cafe24.com/";
-    /*********  FTP USERNAME ***********/
-    static final String FTP_USER = "brad903";
-    /*********  FTP PASSWORD ***********/
-    static final String FTP_PASS = "Nvo78/fd4h";
-    static final String FTP_PATH = "userphoto/";
 
-    // ftp 서버 연결 asyncTask
-    class Async_ftp extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            /********** Pick file from memory *******/
-            //장치로부터 메모리 주소를 얻어낸 뒤, 파일명을 가지고 찾는다.
-            //현재 이것은 내장메모리 루트폴더에 있는 것.
-
-            // Upload file
-            FTPClient client = new FTPClient();
-
-            try {
-                // 연결
-                client.connect(FTP_HOST, 21);//ftp 서버와 연결, 호스트와 포트를 기입
-                client.login(FTP_USER, FTP_PASS);//로그인을 위해 아이디와 패스워드 기입
-                client.setType(FTPClient.TYPE_BINARY);//2진으로 변경
-                client.changeDirectory(FTP_PATH);//서버에서 넣고 싶은 파일 경로를 기입
-
-                client.upload(file);//업로드 시작
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }finally {
-                try {
-                    // 연결중지
-                    client.logout();
-                    client.disconnect(true);
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
-            }
-
-            return null;
-        }//try catch end
-
-    }//doInbackground end
 
 }
 
