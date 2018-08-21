@@ -16,8 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,9 +27,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import it.sauronsoftware.ftp4j.FTPClient;
-
 import static android.support.v4.media.MediaBrowserServiceCompat.RESULT_OK;
+import it.sauronsoftware.ftp4j.FTPClient;
 
 public class UpdateProfilePhoto extends DialogFragment implements View.OnClickListener {
 
@@ -70,6 +69,13 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         // 프로필 이미지 뷰
         iv = getActivity().findViewById(R.id.iv_user);
 
+        Button camera = (Button) getView().findViewById(R.id.camera_btn);
+        camera.setOnClickListener(this);
+        Button photoAlbum = (Button) getView().findViewById(R.id.photoAlbum_btn);
+        photoAlbum.setOnClickListener(this);
+        Button back = (Button) getView().findViewById(R.id.btn_back_photo);
+        back.setOnClickListener(this);
+
     }
 
 
@@ -79,15 +85,14 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         if (v.getId() == R.id.camera_btn) {
             // 카메라로 사진찍기
             Log.d("onClick", "카메라로 사진찍기");
-            //takePicture();
-            //dismiss();
+            takePicture();
+            dismiss();
 
         } else if (v.getId() == R.id.photoAlbum_btn) {
             // 앨범에서 가져오기
             Log.d("onClick", "앨범에서 가져오기");
-
-            //photoAlbum();
-           // dismiss();
+            photoAlbum();
+            dismiss();
 
         } else if(v.getId() == R.id.btn_back_photo){
             Log.d("onClick", "취소");
