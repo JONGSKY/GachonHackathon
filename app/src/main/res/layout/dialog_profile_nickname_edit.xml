@@ -21,21 +21,21 @@
             >
 
             <EditText
-                android:id="@+id/tv_status"
+                android:id="@+id/tv_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_centerInParent="true"
                 android:textSize="20dp"
-                android:hint="상태메세지를 입력해주세요."
+                android:hint="별칭을 입력해주세요."
                 android:maxLength="20"
                 android:textStyle="bold"/>
 
         </RelativeLayout>
 
         <Button
-            android:id="@+id/ib_back_status"
+            android:id="@+id/ib_back_nick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
