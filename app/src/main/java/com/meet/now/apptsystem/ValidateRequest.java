@@ -17,7 +17,6 @@ public class ValidateRequest extends StringRequest{
         super(Method.POST, URL, listener, null);  // 해당 파라미터를 POST방식으로 전송
         parameters = new HashMap<>();
         parameters.put("userID", userID);
-        Log.w(this.getClass().getName(), userID);
     }
 
     @Override

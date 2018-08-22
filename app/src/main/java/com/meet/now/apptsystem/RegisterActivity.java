@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String userGender;
     private AlertDialog dialog;
     private boolean validate = false;
+    EditText addressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +50,12 @@ public class RegisterActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         final EditText idText = (EditText) findViewById(R.id.idText);
+        final Button validateButton = (Button) findViewById(R.id.validateButton);
         final EditText passwordText = (EditText) findViewById(R.id.passwordText);
         final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
-        final EditText addressText = (EditText) findViewById(R.id.addressText);
+        addressText = (EditText) findViewById(R.id.addressText);
 
-        RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
+        final RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
         int genderGroupID = genderGroup.getCheckedRadioButtonId();
         userGender = ((RadioButton)findViewById(genderGroupID)).getText().toString();
 
@@ -64,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        final Button validateButton = (Button) findViewById(R.id.validateButton);
         validateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -112,6 +114,16 @@ public class RegisterActivity extends AppCompatActivity {
                     RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                     queue.add(validateRequest);
                 }
+            }
+        });
+
+        Button addressButton = (Button) findViewById(R.id.addressButton);
+        addressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int genderIndex = genderGroup.indexOfChild(genderGroup.findViewById(genderGroup.getCheckedRadioButtonId()));
+                Intent addressIntent = new Intent(RegisterActivity.this, DaumWebViewActivity.class);
+                startActivityForResult(addressIntent, 0);
             }
         });
 
@@ -175,6 +187,17 @@ public class RegisterActivity extends AppCompatActivity {
                 queue.add(registerRequest);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(resultCode){
+            case 1:
+                addressText.setText(data.getStringExtra("userAddress"));
+                break;
+            default:
+        }
     }
 
     @Override

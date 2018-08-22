@@ -11,17 +11,17 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:id="@+id/search"
-        android:hint="ID검색" />
+        android:id="@+id/searchFriend"
+        android:hint="검색" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
@@ -53,11 +53,11 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/friendListView"
             android:layout_width="match_parent"
             android:layout_height="514dp"
-            android:divider="#d1d1d1"
-            android:dividerHeight="10dp"></ListView>
+            android:divider="#ffffff"
+            android:dividerHeight="5dp"></ListView>
 
     </LinearLayout>
 

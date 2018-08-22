@@ -53,14 +53,14 @@
     </android.support.constraint.ConstraintLayout>
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/ddayListView"
         android:layout_width="match_parent"
         android:layout_height="375dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:divider="#d1d1d1"
-        android:dividerHeight="2dp" />
+        android:divider="#ffffff"
+        android:dividerHeight="10dp" />
 
 
     <LinearLayout
