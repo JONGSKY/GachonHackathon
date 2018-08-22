@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -34,14 +36,14 @@ import static android.support.v4.media.MediaBrowserServiceCompat.RESULT_OK;
 public class UpdateProfilePhoto extends DialogFragment implements View.OnClickListener {
 
     //사진으로 전송시 되돌려 받을 번호
-    static int REQUEST_PICTURE = 1;
+    static int REQUEST_PICTURE = 1000;
     //앨범으로 전송시 돌려받을 번호
-    static int REQUEST_PHOTO_ALBUM = 2;
+    static int REQUEST_PHOTO_ALBUM = 2000;
     // 파일 크랍시 돌려받을 번호
-    static int REQUEST_IMAGE_CROP = 3;
+    static int REQUEST_IMAGE_CROP = 3000;
 
-    //샘플
-    static String SAMPLEIMG = null;
+    // 파일 껍데기
+    String fileName = null;
 
     String userID = null;
     String userPhoto = null;
@@ -55,6 +57,7 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        Log.d("시작", "onCreateView()");
         // 다이얼로그 뷰 생성
         View view = inflater.inflate(R.layout.dialog_profile_photo_edit, null);
 
@@ -64,32 +67,40 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d("시작", "onActivityCreated()");
         // 유저아이디 받아옴
         userID = getArguments().getString("userID");
 
         // 프로필 이미지 뷰
         iv = getActivity().findViewById(R.id.iv_user);
 
+        Button camera = (Button) getView().findViewById(R.id.camera_btn);
+        camera.setOnClickListener(this);
+        Button photoAlbum = (Button) getView().findViewById(R.id.photoAlbum_btn);
+        photoAlbum.setOnClickListener(this);
+        Button back = (Button) getView().findViewById(R.id.btn_back_photo);
+        back.setOnClickListener(this);
+
     }
 
 
     @Override
     public void onClick(View v) {
+        Log.d("시작", "onClick()");
 
         if (v.getId() == R.id.camera_btn) {
             // 카메라로 사진찍기
             Log.d("onClick", "카메라로 사진찍기");
-            //takePicture();
-            //dismiss();
+            takePicture();
+            dismiss();
 
         } else if (v.getId() == R.id.photoAlbum_btn) {
             // 앨범에서 가져오기
             Log.d("onClick", "앨범에서 가져오기");
+            photoAlbum();
+            dismiss();
 
-            //photoAlbum();
-           // dismiss();
-
-        } else if(v.getId() == R.id.btn_back_photo){
+        } else if (v.getId() == R.id.btn_back_photo) {
             Log.d("onClick", "취소");
             dismiss();
         }
@@ -97,22 +108,29 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     }
 
     File file = null;
+
     void takePicture() {
+        Log.d("카메라로 가져오기", "시작");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        SAMPLEIMG = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg"; // 파일이름.
-        file = new File(Environment.getExternalStorageDirectory(), SAMPLEIMG); // sdcard에 새로운 파일 생성. 경로, 이름
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+        fileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg"; // 파일이름.
+        file = new File(Environment.getExternalStorageDirectory(), fileName); // sdcard에 새로운 파일 생성. 경로, 이름
+        Log.d("시작", Uri.fromFile(file).toString());
+        Uri fileUri = Uri.fromFile(file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
-        startActivityForResult(intent, REQUEST_PICTURE);
+
+        Log.d("결과창 띄우기", "시작");
+        getActivity().startActivityForResult(intent, REQUEST_PICTURE);
 
     }
 
     void photoAlbum() {
+        Log.d("앨범에서 가져오기", "시작");
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_PHOTO_ALBUM);
+        getActivity().startActivityForResult(intent, REQUEST_PHOTO_ALBUM);
 
     }
 
@@ -125,14 +143,20 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
 
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("시작", "onActivityResult()" + requestCode + " " + resultCode + " " + data);
+
 
         // 이미지 바로띄우기는 가능.
         // 서버에 이미지를 업로드 -> db에 경로 뿌리기 -> dismiss()
         // activity에서 db경로 가져오기 -> 서버의 이미지 가져오기 -> 이미지 뿌리기
-        if (resultCode == RESULT_OK) {
+
+        if (resultCode == -1) {
+            Log.d("result_ok", "시작");
             if (requestCode == REQUEST_PICTURE) {
+                Log.d("카메라 결과창", "시작");
                 // 이미지 바로 띄우기 -> 서버로 업로드하기로 변경
                 Async_ftp_Prepare(file); // 파일 서버에 저장.
                 iv.setImageBitmap(loadPicture());
@@ -140,7 +164,7 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
             }
 
             if (requestCode == REQUEST_PHOTO_ALBUM) {
-                Log.d("data.getData()",data.getData().toString());
+                Log.d("이미지 uri", data.getData().toString());
                 iv.setImageURI(data.getData());
 
             }
@@ -152,16 +176,19 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        getActivity().recreate();
+        Log.d("시작", "onDismiss");
+
 
     }
 
 
     // 파일을 서버에 저장
     public void Async_ftp_Prepare(File file) {
+        Log.d("파일을 서버에 저장", "시작");
         Async_ftp async_ftp = new Async_ftp();
         async_ftp.execute();
     }
+
     // 파일 서버 경로를 Db에 저장
     public void Async_db_Prepare() {
         Async_test async_test = new Async_test();
@@ -220,20 +247,22 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         }
     }
 
-    /*********  work only for Dedicated IP ***********/
-    static final String FTP_HOST = "http://brad903.cafe24.com/";
-    /*********  FTP USERNAME ***********/
+    //*********  work only for Dedicated IP ***********//
+    static final String FTP_HOST = "brad903.cafe24.com";
+    //*********  FTP USERNAME ***********//
     static final String FTP_USER = "brad903";
-    /*********  FTP PASSWORD ***********/
+    //*********  FTP PASSWORD ***********//
     static final String FTP_PASS = "Nvo78/fd4h";
-    static final String FTP_PATH = "userphoto/";
+    static final String FTP_PATH = "../userphoto/";
 
     // ftp 서버 연결 asyncTask
     class Async_ftp extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            /********** Pick file from memory *******/
+            // 업로드 수정 필요
+            Log.d("백그라운드 업로드", "시작");
+            //********** Pick file from memory *******//
             //장치로부터 메모리 주소를 얻어낸 뒤, 파일명을 가지고 찾는다.
             //현재 이것은 내장메모리 루트폴더에 있는 것.
 
@@ -249,13 +278,13 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
 
                 client.upload(file);//업로드 시작
 
+
             } catch (Exception e) {
                 e.printStackTrace();
 
-            }finally {
+            } finally {
                 try {
                     // 연결중지
-                    client.logout();
                     client.disconnect(true);
                 } catch (Exception e2) {
                     e2.printStackTrace();
@@ -268,5 +297,3 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     }//doInbackground end
 
 }
-
-

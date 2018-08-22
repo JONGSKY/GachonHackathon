@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
     String userPhoto = null;
     String userAddress = null;
     String userID = null;
+
+    private UpdateProfilePhoto updateProfilePhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +91,15 @@ public class ProfileLoadActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 FragmentManager fm = getSupportFragmentManager();
-                UpdateProfilePhoto dialogFragment = new UpdateProfilePhoto();
+                updateProfilePhoto = new UpdateProfilePhoto();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("userID", userID);
-                dialogFragment.setArguments(bundle);
+                updateProfilePhoto.setArguments(bundle);
 
-                dialogFragment.show(fm, "fragment_dialog_photo");
+                updateProfilePhoto.show(fm, "fragment_dialog_photo");
+
+
 
 
             }
@@ -188,5 +193,11 @@ public class ProfileLoadActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.updateProfilePhoto.onActivityResult(requestCode, resultCode, data);
     }
 }
