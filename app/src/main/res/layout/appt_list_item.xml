@@ -13,8 +13,9 @@
 
         <TextView
             android:id="@+id/Week_textView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.15"
             android:text="Sun"
             android:textSize="20dp"
             android:layout_marginLeft="10dp"
@@ -22,8 +23,9 @@
 
         <TextView
             android:id="@+id/Day_textView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.15"
             android:text="15"
             android:layout_gravity="center"
             android:textSize="40dp"
@@ -31,15 +33,17 @@
             android:textColor="@android:color/white"/>
 
         <ImageView
-            android:layout_width="35dp"
+            android:layout_width="0dp"
             android:layout_height="35dp"
+            android:layout_weight="0.1"
             android:background="@drawable/ic_add"
             android:layout_marginLeft="5dp"/>
 
         <LinearLayout
             android:id="@+id/today_appt"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.6"
             android:orientation="vertical"
             android:layout_marginLeft="10dp">
 

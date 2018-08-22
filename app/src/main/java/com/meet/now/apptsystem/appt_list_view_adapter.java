@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +80,21 @@ public class appt_list_view_adapter extends BaseAdapter {
         TextView Week_TextView = view.findViewById(R.id.Week_textView);
         Week_TextView.setText(week);
 
+        LinearLayout linearLayout = view.findViewById(R.id.today_appt);
+
+        if(linearLayout.getChildCount() == 0){
+            for(int j = 0; j < hashMap.get(Date).size(); j++){
+                String Appt_Name = hashMap.get(Date).get(j);
+
+                TextView textView = new TextView(context);
+                textView.setText("- "+Appt_Name);
+                textView.setTextSize(20);
+                textView.setTextColor(Color.WHITE);
+
+                linearLayout.addView(textView);
+            }
+
+        }
         return view;
     }
 

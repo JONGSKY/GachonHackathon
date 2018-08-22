@@ -19,46 +19,21 @@
             android:background="@drawable/ic_arrow_left" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginTop="10dp"
             android:text="약속 목록"
             android:textSize="40dp"
             android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        //년도
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:text="2018"
-            android:textSize="32dp"
-            android:textStyle="bold" />
-
-        //월
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:text="september"
-            android:textSize="32dp"
-            android:textStyle="bold"/>
 
         //appt_list_view layout으로 가는 버튼
         <ImageButton
             android:id="@+id/list_change_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
             android:background="@drawable/ic_list"/>
 
     </LinearLayout>
@@ -67,8 +42,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_height="wrap_content">
 
         //외부 캘린더로 변경 필요
         <CalendarView
@@ -83,7 +57,7 @@
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/ic_add"/>
 

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -52,6 +54,7 @@ public class appt_list_view_activity extends AppCompatActivity{
 
         mlistView = findViewById(R.id.appt_listView);
         mArrayList = new ArrayList<>();
+
         appt_name_linearlayout = findViewById(R.id.today_appt);
 
         GetData task = new GetData();
@@ -189,7 +192,7 @@ public class appt_list_view_activity extends AppCompatActivity{
                 mArrayList.add(hashMap);
 
             }
-
+            
             appt_list_view_adapter adapter = new appt_list_view_adapter(appt_list_view_activity.this, R.layout.appt_list_item, mArrayList);
 
             mlistView.setAdapter(adapter);
