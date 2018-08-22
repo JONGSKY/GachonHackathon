@@ -1,10 +1,6 @@
 package com.meet.now.apptsystem;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,8 +25,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import static android.support.v4.media.MediaBrowserServiceCompat.RESULT_OK;
-import it.sauronsoftware.ftp4j.FTPClient;
 
 public class UpdateProfilePhoto extends DialogFragment implements View.OnClickListener {
 

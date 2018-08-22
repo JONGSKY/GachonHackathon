@@ -1,16 +1,13 @@
 package com.meet.now.apptsystem;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
@@ -29,17 +26,12 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 
 import it.sauronsoftware.ftp4j.FTPClient;
-import it.sauronsoftware.ftp4j.FTPDataTransferListener;
-import okhttp3.internal.Util;
 
-import static android.support.v4.media.MediaBrowserServiceCompat.RESULT_OK;
 import static com.meet.now.apptsystem.UpdateProfilePhoto.REQUEST_PHOTO_ALBUM;
 import static com.meet.now.apptsystem.UpdateProfilePhoto.REQUEST_PICTURE;
 import static com.meet.now.apptsystem.UpdateProfilePhoto.file;
@@ -232,13 +224,25 @@ public class ProfileLoadActivity extends AppCompatActivity {
             }
 
             if (requestCode == REQUEST_PHOTO_ALBUM) {
-                Log.w("FILE", "호출");
-                Async_ftp_Prepare(new File(data.getData().getPath()));
+                Uri imgUri = data.getData();
+                String imagePath = getRealPathFromURI(imgUri);
+                file = new File(imagePath);
+                Log.w("URI 값 : ", imagePath);
+                Async_ftp_Prepare(file);
                 iv.setImageURI(data.getData());
-
             }
-
         }
+    }
+
+    private String getRealPathFromURI(Uri contentUri){
+        int column_index=0;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
+
+        return cursor.getString(column_index);
     }
 
 
@@ -307,7 +311,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     @Override
