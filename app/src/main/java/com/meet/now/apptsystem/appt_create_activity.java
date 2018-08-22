@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static java.security.AccessController.getContext;
@@ -50,6 +52,12 @@ public class appt_create_activity extends AppCompatActivity {
         appt_time = findViewById(R.id.appt_time_spinner);
         appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
 
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
+        SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
+        SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
+        Date = CurYearFormat.format(date) + "-" + CurMonthFormat.format(date) + "-" + CurDayFormat.format(date);
 
         appt_date.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -58,10 +66,11 @@ public class appt_create_activity extends AppCompatActivity {
             }
         });
 
+        Time = String.valueOf(appt_time.getHour()) + ":" + String.valueOf(appt_time.getMinute());
         appt_time.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
-                Time = String.valueOf(hour) + ":" + String.valueOf(minute) + ":00";
+                Time = String.valueOf(hour) + ":" + String.valueOf(minute);
             }
         });
 
@@ -77,6 +86,8 @@ public class appt_create_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Async_Prepare();
+                Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
+                startActivity(intent);
             }
         });
     }
@@ -100,7 +111,6 @@ public class appt_create_activity extends AppCompatActivity {
         Appt_Name_Set_String(appt_name);
         Appt_Age_Set_String(appt_age);
         Appt_Meeting_Type_Set_String(appt_meeting_type);
-        Log.w("1",Name+Date+Age+Time+Meeting);
         async_test.execute(Name, Date, Age, Time, Meeting);
     }
 
@@ -137,7 +147,7 @@ public class appt_create_activity extends AppCompatActivity {
                 String Time_String = params[3];
                 String Meeting_Type_String = params[4];
 
-                String data = URLEncoder.encode("Appt_Name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
+                String data = URLEncoder.encode("appt_name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
                 data += "&" + URLEncoder.encode("Date_String", "UTF-8") + "=" + URLEncoder.encode(Date_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Age_String", "UTF-8") + "=" + URLEncoder.encode(Age_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Time_String", "UTF-8") + "=" + URLEncoder.encode(Time_String, "UTF-8");

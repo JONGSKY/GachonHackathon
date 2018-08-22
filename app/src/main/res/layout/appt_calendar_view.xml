@@ -55,6 +55,7 @@
 
         //appt_list_view layout으로 가는 버튼
         <ImageButton
+            android:id="@+id/list_change_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="40dp"
