@@ -124,13 +124,6 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     }
 
 
-    //    @Override
-//    public void onDismiss(DialogInterface dialog) {
-//        super.onDismiss(dialog);
-//        getActivity().recreate();
-//    }
-
-
     // 파일 서버 경로를 Db에 저장
     public void Async_db_Prepare() {
         Async_test async_test = new Async_test();

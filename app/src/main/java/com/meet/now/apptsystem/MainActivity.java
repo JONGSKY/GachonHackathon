@@ -202,52 +202,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Context mContext;
-    final static int MY_PERMISSION_CAMERA = 1;
-    public boolean isCheck(String permission) {
-        switch (permission) {
-            case "camera":
-                // 권한없다면
-                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                        ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                    if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        new AlertDialog.Builder(mContext)
-                                .setTitle("알림")
-                                .setMessage("저장소 권한은 거부되었습니다.")
-                                // 권한설정
-                                .setNeutralButton("설정", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                        intent.setData(Uri.parse("package:com.meet.now.apptsystem"));
-                                        mContext.startActivity(intent);
-                                    }
-                                })
-                                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) mContext).finish();
-                                    }
-                                })
-                                .setCancelable(false)
-                                .create()
-                                .show();
-
-                        //권한 있다면 권한요구
-                    } else {
-                        ActivityCompat.requestPermissions((Activity) mContext, new String[]{Manifest.permission.CAMERA,
-                                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSION_CAMERA);
-                    }
-
-
-                } else {
-                    return true;
-                }
-                break;
-        }
-        return true;
-    }
 
     private void checkPermisson(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
