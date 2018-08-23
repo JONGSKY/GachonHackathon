@@ -35,6 +35,8 @@ import java.util.HashSet;
 // 약속목록 리스트보기 방식
 public class appt_list_view_activity extends AppCompatActivity{
 
+    public static AppCompatActivity apptListActivity;
+
     private static String TAG = "phptest_MainActivity";
 
     private static final String TAG_JSON = "respons";
@@ -50,7 +52,14 @@ public class appt_list_view_activity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_list_view);
+        // 리스트뷰 객체 생성
+        apptListActivity = appt_list_view_activity.this;
 
+        // 캘린더뷰 종료
+        appt_calendar_view_activity apptCalenterActivity = (appt_calendar_view_activity)appt_calendar_view_activity.apptCalenderActivity;
+        if(apptCalenterActivity != null) apptCalenterActivity.finish();
+
+        // 뒤로가기
         ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_list);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +73,11 @@ public class appt_list_view_activity extends AppCompatActivity{
         mArrayList = new ArrayList<>();
         appt_name_linearlayout = findViewById(R.id.today_appt);
 
+        // 약속 목록 데이터 받아오기
         GetData task = new GetData();
         task.execute("http://brad903.cafe24.com/AppointmentDetails_Data_Get.php");
 
+        // 캘린더보기로 바꾸기
         ImageButton imageButton = findViewById(R.id.calendar_change_button);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +88,7 @@ public class appt_list_view_activity extends AppCompatActivity{
         });
     }
 
+    // getData
     private class GetData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
         String errorString = null;
@@ -151,6 +163,7 @@ public class appt_list_view_activity extends AppCompatActivity{
 
     }
 
+    // 결과출력
     private void showResult(){
         try{
             JSONObject jsonObject = new JSONObject(mJsonString);

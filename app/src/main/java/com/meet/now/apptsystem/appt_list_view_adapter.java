@@ -79,6 +79,20 @@ public class appt_list_view_adapter extends BaseAdapter {
         TextView Week_TextView = view.findViewById(R.id.Week_textView);
         Week_TextView.setText(week);
 
+        LinearLayout linearLayout = view.findViewById(R.id.today_appt);
+
+        if(linearLayout.getChildCount() == 0){
+            for(int j = 0; j < hashMap.get(Date).size(); j++){
+                String Appt_Name = hashMap.get(Date).get(j);
+
+                TextView textView = new TextView(context);
+                textView.setText(Appt_Name);
+                textView.setTextSize(20);
+
+                linearLayout.addView(textView);
+            }
+
+        }
         return view;
     }
 
