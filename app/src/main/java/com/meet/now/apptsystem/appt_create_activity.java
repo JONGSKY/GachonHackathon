@@ -47,15 +47,6 @@ public class appt_create_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_create);
 
-        ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_create);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-
         appt_name = findViewById(R.id.appt_name_edit);
         appt_date = findViewById(R.id.calendarView);
         appt_age = findViewById(R.id.age_spinner);
