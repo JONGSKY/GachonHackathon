@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
@@ -25,10 +29,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
 
 import it.sauronsoftware.ftp4j.FTPClient;
 
@@ -44,7 +55,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
     String userAddress = null;
     String userID = null;
 
-    ImageView iv;
+    ImageView iv;  // user image
 
     Handler handler = new Handler();
 
@@ -79,18 +90,15 @@ public class ProfileLoadActivity extends AppCompatActivity {
                         nicknameText.setText(userNickname);
                         if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
 
-                        // 이미지 경로 찾아가 이미지 가져오기
-                        // 프로필 사진 등록하기
-
-                        ImageView ivImage = findViewById(R.id.iv_user);
-                        // 프로필 라운딩
-                        //ivImage.setBackground(new ShapeDrawable(new OvalShape()));
-                        //ivImage.setClipToOutline(true);
+                        // 파일 이름과 파일 필요.
+                        Async_db_Prepare("false");
 
 
                     } else {
                         // 값 가져오기 실패
                         Toast.makeText(getApplicationContext(), "다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                        file.delete();
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -101,7 +109,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         ProfileLoadRequest profileLoadRequest = new ProfileLoadRequest(userID, responseListener);
         RequestQueue queue = Volley.newRequestQueue(ProfileLoadActivity.this);
         queue.add(profileLoadRequest);
-        //////////////////////////////////////////////////////////////////////////////////
+
 
         // 프로필 이미지 변경
         ImageButton ibEditImg = (ImageButton) findViewById(R.id.ib_edit_userImg);
@@ -121,7 +129,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
             }
         });
-        ////////////////////////////////////////////////////////////////////////////////////
+
 
         // 뒤로가기 버튼
         ImageButton backBtn = (ImageButton) findViewById(R.id.ib_back);
@@ -131,7 +139,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        ///////////////////////////////////////////////////////////////////////////////////
+
 
         // 닉네임 수정
         ImageButton ibNickname = (ImageButton) findViewById(R.id.ib_edit_nickname);
@@ -167,7 +175,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             }
 
         });
-        ///////////////////////////////////////////////////////////////////////////////
+
 
         ImageButton mapBtn = (ImageButton) findViewById(R.id.ib_map);
         mapBtn.setOnClickListener(new View.OnClickListener() {
@@ -202,34 +210,72 @@ public class ProfileLoadActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    Bitmap loadPicture() {
+    // 리사이징
+    private Bitmap loadPictureWithResize(int resize) {
+        Bitmap resizeBitmap = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        BitmapFactory.decodeFile(file.getAbsolutePath(), options); // 1번
+
+        int width = options.outWidth;
+        int height = options.outHeight;
+        int samplesize = 1;
+
+        while (true) {//2번
+            if (width / 2 < resize || height / 2 < resize)
+                break;
+            width /= 2;
+            height /= 2;
+            samplesize *= 2;
+        }
+
+        options.inSampleSize = samplesize;
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options); //3번
+        resizeBitmap = bitmap;
+
+        return resizeBitmap;
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.w("resultCode", String.valueOf(resultCode));
-        Log.w("requestCode", String.valueOf(requestCode));
-        // 이미지 바로띄우기는 가능.
-        // 서버에 이미지를 업로드 -> db에 경로 뿌리기 -> dismiss()
-//         activity에서 db경로 가져오기 -> 서버의 이미지 가져오기 -> 이미지 뿌리기
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_PICTURE) {
-                // 이미지 바로 띄우기 -> 서버로 업로드하기로 변경
-                Async_ftp_Prepare(file); // 파일 서버에 저장.
-                iv.setImageBitmap(loadPicture());
+                // 카메라로 가져오기
+                Async_ftp_Prepare(file, "false"); // 파일 서버에 저장.
+                userPhoto = file.getName();
+                Log.d("REQUEST_PICTURE", String.valueOf(file));
+                Async_db_Prepare("true"); // 파일경로 db에 저장.
+                iv.setImageBitmap(loadPictureWithResize(200));
+                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                iv.setClipToOutline(true);
+                file.delete();
             }
 
             if (requestCode == REQUEST_PHOTO_ALBUM) {
-                Uri imgUri = data.getData();
-                String imagePath = getRealPathFromURI(imgUri);
+                // 앨범에서 가져오기
+                String imagePath = getRealPathFromURI(data.getData());
                 file = new File(imagePath);
-                Log.w("URI 값 : ", imagePath);
-                Async_ftp_Prepare(file);
-                iv.setImageURI(data.getData());
+                userPhoto = file.getName();
+                Log.d("REQUEST_PHOTO_ALBUM", String.valueOf(file));
+                Async_ftp_Prepare(file, "true"); // 파일 서버에 저장.
+//                Async_db_Prepare("true");
+//
+//                ExifInterface exif = null;
+//                try {
+//                    exif = new ExifInterface(imagePath);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+//                int exifDegree = exifOrientationToDegrees(exifOrientation);
+//
+//                Bitmap bitmap = loadPictureWithResize(200);
+//                iv.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
+//                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+//                iv.setClipToOutline(true);
+//                file.delete();
+
             }
         }
     }
@@ -247,9 +293,9 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
 
     // 파일을 서버에 저장
-    public void Async_ftp_Prepare(File file) {
+    public void Async_ftp_Prepare(File file, String isPhotoAlbum) {
         Async_ftp async_ftp = new Async_ftp();
-        async_ftp.execute();
+        async_ftp.execute(isPhotoAlbum);
     }
 
     /*********  work only for Dedicated IP ***********/
@@ -269,6 +315,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             //장치로부터 메모리 주소를 얻어낸 뒤, 파일명을 가지고 찾는다.
             //현재 이것은 내장메모리 루트폴더에 있는 것.
 
+            String isPhotoAlbum = params[0];
             // Upload file
             FTPClient client = new FTPClient();
 
@@ -312,10 +359,195 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     }
 
+    // 파일을 서버에서 가져오기
+    public void Async_ftp_Prepare_download() {
+        Async_ftp_download async_ftp_download = new Async_ftp_download();
+        async_ftp_download.execute();
+    }
+    // ftp 서버 연결 asyncTask
+    class Async_ftp_download extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.d("이미지 다운로드", "시작");
+
+            file = new File(Environment.getExternalStorageDirectory(), userPhoto); // sdcard에 새로운 파일 생성. 경로, 이름
+            // Download file
+            FTPClient client = new FTPClient();
+
+            try {
+                // 연결
+                client.connect(FTP_HOST, 21);//ftp 서버와 연결, 호스트와 포트를 기입
+                client.login(FTP_USER, FTP_PASS);//로그인을 위해 아이디와 패스워드 기입
+                client.setType(FTPClient.TYPE_BINARY);//2진으로 변경
+                client.changeDirectory(FTP_PATH);//서버에서 넣고 싶은 파일 경로를 기입
+                client.download(userPhoto, file);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("이미지경로",file.getAbsolutePath());
+
+                        iv.setImageBitmap(loadPictureWithResize(100));
+                        iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                        iv.setClipToOutline(true);
+                        file.delete();
+
+                        Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.d("이미지 다운로드", "오류!!");
+                file.delete();
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "실패", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                e.printStackTrace();
+
+            } finally {
+                try {
+                    client.disconnect(true); // 연결중지
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+    }
+
+    public String Async_db_Prepare(String isUpdate) {
+        Async_db async_test = new Async_db();
+        String result = null;
+        try {
+            result = async_test.execute(userID, userPhoto, isUpdate).get();
+        } catch (InterruptedException e) {
+            Log.d("이미지", "interruptedException");
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            Log.d("이미지", "ExcutionException");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    // DB에 사진경로 저장하는 asyncTask
+    class Async_db extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpURLConnection httpURLConnection = null;
+
+            try {
+                String userID = params[0];
+                String userPhoto = params[1];
+                String isUpdate = params[2];
+
+                String data = null;
+                String link = null;
+                if("true".equals(isUpdate)){
+                    Log.d("이미지", "성공");
+                    data = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
+                    data += "&" + URLEncoder.encode("userPhoto", "UTF-8") + "=" + URLEncoder.encode(userPhoto, "UTF-8");
+                    link = "http://brad903.cafe24.com/" + "UserPhotoUpdate.php";
+
+                }
+                if("false".equals(isUpdate)){
+                    Log.d("이미지", "검색");
+                    data = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
+                    link = "http://brad903.cafe24.com/" + "UserPhotoSelect.php";
+
+                }
+
+                URL url = new URL(link);
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);
+
+                //httpURLConnection.setConnectTimeout(30);
+
+                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader
+                        (httpURLConnection.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+
+                }
+
+                httpURLConnection.disconnect();
+                return sb.toString();
+            } catch (Exception e) {
+                Log.d("이미지 검색", "오류!!");
+
+                httpURLConnection.disconnect();
+                return new String("Exception Occure" + e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.d("이미지", result);
+            try {
+                JSONObject jsonResponse = new JSONObject(result);
+                String purpose = jsonResponse.getString("purpose");
+                if(purpose.equals("select")){
+                    userPhoto = jsonResponse.getString("userPhoto");
+                    Async_ftp_Prepare_download();
+                }else if(purpose.equals("update")){
+                    // 사진찍기, 앨범 사진 일경우는 따로 다운로드 필요없음
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private int exifOrientationToDegrees(int exifOrientation) {
+        Log.d("비트맵 이미지 수정", "회전각도 정하기");
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+    private Bitmap rotate(Bitmap src, float degree) {
+        Log.d("비트맵 이미지 수정", "이미지 회전");
+        // Matrix 객체 생성
+        Matrix matrix = new Matrix();
+        // 회전 각도 셋팅
+        matrix.postRotate(degree);
+        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+        return Bitmap.createBitmap(src, 0, 0, src.getWidth(),
+                src.getHeight(), matrix, true);
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
     }
+
+
 }

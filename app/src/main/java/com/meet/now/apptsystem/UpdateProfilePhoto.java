@@ -117,66 +117,6 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
     }
 
 
-    // 파일 서버 경로를 Db에 저장
-    public void Async_db_Prepare() {
-        Async_test async_test = new Async_test();
-        async_test.execute(userID, userPhoto);
-    }
-
-    // DB에 사진경로 저장하는 asyncTask
-    class Async_test extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            HttpURLConnection httpURLConnection = null;
-
-            try {
-                String userID = params[0];
-                String userPhoto = params[1];
-
-                String data = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
-                data += "&" + URLEncoder.encode("userPhoto", "UTF-8") + "=" + URLEncoder.encode(userPhoto, "UTF-8");
-
-                //String data2 = "tmsg="+testMsg+"&tmsg2="+testMsg2;
-
-                String link = "http://brad903.cafe24.com/" + "UserPhotoUpdate.php";
-
-                URL url = new URL(link);
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setDoOutput(true);
-
-                //httpURLConnection.setConnectTimeout(30);
-
-                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
-                wr.write(data);
-                wr.flush();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader
-                        (httpURLConnection.getInputStream(), "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-
-                }
-
-                httpURLConnection.disconnect();
-                return sb.toString();
-            } catch (Exception e) {
-
-                httpURLConnection.disconnect();
-                return new String("Exception Occure" + e.getMessage());
-            }
-        }
-    }
-
-
-
 }
 
 
