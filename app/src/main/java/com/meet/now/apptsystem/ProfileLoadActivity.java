@@ -9,7 +9,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -173,7 +172,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     }
 
-
     // 위치 보여주기
     void showLoc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -192,6 +190,19 @@ public class ProfileLoadActivity extends AppCompatActivity {
         ibBack.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+
+        ibLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileLoadActivity.this, UpdateProfileAddr.class);
+                intent.putExtra("UserID", userID);
+                intent.putExtra("UserAddress", userAddress);
+                ProfileLoadActivity.this.startActivity(intent);
+
+
+
             }
         });
 
