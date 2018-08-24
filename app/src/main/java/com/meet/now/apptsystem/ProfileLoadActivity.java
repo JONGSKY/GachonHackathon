@@ -34,6 +34,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -85,7 +88,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
                         TextView nicknameText = (TextView) findViewById(R.id.tv_user);
                         TextView statusmsgText = (TextView) findViewById(R.id.tv_introduce);
-                        ImageView photoView = findViewById(R.id.iv_user);
 
                         nicknameText.setText(userNickname);
                         if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
@@ -242,7 +244,9 @@ public class ProfileLoadActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_PICTURE) {
                 // 카메라로 가져오기
-                Async_ftp_Prepare(file, "false"); // 파일 서버에 저장.
+                String newPath = decodeFile(file.getAbsolutePath(), 600, 600);
+                file = new File(newPath);
+                Async_ftp_Prepare(file); // 파일 서버에 저장.
                 userPhoto = file.getName();
                 Log.d("REQUEST_PICTURE", String.valueOf(file));
                 Async_db_Prepare("true"); // 파일경로 db에 저장.
@@ -254,27 +258,32 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
             if (requestCode == REQUEST_PHOTO_ALBUM) {
                 // 앨범에서 가져오기
-                String imagePath = getRealPathFromURI(data.getData());
+//                String imagePath = getRealPathFromURI(data.getData());
+                String imagePath = decodeFile(getRealPathFromURI(data.getData()), 600, 600);
+
+                Log.d("기존",getRealPathFromURI(data.getData()));
+                Log.d("새로운",imagePath);
+
                 file = new File(imagePath);
                 userPhoto = file.getName();
                 Log.d("REQUEST_PHOTO_ALBUM", String.valueOf(file));
-                Async_ftp_Prepare(file, "true"); // 파일 서버에 저장.
-//                Async_db_Prepare("true");
-//
-//                ExifInterface exif = null;
-//                try {
-//                    exif = new ExifInterface(imagePath);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-//                int exifDegree = exifOrientationToDegrees(exifOrientation);
-//
-//                Bitmap bitmap = loadPictureWithResize(200);
-//                iv.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
-//                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
-//                iv.setClipToOutline(true);
-//                file.delete();
+                Async_ftp_Prepare(file); // 파일 서버에 저장.
+                Async_db_Prepare("true");
+
+                ExifInterface exif = null;
+                try {
+                    exif = new ExifInterface(imagePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int exifDegree = exifOrientationToDegrees(exifOrientation);
+
+                Bitmap bitmap = loadPictureWithResize(200);
+                iv.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
+                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                iv.setClipToOutline(true);
+                file.delete();
 
             }
         }
@@ -293,9 +302,9 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
 
     // 파일을 서버에 저장
-    public void Async_ftp_Prepare(File file, String isPhotoAlbum) {
+    public void Async_ftp_Prepare(File file) {
         Async_ftp async_ftp = new Async_ftp();
-        async_ftp.execute(isPhotoAlbum);
+        async_ftp.execute();
     }
 
     /*********  work only for Dedicated IP ***********/
@@ -307,15 +316,14 @@ public class ProfileLoadActivity extends AppCompatActivity {
     static final String FTP_PATH = "../userphoto/";
 
     // ftp 서버 연결 asyncTask
-    class Async_ftp extends AsyncTask<String, Void, String> {
+    class Async_ftp extends AsyncTask<Void, Void, String> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(Void... params) {
             /********** Pick file from memory *******/
             //장치로부터 메모리 주소를 얻어낸 뒤, 파일명을 가지고 찾는다.
             //현재 이것은 내장메모리 루트폴더에 있는 것.
 
-            String isPhotoAlbum = params[0];
             // Upload file
             FTPClient client = new FTPClient();
 
@@ -546,6 +554,61 @@ public class ProfileLoadActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+    }
+
+    private String decodeFile(String path, int DESIREDWIDTH, int DESIREDHEIGHT) {
+        String strMyImagePath = null;
+        Bitmap scaledBitmap = null;
+
+        try {
+            // Part 1: Decode image
+            Bitmap unscaledBitmap = ScalingUtilities.decodeFile(path, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilities.ScalingLogic.FIT);
+
+//            if (!(unscaledBitmap.getWidth() <= DESIREDWIDTH && unscaledBitmap.getHeight() <= DESIREDHEIGHT)) {
+                // Part 2: Scale image
+                scaledBitmap = ScalingUtilities.createScaledBitmap(unscaledBitmap, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilities.ScalingLogic.FIT);
+//            } else {
+//                unscaledBitmap.recycle();
+//                return path;
+//            }
+
+            // Store to tmp file
+            String extr = Environment.getExternalStorageDirectory().toString();
+            File mFolder = new File(extr + "/TMMFOLDER");
+            if (!mFolder.exists()) {
+                mFolder.mkdir();
+            }
+
+            Log.d("mFolder 경로", String.valueOf(mFolder));
+
+            String s = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".png";
+
+            File f = new File(mFolder.getAbsolutePath(), s);
+
+            strMyImagePath = f.getAbsolutePath();
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(f);
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fos);
+                fos.flush();
+                fos.close();
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+
+            scaledBitmap.recycle();
+        } catch (Throwable e) {
+        }
+
+        if (strMyImagePath == null) {
+            return path;
+        }
+        return strMyImagePath;
 
     }
 
