@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import static android.support.constraint.Constraints.TAG;
-
 public class appt_list_view_adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<HashMap<String, ArrayList<String>>> arrayList;

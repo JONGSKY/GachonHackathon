@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -194,8 +195,13 @@ public class appt_list_view_activity extends AppCompatActivity{
             }
             
             appt_list_view_adapter adapter = new appt_list_view_adapter(appt_list_view_activity.this, R.layout.appt_list_item, mArrayList);
-
             mlistView.setAdapter(adapter);
+            mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                }
+            });
 
         }
         catch(JSONException e){
