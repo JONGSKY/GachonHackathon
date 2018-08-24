@@ -9,6 +9,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -79,14 +80,12 @@ public class ProfileLoadActivity extends AppCompatActivity {
                         nicknameText.setText(userNickname);
                         if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
 
-
-                        if(userPhoto!=null) {
+                        if (userPhoto != null) {
                             Bitmap bitmap = bitmapImgDownload();
                             iv.setImageBitmap(bitmap);
                             iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
                             iv.setClipToOutline(true);
                         }
-
 
                     } else {
                         Toast.makeText(getApplicationContext(), "정보를 가져오지 못했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
@@ -147,6 +146,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
         });
 
+        // 위치변경
         ImageButton mapBtn = (ImageButton) findViewById(R.id.ib_map);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +173,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     }
 
+
     // 위치 보여주기
     void showLoc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -197,49 +198,59 @@ public class ProfileLoadActivity extends AppCompatActivity {
         dialog.show();
     }
 
+
+
     // 이미지 카메라, 앨범에서 가져오기
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
 
         Log.w("resultCode", String.valueOf(resultCode));
         Log.w("requestCode", String.valueOf(requestCode));
 
         if (resultCode == RESULT_OK) {
             Bitmap bitmap = null;
+            String imagePath = null;
             if (requestCode == REQUEST_PICTURE) {
+                imagePath = file.getAbsolutePath();
                 bitmap = loadPictureWithResize(200);
-            }
-            else if (requestCode == REQUEST_PHOTO_ALBUM) {
-                String imagePath = getRealPathFromURI(data.getData());
+                setImage(bitmap,imagePath);
+            } else if (requestCode == REQUEST_PHOTO_ALBUM) {
+                imagePath = getRealPathFromURI(data.getData());
                 file = new File(imagePath);
-
-                ExifInterface exif = null;
-                try {
-                    exif = new ExifInterface(imagePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                int exifDegree = exifOrientationToDegrees(exifOrientation);
-                bitmap = loadPictureWithResize(200);
-                bitmap = rotate(bitmap, exifDegree);
+                setImage(bitmap, imagePath);
             }
 
-            SaveBitmapToFileCache(bitmap); // 비트맵 변환하여 캐시, 서버, db 저장
-            ImageView iv = findViewById(R.id.iv_user);
-            iv.setImageBitmap(bitmap);//이미지 뷰에 비트맵 넣기
-            iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
-            iv.setClipToOutline(true);
         }
+
     }
 
-    public void Async_ftp_Prepare(String act) {
+    public void setImage(Bitmap bitmap, String imagePath){
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        int exifDegree = exifOrientationToDegrees(exifOrientation);
+        bitmap = loadPictureWithResize(200);
+        bitmap = rotate(bitmap, exifDegree);
+
+        ImageView iv = findViewById(R.id.iv_user);
+        iv.setImageBitmap(bitmap);//이미지 뷰에 비트맵 넣기
+        iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+        iv.setClipToOutline(true);
+
+        SaveBitmapToFileCache(bitmap); // 비트맵 변환하여 캐시, 서버, db 저장
+    }
+
+
+    private void Async_ftp_Prepare(String act) {
         Async_ftp async_ftp = new Async_ftp();
         async_ftp.execute(act, userPhoto);
     }
 
-    public void Async_db_Prepare() {
+    private void Async_db_Prepare() {
         Async_db async_test = new Async_db();
         async_test.execute(userID, userPhoto);
     }
@@ -305,9 +316,13 @@ public class ProfileLoadActivity extends AppCompatActivity {
                 src.getHeight(), matrix, true);
     }
 
+    // 기존 이미지 삭제 후 이미지 캐시, 서버, db 업로드
     private void SaveBitmapToFileCache(Bitmap bitmap) {
         file.delete();
-        String fileName = "tmp_"+String.valueOf(System.currentTimeMillis())+".JPEG";
+        File oldPhoto = new File("data/data/com.meet.now.apptsystem/cache/" + userPhoto);
+        oldPhoto.delete();
+
+        String fileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".JPEG";
         file = new File(getApplicationContext().getCacheDir(), fileName);
         OutputStream out = null;
 
@@ -329,15 +344,16 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
     }
 
-    Bitmap bitmapImgDownload(){
+    private Bitmap bitmapImgDownload() {
         Bitmap bitmap = null;
-        try{
+        try {
             String imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
             bitmap = BitmapFactory.decodeFile(imgPath);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             Async_ftp_Prepare("download");
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
             file.delete();
         }
 

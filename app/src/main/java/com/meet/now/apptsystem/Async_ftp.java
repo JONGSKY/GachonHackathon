@@ -33,6 +33,7 @@ class Async_ftp extends AsyncTask<String, Void, String> {
             client.changeDirectory(FTP_PATH);//서버에서 넣고 싶은 파일 경로를 기입
             if(act.equals("upload")){
                 client.upload(file);
+                client.deleteFile(userPhoto);
             }
             if(act.equals("download")){
                 file = new File(Environment.getExternalStorageDirectory(), userPhoto);
