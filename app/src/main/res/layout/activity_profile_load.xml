@@ -34,12 +34,14 @@
             <!--상태메세지-->
             <TextView
                 android:id="@+id/tv_introduce"
-                android:layout_width="200dp"
+                android:layout_width="313dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="100dp"
                 android:gravity="center"
                 android:text=""
-                android:textSize="30dp" />
+                android:textSize="25dp" />
 
             <!--자동차 유무 버튼-->
             <!--<RadioButton
