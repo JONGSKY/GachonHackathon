@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.content.Intent;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -34,7 +38,6 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,7 +76,17 @@ public class MainActivity extends AppCompatActivity {
         makeapptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 민용이 부분 나중에 덮어씀
+                Intent intent = new Intent(getApplicationContext(), appt_create_activity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button button = (Button)findViewById(R.id.viewapptButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
+                startActivity(intent);
             }
         });
 
@@ -247,5 +260,7 @@ public class MainActivity extends AppCompatActivity {
                 // 허용했다면
                 break;
         }
+
+
     }
 }

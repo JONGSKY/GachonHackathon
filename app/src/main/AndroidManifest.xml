@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.meet.now.apptsystem">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- 반드시 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 위치정보활용시 추가 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -9,7 +11,6 @@
     <!-- WIFI 상태활용시 추가 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
     <!--CAMERA와 SD카드 접근 권한-->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -32,6 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ApptDetailActivity"
             android:label="@string/title_activity_appt_detail" />
@@ -40,6 +42,12 @@
         <activity android:name=".FriendlistActivity" />
         <activity android:name=".DaumWebViewActivity" />
         <activity android:name=".ProfileLoadActivity" />
+        <activity android:name=".appt_create_activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".appt_list_view_activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".appt_calendar_view_activity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
