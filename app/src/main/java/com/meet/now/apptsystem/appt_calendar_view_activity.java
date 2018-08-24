@@ -13,6 +13,14 @@ public class appt_calendar_view_activity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_calendar_view);
 
+        ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_calender);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         ImageButton imageButton = findViewById(R.id.list_change_button);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -18,6 +18,7 @@
 
             <!--뒤로가기 버튼-->
             <ImageButton
+                android:id="@+id/btn_back_create"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
@@ -171,10 +172,12 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/createCancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="100dp"
                 android:background="@android:color/darker_gray"
+                android:onClick="createCancelBtnClicked"
                 android:text="취소"
                 android:textColor="@android:color/white"
                 android:textSize="20dp" />
@@ -185,6 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:background="@android:color/darker_gray"
+                android:onClick="createApptBtnClicked"
                 android:text="생성하기"
                 android:textColor="@android:color/white"
                 android:textSize="20dp" />

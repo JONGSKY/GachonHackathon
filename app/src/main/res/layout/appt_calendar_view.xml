@@ -13,6 +13,7 @@
 
         //뒤로가기 버튼
         <ImageButton
+            android:id="@+id/btn_back_calender"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
