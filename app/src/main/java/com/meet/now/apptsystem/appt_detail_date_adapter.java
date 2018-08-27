@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,10 +55,10 @@ public class appt_detail_date_adapter extends BaseAdapter {
         }
 
         JSONObject jsonObject = new JSONObject();
-        String Time = null;
-        String RelationGroup = null;
-        String MemberNumber = "3";
-        String ApptPlace = "Seoul";
+        String Time = "약속시간 : ";
+        String RelationGroup = "모임 유형 : ";
+        //String MemberNumber = "멤버 수 : ";
+        String ApptPlace = "약속 장소 : ";
 
         try {
             jsonObject = jsonArray.getJSONObject(i);
@@ -66,22 +67,23 @@ public class appt_detail_date_adapter extends BaseAdapter {
         }
 
         try {
-            Time = jsonObject.getString("ApptTime");
-            RelationGroup = jsonObject.getString("RelationGroup");
-            MemberNumber = jsonObject.getString("MemberNumber");
-            ApptPlace = jsonObject.getString("ApptPlace");
+            Time += jsonObject.getString("ApptTime");
+            RelationGroup += jsonObject.getString("RelationGroup");
+            ApptPlace += jsonObject.getString("ApptPlace");
+            //멤버 수에 대한 처리 해야함
+           // MemberNumber += jsonObject.getString("MemberNumber");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         TextView textView1 = (TextView)view.findViewById(R.id.appt_time_textview);
         TextView textView2 = (TextView)view.findViewById(R.id.appt_group_textview);
-        TextView textView3 = (TextView)view.findViewById(R.id.appt_member_number_textview);
+        //TextView textView3 = (TextView)view.findViewById(R.id.appt_member_number_textview);
         TextView textView4 = (TextView)view.findViewById(R.id.appt_place_textview);
 
         textView1.setText(Time);
         textView2.setText(RelationGroup);
-        textView3.setText(MemberNumber);
+        //textView3.setText(MemberNumber);
         textView4.setText(ApptPlace);
 
         return view;

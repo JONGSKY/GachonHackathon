@@ -46,11 +46,12 @@
         android:layout_height="wrap_content">
 
         //외부 캘린더로 변경 필요
-        <CalendarView
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/calendarView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:background="@android:color/white"/>
 
     </RelativeLayout>
 

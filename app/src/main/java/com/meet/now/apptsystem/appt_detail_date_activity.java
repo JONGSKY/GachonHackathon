@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,106 +32,71 @@ public class appt_detail_date_activity extends AppCompatActivity{
     private ListView appt_detail_listView;
     private String mJsonString;
 
-    private static final String TAG_JSON = "respons";
-    private static final String TAG_ApptTime = "ApptTime";
+    private static final String TAG_JSON = "response";
+    private static final String TAG_Appt_Name = "ApptName";
+    private static final String TAG_Date = "Date";
     private static final String TAG_RelationGroup = "RelationGroup";
+    private static final String TAG_ApptTime = "ApptTime";
+    private static final String TAG_ApptPlace = "ApptPlace";
+    private JSONArray jsonArray_intent;
+    private JSONArray TodayApptArray = new JSONArray();
+    private JSONObject jsonObject;
+    private String Date;
+    private String Date1;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_detail_date);
 
+        Intent intent = getIntent();
+        TextView textView = findViewById(R.id.Date);
         appt_detail_listView = findViewById(R.id.appt_detail_listview);
-        appt_detail_date_activity.GetData task = new appt_detail_date_activity.GetData();
-        task.execute("http://brad903.cafe24.com/AppointmentDetails_Data_Get.php");
-    }
 
-    private class GetData extends AsyncTask<String, Void, String> {
-        ProgressDialog progressDialog;
-        String errorString = null;
+        String Array = intent.getStringExtra("Appt_Info");
+        Date = intent.getStringExtra("Date");
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        String[] Date_Split = Date.split("-");
 
-            progressDialog = ProgressDialog.show(appt_detail_date_activity.this,
-                    "Please Wait", null, true, true);
+        textView.setText(Date_Split[1]+"월"+Date_Split[2]+"일");
+
+        try {
+            jsonObject = new JSONObject(Array);
+            jsonArray_intent = jsonObject.getJSONArray(TAG_JSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
 
-            progressDialog.dismiss();
-
-            mJsonString = result;
-            Log.w("result값 : ", result);
-            showResult();
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String serverURL = strings[0];
-
-            try{
-                URL url = new URL(serverURL);
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.connect();
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-
-                InputStream inputStream;
-                if(responseStatusCode == httpURLConnection.HTTP_OK){
-                    inputStream = httpURLConnection.getInputStream();
+        int count = 0;
+        for(int j=0; j < jsonArray_intent.length(); j++){
+            try {
+                JSONObject item = jsonArray_intent.getJSONObject(j);
+                Log.w(Date, item.getString(TAG_Date));
+                if(Date.equals(item.getString(TAG_Date))){
+                    count++;
+                    TodayApptArray.put(item);
                 }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-
-                bufferedReader.close();
-
-                return sb.toString().trim();
-
-            }
-            catch (IOException e){
-                errorString = e.toString();
-
-                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 
+        //어댑터 설정
+        appt_detail_date_adapter adapter = new appt_detail_date_adapter(appt_detail_date_activity.this, R.layout.appt_item, TodayApptArray);
+        appt_detail_listView.setAdapter(adapter);
+        appt_detail_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
     }
 
-    private void showResult(){
-        try{
-            JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
-
-            appt_detail_date_adapter adapter = new appt_detail_date_adapter(appt_detail_date_activity.this, R.layout.appt_list_item, jsonArray);
-            appt_detail_listView.setAdapter(adapter);
-            appt_detail_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                }
-            });
-
+    public String method(String str) {
+        if (str.length() > 0 && str.charAt(str.length()-1)=='x') {
+            str = str.substring(0, str.length()-1);
         }
-        catch(JSONException e){
-        }
+        return str;
     }
 }

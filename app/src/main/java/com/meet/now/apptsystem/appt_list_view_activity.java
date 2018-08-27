@@ -17,6 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import com.meet.now.apptsystem.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,31 +28,41 @@ import java.io.IOException;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class appt_list_view_activity extends AppCompatActivity{
 
     private static String TAG = "phptest_MainActivity";
 
-    private static final String TAG_JSON = "respons";
+    private static final String TAG_JSON = "response";
     private static final String TAG_Appt_Name = "ApptName";
     private static final String TAG_Date = "Date";
+
 
     ArrayList<HashMap<String, ArrayList<String>>> mArrayList;
     ListView mlistView;
     String mJsonString;
     LinearLayout appt_name_linearlayout;
+    private String userID;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_list_view);
+
+        Intent intent = getIntent();
+        userID = intent.getStringExtra("userID");
 
         mlistView = findViewById(R.id.appt_listView);
         mArrayList = new ArrayList<>();
@@ -59,13 +70,14 @@ public class appt_list_view_activity extends AppCompatActivity{
         appt_name_linearlayout = findViewById(R.id.today_appt);
 
         GetData task = new GetData();
-        task.execute("http://brad903.cafe24.com/AppointmentDetails_Data_Get.php");
+        task.execute("http://brad903.cafe24.com/ApptListView.php");
 
         ImageButton imageButton = findViewById(R.id.calendar_change_button);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), appt_calendar_view_activity.class);
+                intent.putExtra("userID", userID);
                 startActivity(intent);
             }
         });
@@ -104,35 +116,35 @@ public class appt_list_view_activity extends AppCompatActivity{
             try{
                 URL url = new URL(serverURL);
 
-                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.connect();
+                Map<String,Object> params = new LinkedHashMap<>();
+                params.put("userID", userID);
 
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode == httpURLConnection.HTTP_OK){
-                    inputStream = httpURLConnection.getInputStream();
+                StringBuilder postData = new StringBuilder();
+                for (Map.Entry<String,Object> param : params.entrySet()) {
+                    if (postData.length() != 0) postData.append('&');
+                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                    postData.append('=');
+                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
                 }
-                else{
-                    inputStream = httpURLConnection.getErrorStream();
-                }
+                byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+                conn.setDoOutput(true);
+                conn.getOutputStream().write(postDataBytes);
+
+                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
                 StringBuilder sb = new StringBuilder();
-                String line;
+                for (int c; (c = in.read()) >= 0;)
+                    sb.append((char)c);
+                String response = sb.toString().trim();
 
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-
-                bufferedReader.close();
-
-                return sb.toString().trim();
+                in.close();
+                conn.disconnect();
+                return response;
 
             }
             catch (IOException e){
@@ -142,27 +154,27 @@ public class appt_list_view_activity extends AppCompatActivity{
                 return null;
             }
         }
-
     }
 
     private void showResult(){
         try{
             JSONObject jsonObject = new JSONObject(mJsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+            final JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
 
             ArrayList<String> Date_String = new ArrayList<>();
             ArrayList<String> Appt_Name_String = new ArrayList<>();
 
+            int k;
             //Date 리스트 생성
-            for(int i=0; i< jsonArray.length(); i++) {
-                JSONObject item = jsonArray.getJSONObject(i);
+            for(k=0; k< jsonArray.length(); k++) {
+                JSONObject item = jsonArray.getJSONObject(k);
                 String Date = item.getString(TAG_Date);
                 Date_String.add(Date);
             }
 
             //중복 item제거
             HashSet<String> set = new HashSet<>(Date_String);
-            ArrayList<String> Date_String_Array = new ArrayList<>(set);
+            final ArrayList<String> Date_String_Array = new ArrayList<>(set);
 
             //중복 제거한 List 오름차순으로 정렬
             Ascending ascending = new Ascending();
@@ -193,16 +205,19 @@ public class appt_list_view_activity extends AppCompatActivity{
                 mArrayList.add(hashMap);
 
             }
-            
+
             appt_list_view_adapter adapter = new appt_list_view_adapter(appt_list_view_activity.this, R.layout.appt_list_item, mArrayList);
             mlistView.setAdapter(adapter);
             mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                    Intent intent = new Intent(appt_list_view_activity.this, appt_detail_date_activity.class);
+                    intent.putExtra("Appt_Info", mJsonString);
+                    intent.putExtra("Date", Date_String_Array.get(i));
+                    startActivity(intent);
                 }
             });
-
         }
         catch(JSONException e){
             Log.d(TAG, "showResult : ", e);

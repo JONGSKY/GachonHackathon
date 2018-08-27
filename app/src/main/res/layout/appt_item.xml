@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="200dp">
 
         <TextView
             android:id="@+id/appt_name_textview"
@@ -14,14 +14,14 @@
             android:layout_height="wrap_content"
             android:text="약속이름"
             android:textSize="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"/>
 
         <RelativeLayout
             android:layout_width="300dp"
             android:layout_height="120dp"
             android:layout_below="@id/appt_name_textview"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:background="@drawable/appt_list_item_edge">
