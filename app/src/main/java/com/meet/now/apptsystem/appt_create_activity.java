@@ -38,6 +38,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static java.security.AccessController.getContext;
@@ -57,6 +58,7 @@ public class appt_create_activity extends AppCompatActivity {
     private static final String TAGApptNo = "ApptNo";
     private String mJsonString;
     private String USERID;
+    private ArrayList<JSONObject> FriendID = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +83,16 @@ public class appt_create_activity extends AppCompatActivity {
         Intent intent = getIntent();
         USERID = intent.getStringExtra("UserID");
 
-        Log.w("userID Test", USERID);
+        try {
+            JSONObject TempFriendID = new JSONObject();
+            TempFriendID.put("FriendID", "추가할 친구 아이디");
+            FriendID.add(TempFriendID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.w("asd", String.valueOf(FriendID));
+
+
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -139,7 +150,10 @@ public class appt_create_activity extends AppCompatActivity {
         Appt_Name_Set_String(appt_name);
         Appt_Age_Set_String(appt_age);
         Appt_Meeting_Type_Set_String(appt_meeting_type);
-        async_test.execute(Name, Date, Age, Time, Meeting, USERID);
+
+        String FriendIdString = String.valueOf(FriendID);
+        Log.w("asd", FriendIdString);
+        async_test.execute(Name, Date, Age, Time, Meeting, USERID, FriendIdString);
     }
 
     class AppointmentDetailPut extends AsyncTask<String, Void, String> {
@@ -175,6 +189,12 @@ public class appt_create_activity extends AppCompatActivity {
                 String Time_String = params[3];
                 String Meeting_Type_String = params[4];
                 String USERID = params[5];
+
+
+                String FriendID = params[6];
+
+                JSONObject Temp = new JSONObject(FriendID);
+                JSONArray FriendJson = new JSONArray(Temp);
 
                 String data = URLEncoder.encode("appt_name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
                 data += "&" + URLEncoder.encode("Date_String", "UTF-8") + "=" + URLEncoder.encode(Date_String, "UTF-8");
