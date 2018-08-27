@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -75,7 +77,20 @@ public class ApptAddfriendActivity extends AppCompatActivity{
         friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ApptAddfriendActivity.this, friendList.get(position).getUserID(), Toast.LENGTH_LONG).show();
+                Intent apptFriendIntent = new Intent();
+                String nickname = null;
+                if(friendList.get(position).getFriendNickname().equals("null")){
+                    Log.w("if", "호출");
+                    nickname = friendList.get(position).getUserNickname();
+                }else{
+                    Log.w("else", "호출");
+                    nickname = friendList.get(position).getFriendNickname();
+                }
+                apptFriendIntent.putExtra("nickname", nickname);
+                apptFriendIntent.putExtra("friendID", friendList.get(position).getUserID());
+                apptFriendIntent.putExtra("userPhoto", friendList.get(position).getUserPhoto());
+                setResult(1, apptFriendIntent);
+                finish();
             }
         });
 

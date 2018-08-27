@@ -97,10 +97,26 @@ public class appt_create_activity extends AppCompatActivity {
         apptAddfriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ApptAddfriendActivity.class);
-                startActivity(intent);
+                Intent ApptfriendIntent = new Intent(getApplicationContext(), ApptAddfriendActivity.class);
+                startActivityForResult(ApptfriendIntent, 0);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(resultCode){
+            case 1:
+                Log.w("userPhoto", data.getStringExtra("userPhoto"));
+                Log.w("nickname", data.getStringExtra("nickname"));
+                Log.w("freindID", data.getStringExtra("friendID"));
+                
+                break;
+            default:
+        }
+
     }
 
     public void Appt_Name_Set_String(EditText editText){
