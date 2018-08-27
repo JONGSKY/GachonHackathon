@@ -2,6 +2,9 @@ package com.meet.now.apptsystem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +56,11 @@ public class FriendListAdapter extends BaseAdapter {
         if (photo.equals("null")) {
             userPhoto.setImageResource(R.drawable.ic_person_outline_black_24dp);
         } else {
-            // 사용자 이미지 추가
+            ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
+            Bitmap bitmap = profileLoadActivity.bitmapImgDownload(photo);
+            userPhoto.setImageBitmap(bitmap);
+            userPhoto.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+            userPhoto.setClipToOutline(true);
         }
 
         if(fnickname.equals("null")){

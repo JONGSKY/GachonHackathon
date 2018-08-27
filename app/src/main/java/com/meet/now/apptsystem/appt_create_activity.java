@@ -36,6 +36,7 @@ public class appt_create_activity extends AppCompatActivity {
     private Spinner appt_age;
     private TimePicker appt_time;
     private Spinner appt_meeting_type;
+    private ImageButton apptAddfriend;
     private String Name;
     private String Date;
     private String Age;
@@ -52,6 +53,7 @@ public class appt_create_activity extends AppCompatActivity {
         appt_age = findViewById(R.id.age_spinner);
         appt_time = findViewById(R.id.appt_time_spinner);
         appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
+        apptAddfriend = findViewById(R.id.apptAddfriend);
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -88,6 +90,14 @@ public class appt_create_activity extends AppCompatActivity {
             public void onClick(View view) {
                 Async_Prepare();
                 Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
+                startActivity(intent);
+            }
+        });
+
+        apptAddfriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ApptAddfriendActivity.class);
                 startActivity(intent);
             }
         });

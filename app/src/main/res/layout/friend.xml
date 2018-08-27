@@ -8,6 +8,7 @@
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
     android:background="#ffffff"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -24,8 +25,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:text="삭제"
-            android:background="@drawable/image_profile"
-            android:textColor="#fff"
+            android:src="@drawable/ic_profile_picture"
             android:layout_marginRight="5dp">
         </ImageView>
 
@@ -42,6 +42,7 @@
         <Button
             android:id="@+id/statusMsg"
             android:layout_width="220dp"
+            android:clickable="false"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"

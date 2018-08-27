@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,9 +28,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -47,9 +51,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     private UpdateProfilePhoto updateProfilePhoto;
     public static File file = null;
-
-    Handler handler = new Handler();
-
+    public static File cacheDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,16 @@ public class ProfileLoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_load);
         Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
+
+        cacheDir = getApplicationContext().getCacheDir();
+
+        JSONArray todayApptArray = new JSONArray();
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("이름", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // DB 프로필 정보 로드
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -81,13 +93,11 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
 
                         if(userPhoto!=null) {
-                            Bitmap bitmap = bitmapImgDownload();
+                            Bitmap bitmap = bitmapImgDownload(userPhoto);
                             iv.setImageBitmap(bitmap);
                             iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
                             iv.setClipToOutline(true);
                         }
-
-
                     } else {
                         Toast.makeText(getApplicationContext(), "정보를 가져오지 못했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
                     }
@@ -237,7 +247,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
     }
 
-    public void Async_ftp_Prepare(String act) {
+    public void Async_ftp_Prepare(String act, String userPhoto) {
         Async_ftp async_ftp = new Async_ftp();
         async_ftp.execute(act, userPhoto);
     }
@@ -318,7 +328,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
-            Async_ftp_Prepare("upload"); // 파일 서버에 저장.
+            Async_ftp_Prepare("upload", userPhoto); // 파일 서버에 저장.
             userPhoto = file.getName();
             Async_db_Prepare(); // 파일 db 저장
         } catch (Exception e) {
@@ -332,17 +342,24 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
     }
 
-    Bitmap bitmapImgDownload(){
+    Bitmap bitmapImgDownload(String userPhoto){
         Bitmap bitmap = null;
-        try{
-            String imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
-            bitmap = BitmapFactory.decodeFile(imgPath);
+        String imgPath=null;
 
-        }catch(Exception e){
-            Async_ftp_Prepare("download");
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        Log.w("bitmapImgDownload try", "호출");
+        imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
+        File file = new File(imgPath);
+
+        if(file.exists() == false) {
+            Log.w("bitmapImgDownload catch", "호출");
+            Async_ftp_Prepare("download", userPhoto);
+            imgPath = file.getAbsolutePath();
+            Log.w("imagePath", imgPath);
             file.delete();
         }
+
+        Log.w("bitmapFactory", "호출");
+        bitmap = BitmapFactory.decodeFile(imgPath);
 
         return bitmap;
     }
