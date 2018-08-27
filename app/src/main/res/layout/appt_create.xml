@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#75d0f1">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,185 +13,171 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!--뒤로가기 버튼-->
-            <ImageButton
-                android:id="@+id/btn_back_create"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:layout_weight="0.8"
-                android:background="@drawable/ic_arrow_left" />
+            android:layout_height="70dp"
+            android:background="@color/colorPrimary">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="9"
-                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="약속 생성"
-                android:textSize="40dp"
+                android:textColor="#ffffff"
+                android:textSize="25dp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@android:color/white">
-
-            <!--약속이름 입력칸-->
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/appt_name_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="약속 이름"
-                android:textSize="20dp" />
-        </android.support.design.widget.TextInputLayout>
-
-        <TextView
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray"
-            android:padding="8dp"
-            android:text="참여자 목록"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <!--recylerview로 변경필요-->
-        <ScrollView
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:background="@android:color/white"
-            android:layout_gravity="center_horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-        </ScrollView>
-
-        <TextView
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/darker_gray"
-            android:padding="8dp"
-            android:text="친구 목록"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <!--친구 목록-->
-        <ScrollView
-            android:layout_width="320dp"
-            android:layout_height="150dp"
-            android:background="@android:color/white"
-            android:layout_gravity="center_horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-        </ScrollView>
-
-        <CalendarView
-            android:id="@+id/calendarView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:text="연령대"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
 
-        <!--연령대 설정 스피너-->
-        <Spinner
-            android:id="@+id/age_spinner"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/white"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/appt_create_item">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:text="시간대 설정"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/appt_name_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="약속 이름"
+                    android:textSize="20dp" />
 
-        <!--시간 선택 Spinner-->
-        <TimePicker
-            android:id="@+id/appt_time_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:timePickerMode="spinner"/>
+            </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:text="모임 유형"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:background="@color/colorGray"
+                android:orientation="horizontal">
 
-        <!--모임 유형 선택Spinner-->
-        <Spinner
-            android:id="@+id/appt_meeting_type_spinner"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="9dp"
+                    android:text="참여자 목록"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <ImageButton
+                    android:id="@+id/apptAddfriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@color/colorGray"
+                    android:tint="#000000"
+                    app:srcCompat="@drawable/ic_add_circle_outline_black_24dp" />
+
+            </RelativeLayout>
+
+            <GridView
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/appt_create_item"></GridView>
+
+            <CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/darker_gray"
+                android:padding="7dp"
+                android:text="연령대"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/age_spinner"
+                android:layout_width="320dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/appt_create_item" />
+
+            <TextView
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/darker_gray"
+                android:padding="7dp"
+                android:text="시간대"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+            <TimePicker
+                android:id="@+id/appt_time_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:timePickerMode="spinner" />
+
+            <TextView
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorGray"
+                android:padding="7dp"
+                android:text="모임유형"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/appt_meeting_type_spinner"
+                android:layout_width="320dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/appt_create_item" />
+
+
+        </LinearLayout>
 
         <!--취소, 생성하기 버튼을 담고 있는 레이아웃-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="25dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/createCancelBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_cancel"
                 android:onClick="createCancelBtnClicked"
                 android:text="취소"
                 android:textColor="@android:color/white"
-                android:textSize="20dp" />
+                android:textSize="18dp" />
 
             <Button
                 android:id="@+id/appt_create_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_search"
                 android:onClick="createApptBtnClicked"
                 android:text="생성하기"
                 android:textColor="@android:color/white"
-                android:textSize="20dp" />
+                android:textSize="18dp" />
 
         </LinearLayout>
 

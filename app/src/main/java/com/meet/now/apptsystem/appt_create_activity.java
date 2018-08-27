@@ -50,6 +50,7 @@ public class appt_create_activity extends AppCompatActivity {
     private Spinner appt_age;
     private TimePicker appt_time;
     private Spinner appt_meeting_type;
+    private ImageButton apptAddfriend;
     private String Name;
     private String Date;
     private String Age;
@@ -65,20 +66,12 @@ public class appt_create_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_create);
 
-        ImageButton backButton = (ImageButton) findViewById(R.id.btn_back_create);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-
         appt_name = findViewById(R.id.appt_name_edit);
         appt_date = findViewById(R.id.calendarView);
         appt_age = findViewById(R.id.age_spinner);
         appt_time = findViewById(R.id.appt_time_spinner);
         appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
+        apptAddfriend = findViewById(R.id.apptAddfriend);
 
         Intent intent = getIntent();
         USERID = intent.getStringExtra("UserID");
@@ -131,6 +124,30 @@ public class appt_create_activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        apptAddfriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ApptfriendIntent = new Intent(getApplicationContext(), ApptAddfriendActivity.class);
+                startActivityForResult(ApptfriendIntent, 0);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(resultCode){
+            case 1:
+                Log.w("userPhoto", data.getStringExtra("userPhoto"));
+                Log.w("nickname", data.getStringExtra("nickname"));
+                Log.w("freindID", data.getStringExtra("friendID"));
+                
+                break;
+            default:
+        }
+
     }
 
     public void Appt_Name_Set_String(EditText editText) {
