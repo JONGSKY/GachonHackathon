@@ -80,10 +80,8 @@ public class ApptAddfriendActivity extends AppCompatActivity{
                 Intent apptFriendIntent = new Intent();
                 String nickname = null;
                 if(friendList.get(position).getFriendNickname().equals("null")){
-                    Log.w("if", "호출");
                     nickname = friendList.get(position).getUserNickname();
                 }else{
-                    Log.w("else", "호출");
                     nickname = friendList.get(position).getFriendNickname();
                 }
                 apptFriendIntent.putExtra("nickname", nickname);

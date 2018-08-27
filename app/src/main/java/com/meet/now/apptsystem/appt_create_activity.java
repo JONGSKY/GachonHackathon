@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static java.security.AccessController.getContext;
@@ -42,6 +44,8 @@ public class appt_create_activity extends AppCompatActivity {
     private String Age;
     private String Time;
     private String Meeting;
+
+    ArrayList<String> friendList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +105,8 @@ public class appt_create_activity extends AppCompatActivity {
                 startActivityForResult(ApptfriendIntent, 0);
             }
         });
+
+        friendList = new ArrayList<String>();
     }
 
     @Override
@@ -112,7 +118,21 @@ public class appt_create_activity extends AppCompatActivity {
                 Log.w("userPhoto", data.getStringExtra("userPhoto"));
                 Log.w("nickname", data.getStringExtra("nickname"));
                 Log.w("freindID", data.getStringExtra("friendID"));
-                
+
+                boolean flag = false;
+                for(int i=0; i<friendList.size(); i++){
+                    if(friendList.get(i).equals(data.getStringExtra("friendID"))){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag) break;
+
+                friendList.add(data.getStringExtra("friendID"));
+                Log.w("friendList", String.valueOf(friendList));
+                ApptFriend n_layout = new ApptFriend(getApplicationContext(), data.getStringExtra("nickname"));
+                LinearLayout con = (LinearLayout)findViewById(R.id.con);
+                con.addView(n_layout);
                 break;
             default:
         }
