@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -7,11 +8,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.media.ExifInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,9 +32,13 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import it.sauronsoftware.ftp4j.FTPClient;
 
 import static com.meet.now.apptsystem.UpdateProfilePhoto.REQUEST_PHOTO_ALBUM;
 import static com.meet.now.apptsystem.UpdateProfilePhoto.REQUEST_PICTURE;
@@ -47,9 +53,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     private UpdateProfilePhoto updateProfilePhoto;
     public static File file = null;
-
-    Handler handler = new Handler();
-
+    ImageView iv = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,18 +76,15 @@ public class ProfileLoadActivity extends AppCompatActivity {
                         userPhoto = jsonResponse.getString("userPhoto");
                         userAddress = jsonResponse.getString("userAddress");
 
-                        TextView nicknameText = (TextView) findViewById(R.id.tv_user);
-                        TextView statusmsgText = (TextView) findViewById(R.id.tv_introduce);
-                        ImageView iv = findViewById(R.id.iv_user);
+                        TextView nicknameText = findViewById(R.id.tv_user);
+                        TextView statusmsgText = findViewById(R.id.tv_introduce);
+                        iv = findViewById(R.id.iv_user);
 
                         nicknameText.setText(userNickname);
                         if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
 
                         if (userPhoto != null) {
-                            Bitmap bitmap = bitmapImgDownload();
-                            iv.setImageBitmap(bitmap);
-                            iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
-                            iv.setClipToOutline(true);
+                            bitmapImgDownload();
                         }
 
                     } else {
@@ -101,7 +102,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
         // 이벤트
         // 뒤로가기 버튼
-        ImageButton backBtn = (ImageButton) findViewById(R.id.ib_back);
+        ImageButton backBtn = findViewById(R.id.ib_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +111,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 닉네임 수정
-        ImageButton ibNickname = (ImageButton) findViewById(R.id.ib_edit_nickname);
+        ImageButton ibNickname = findViewById(R.id.ib_edit_nickname);
         ibNickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +128,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 상태메시지 수정
-        ImageButton ibEditStatus = (ImageButton) findViewById(R.id.ib_edit_status);
+        ImageButton ibEditStatus = findViewById(R.id.ib_edit_status);
         ibEditStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,8 +146,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
         });
 
-        // 위치변경
-        ImageButton mapBtn = (ImageButton) findViewById(R.id.ib_map);
+        // 위치보기
+        ImageButton mapBtn = findViewById(R.id.ib_map);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +156,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 이미지 변경
-        ImageButton ibEditImg = (ImageButton) findViewById(R.id.ib_edit_userImg);
+        ImageButton ibEditImg = findViewById(R.id.ib_edit_userImg);
         ibEditImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,14 +177,13 @@ public class ProfileLoadActivity extends AppCompatActivity {
     void showLoc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_profile_loc, null);
+        View view = (View)inflater.inflate(R.layout.dialog_profile_loc, null);
         builder.setView(view);
 
         TextView tvLoc = (TextView) view.findViewById(R.id.tv_loc);
-        ImageButton ibLoc = (ImageButton) view.findViewById(R.id.ib_loc);
         ImageButton ibBack = (ImageButton) view.findViewById(R.id.ib_back_loc);
 
-        if (!userAddress.equals(null)) tvLoc.setText(userAddress);
+        if (!userAddress.equals("null")) tvLoc.setText(userAddress);
 
         final AlertDialog dialog = builder.create();
 
@@ -193,22 +193,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
             }
         });
 
-        ibLoc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileLoadActivity.this, UpdateProfileAddr.class);
-                intent.putExtra("UserID", userID);
-                intent.putExtra("UserAddress", userAddress);
-                ProfileLoadActivity.this.startActivity(intent);
-
-
-
-            }
-        });
-
         dialog.show();
     }
-
 
 
     // 이미지 카메라, 앨범에서 가져오기
@@ -219,32 +205,33 @@ public class ProfileLoadActivity extends AppCompatActivity {
         Log.w("requestCode", String.valueOf(requestCode));
 
         if (resultCode == RESULT_OK) {
-            Bitmap bitmap = null;
-            String imagePath = null;
+            String imagePath;
             if (requestCode == REQUEST_PICTURE) {
                 imagePath = file.getAbsolutePath();
-                bitmap = loadPictureWithResize(200);
-                setImage(bitmap,imagePath);
+                if (file.exists()) setImage(imagePath);
             } else if (requestCode == REQUEST_PHOTO_ALBUM) {
                 imagePath = getRealPathFromURI(data.getData());
-                file = new File(imagePath);
-                setImage(bitmap, imagePath);
+                if (imagePath != null) file = new File(imagePath);
+                if (file.exists()) setImage(imagePath);
             }
 
         }
 
     }
 
-    public void setImage(Bitmap bitmap, String imagePath){
+    public void setImage(String imagePath) {
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(imagePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (exif == null) {
+            return;
+        }
         int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         int exifDegree = exifOrientationToDegrees(exifOrientation);
-        bitmap = loadPictureWithResize(200);
+        Bitmap bitmap = loadPictureWithResize();
         bitmap = rotate(bitmap, exifDegree);
 
         ImageView iv = findViewById(R.id.iv_user);
@@ -257,7 +244,51 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
 
     private void Async_ftp_Prepare(String act) {
-        Async_ftp async_ftp = new Async_ftp();
+        Async_ftp async_ftp = new Async_ftp(new AsyncTaskListener() {
+            @Override
+            public void taskCompleted(File result) {
+                Log.e("taskCompleted", result.getAbsolutePath());
+                if (result.exists()) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    ImageView iv = findViewById(R.id.iv_user);
+                    iv.setImageBitmap(bitmap);
+                    iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                    iv.setClipToOutline(true);
+
+                    // 캐시 업데이트
+                    byte[] buf = new byte[1024];
+                    FileInputStream in = null;
+                    FileOutputStream out = null;
+                    File oldFile = file;
+                    File newFile = new File(getApplicationContext().getCacheDir(), userPhoto);
+
+                    try {
+                        if (!oldFile.renameTo(newFile)) {
+                            buf = new byte[1024];
+                            in = new FileInputStream(oldFile);
+                            out = new FileOutputStream(newFile);
+                            int read = 0;
+                            while ((read = in.read(buf, 0, buf.length)) != -1) {
+                                out.write(buf, 0, read);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if(in != null) in.close();
+                            if(out != null) out.close();
+                            if(oldFile.exists()) oldFile.delete();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+
+            }
+        });
         async_ftp.execute(act, userPhoto);
     }
 
@@ -271,16 +302,20 @@ public class ProfileLoadActivity extends AppCompatActivity {
         int column_index = 0;
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor == null) return null;
         if (cursor.moveToFirst()) {
             column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         }
 
-        return cursor.getString(column_index);
+        String ret = cursor.getString(column_index);
+        cursor.close();
+        return ret;
     }
 
     // 이미지 리사이징
-    private Bitmap loadPictureWithResize(int resize) {
-        Bitmap resizeBitmap = null;
+    private Bitmap loadPictureWithResize() {
+        int resize = 200;
+        Bitmap resizeBitmap;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         BitmapFactory.decodeFile(file.getAbsolutePath(), options); // 1번
@@ -298,7 +333,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
 
         options.inSampleSize = samplesize;
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options); //3번
+        Bitmap bitmap;
+        bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options); //3번
         resizeBitmap = bitmap;
 
         return resizeBitmap;
@@ -329,10 +365,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     // 기존 이미지 삭제 후 이미지 캐시, 서버, db 업로드
     private void SaveBitmapToFileCache(Bitmap bitmap) {
-        file.delete();
-        File oldPhoto = new File("data/data/com.meet.now.apptsystem/cache/" + userPhoto);
-        oldPhoto.delete();
-
         String fileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".JPEG";
         file = new File(getApplicationContext().getCacheDir(), fileName);
         OutputStream out = null;
@@ -348,28 +380,92 @@ public class ProfileLoadActivity extends AppCompatActivity {
             e.printStackTrace();
         } finally {
             try {
-                out.close();
+                if (out != null) out.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private Bitmap bitmapImgDownload() {
-        Bitmap bitmap = null;
-        try {
-            String imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
+    private void bitmapImgDownload() {
+        Bitmap bitmap;
+        File file = new File(getApplicationContext().getCacheDir(), userPhoto);
+        Log.e("cacheFile", file.getAbsolutePath());
+        if (file.exists()) { // 캐시 다운로드
+            String imgPath = getApplicationContext().getCacheDir() + "/" + userPhoto;
+            Log.e("cacheFile down", imgPath);
             bitmap = BitmapFactory.decodeFile(imgPath);
+            ImageView iv = findViewById(R.id.iv_user);
+            iv.setImageBitmap(bitmap);
+            iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+            iv.setClipToOutline(true);
 
-        } catch (Exception e) {
+
+        } else {
             Async_ftp_Prepare("download");
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-            file.delete();
         }
-
-        return bitmap;
     }
 
+    public interface AsyncTaskListener {
+        void taskCompleted(File result);
+    }
 
+    // ftp 서버 연결 asyncTask
+    @SuppressLint("StaticFieldLeak")
+    class Async_ftp extends AsyncTask<String, File, File> {
+
+        AsyncTaskListener listener;
+
+        Async_ftp(AsyncTaskListener listener) {
+            this.listener = listener;
+        }
+
+        protected void onPostExecute(File result) {
+            if (this.listener != null) {
+                if (result != null) this.listener.taskCompleted(result);
+            }
+        }
+
+        static final String FTP_HOST = "brad903.cafe24.com";
+        static final String FTP_USER = "brad903";
+        static final String FTP_PASS = "Nvo78/fd4h";
+        static final String FTP_PATH = "../userphoto/";
+
+        @Override
+        protected File doInBackground(String... params) {
+
+            String act = params[0];
+            String userPhoto = params[1];
+            // Upload file
+            FTPClient client = new FTPClient();
+
+            try {
+                // 연결
+                client.connect(FTP_HOST, 21);//ftp 서버와 연결, 호스트와 포트를 기입
+                client.login(FTP_USER, FTP_PASS);//로그인을 위해 아이디와 패스워드 기입
+                client.setType(FTPClient.TYPE_BINARY);//2진으로 변경
+                client.changeDirectory(FTP_PATH);//서버에서 넣고 싶은 파일 경로를 기입
+                if (act.equals("upload")) {
+                    client.upload(file);
+                    client.deleteFile(userPhoto);
+                }
+                if (act.equals("download")) {
+                    file = new File(Environment.getExternalStorageDirectory(), userPhoto);
+                    client.download(userPhoto, file);
+                    return file;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            } finally {
+                try {
+                    client.disconnect(true);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
 }
