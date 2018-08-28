@@ -7,7 +7,7 @@
     tools:context=".ApptDetailActivity"
     android:id="@+id/fabFrame"
     tools:ignore="InvalidId">
-
+    
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="wrap_content"
