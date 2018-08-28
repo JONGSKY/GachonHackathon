@@ -1,62 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#75d0f1">
+    android:background="#FFFFFF">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        //뒤로가기 버튼
-        <ImageButton
-            android:id="@+id/btn_back_list"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_arrow_left" />
+        android:layout_height="70dp"
+        android:background="@color/colorPrimary">
 
         <TextView
+            android:id="@+id/Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="40dp"
-            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:text="약속 목록"
-            android:textSize="40dp"
+            android:textColor="#ffffff"
+            android:textSize="25dp"
             android:textStyle="bold" />
 
-        //appt_list_view layout으로 가는 버튼
         <ImageButton
             android:id="@+id/calendar_change_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="50dp"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
             android:background="@drawable/ic_date_range"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/appt_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="3">
+        android:dividerHeight="5dp"
+        android:divider="#ffffff"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
 
     </ListView>
-
-
-    //appt_create layout으로 가는 버튼
-    <ImageButton
-        android:id="@+id/appt_create_layout_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/ic_add"/>
 
 </LinearLayout>
 

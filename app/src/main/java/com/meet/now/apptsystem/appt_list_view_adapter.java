@@ -85,9 +85,9 @@ public class appt_list_view_adapter extends BaseAdapter {
                 String Appt_Name = hashMap.get(Date).get(j);
 
                 TextView textView = new TextView(context);
-                textView.setText("- "+Appt_Name);
+                textView.setText(" - "+Appt_Name);
                 textView.setTextSize(20);
-                textView.setTextColor(Color.WHITE);
+                textView.setTextColor(Color.BLACK);
 
                 linearLayout.addView(textView);
             }

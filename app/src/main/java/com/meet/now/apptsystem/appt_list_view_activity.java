@@ -79,6 +79,7 @@ public class appt_list_view_activity extends AppCompatActivity{
                 Intent intent = new Intent(getApplicationContext(), appt_calendar_view_activity.class);
                 intent.putExtra("userID", userID);
                 startActivity(intent);
+                finish();
             }
         });
     }

@@ -54,6 +54,7 @@ public class appt_create_activity extends AppCompatActivity {
     private TimePicker appt_time;
     private Spinner appt_meeting_type;
     private ImageButton apptAddfriend;
+    private Button createCancelBtn;
     private String Name;
     private String Date;
     private String Age;
@@ -78,6 +79,7 @@ public class appt_create_activity extends AppCompatActivity {
         appt_time = findViewById(R.id.appt_time_spinner);
         appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
         apptAddfriend = findViewById(R.id.apptAddfriend);
+        createCancelBtn = findViewById(R.id.createCancelBtn);
 
         Intent intent = getIntent();
         USERID = intent.getStringExtra("UserID");
@@ -115,8 +117,10 @@ public class appt_create_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AppointmentDetailPutPrepare();
-                Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("userID", USERID);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -129,6 +133,16 @@ public class appt_create_activity extends AppCompatActivity {
         });
 
         friendList = new ArrayList<String>();
+
+        createCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cancelIntent = new Intent(getApplicationContext(), MainActivity.class);
+                cancelIntent.putExtra("userID", USERID);
+                startActivity(cancelIntent);
+                finish();
+            }
+        });
     }
 
     @Override
