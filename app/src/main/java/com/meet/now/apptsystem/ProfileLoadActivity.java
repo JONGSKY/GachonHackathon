@@ -213,10 +213,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-        Log.w("resultCode", String.valueOf(resultCode));
-        Log.w("requestCode", String.valueOf(requestCode));
-
         if (resultCode == RESULT_OK) {
             Bitmap bitmap = null;
 
@@ -360,7 +356,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
 //            file.delete();
         }
 
-        Log.w("bitmapFactory", "호출");
         bitmap = BitmapFactory.decodeFile(imgPath);
 
         return bitmap;

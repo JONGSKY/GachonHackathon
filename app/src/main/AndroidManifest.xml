@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.meet.now.apptsystem">
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- 반드시 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -48,6 +47,8 @@
         <activity android:name=".appt_list_view_activity"
             android:screenOrientation="portrait"/>
         <activity android:name=".appt_calendar_view_activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".appt_detail_date_activity"
             android:screenOrientation="portrait"/>
     </application>
 

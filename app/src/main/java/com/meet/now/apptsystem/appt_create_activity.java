@@ -1,11 +1,11 @@
 package com.meet.now.apptsystem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,16 +18,31 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import com.meet.now.apptsystem.MainActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.security.AccessController.getContext;
 
@@ -44,6 +59,11 @@ public class appt_create_activity extends AppCompatActivity {
     private String Age;
     private String Time;
     private String Meeting;
+    private static final String TAGApptNo = "ApptNo";
+    private String mJsonString;
+    private String USERID;
+    private JSONArray jsonArray = new JSONArray();
+    private JSONObject jsonMain = new JSONObject();
 
     ArrayList<String> friendList;
 
@@ -59,6 +79,9 @@ public class appt_create_activity extends AppCompatActivity {
         appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
         apptAddfriend = findViewById(R.id.apptAddfriend);
 
+        Intent intent = getIntent();
+        USERID = intent.getStringExtra("UserID");
+
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
@@ -69,7 +92,7 @@ public class appt_create_activity extends AppCompatActivity {
         appt_date.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
-                Date = String.valueOf(year) + "-" + String.valueOf(month+1) + "-" + String.valueOf(day);
+                Date = String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(day);
             }
         });
 
@@ -87,12 +110,11 @@ public class appt_create_activity extends AppCompatActivity {
         ArrayAdapter appt_meeting_type_adapter = ArrayAdapter.createFromResource(this, R.array.meeting_type_array, android.R.layout.simple_spinner_item);
         appt_meeting_type.setAdapter(appt_meeting_type_adapter);
 
-
-        Button button = (Button)findViewById(R.id.appt_create_button);
+        Button button = (Button) findViewById(R.id.appt_create_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Async_Prepare();
+                AppointmentDetailPutPrepare();
                 Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
                 startActivity(intent);
             }
@@ -132,35 +154,43 @@ public class appt_create_activity extends AppCompatActivity {
                 ApptFriend n_layout = new ApptFriend(getApplicationContext(), nickname, userPhoto);
                 LinearLayout con = (LinearLayout)findViewById(R.id.con);
                 con.addView(n_layout);
+
+                try {
+                    JSONObject TempFriendID = new JSONObject();
+                    TempFriendID.put("FriendID", data.getStringExtra("friendID"));
+                    jsonArray.put(TempFriendID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 break;
             default:
         }
 
     }
 
-    public void Appt_Name_Set_String(EditText editText){
+    public void Appt_Name_Set_String(EditText editText) {
         Name = editText.getText().toString();
     }
 
-
-    public void Appt_Age_Set_String(Spinner spinner){
+    public void Appt_Age_Set_String(Spinner spinner) {
         Age = spinner.getSelectedItem().toString();
     }
 
-
-    public void Appt_Meeting_Type_Set_String(Spinner spinner){
+    public void Appt_Meeting_Type_Set_String(Spinner spinner) {
         Meeting = spinner.getSelectedItem().toString();
     }
 
-    public void Async_Prepare() {
-        Async_test async_test = new Async_test();
+    public void AppointmentDetailPutPrepare() {
+        AppointmentDetailPut async_test = new AppointmentDetailPut();
         Appt_Name_Set_String(appt_name);
         Appt_Age_Set_String(appt_age);
         Appt_Meeting_Type_Set_String(appt_meeting_type);
-        async_test.execute(Name, Date, Age, Time, Meeting);
+
+        async_test.execute(Name, Date, Age, Time, Meeting, USERID);
     }
 
-    class Async_test extends AsyncTask<String, Void, String> {
+    class AppointmentDetailPut extends AsyncTask<String, Void, String> {
 
         int cnt = 0;
 
@@ -173,8 +203,8 @@ public class appt_create_activity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             //textView.setText("I got Msg from Server! : " + s);// TextView에 보여줍니다.
-            Toast.makeText(getApplicationContext(),"i got a msg from server :"+s,Toast.LENGTH_LONG).show();
-    }
+            Toast.makeText(getApplicationContext(), "i got a msg from server :" + s, Toast.LENGTH_LONG).show();
+        }
 
         @Override
         protected void onProgressUpdate(Void... values) {
@@ -192,16 +222,21 @@ public class appt_create_activity extends AppCompatActivity {
                 String Age_String = params[2];
                 String Time_String = params[3];
                 String Meeting_Type_String = params[4];
+                String USERID = params[5];
+
+                jsonMain.put("FriendList", jsonArray);
+                Log.w("minyong", String.valueOf(jsonMain));
 
                 String data = URLEncoder.encode("appt_name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
                 data += "&" + URLEncoder.encode("Date_String", "UTF-8") + "=" + URLEncoder.encode(Date_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Age_String", "UTF-8") + "=" + URLEncoder.encode(Age_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Time_String", "UTF-8") + "=" + URLEncoder.encode(Time_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Meeting_Type_String", "UTF-8") + "=" + URLEncoder.encode(Meeting_Type_String, "UTF-8");
+                data += "&" + URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(USERID, "UTF-8");
 
                 //String data2 = "tmsg="+testMsg+"&tmsg2="+testMsg2;
 
-                String link = "http://brad903.cafe24.com/" + "Appt_Create.php";// 요청하는 url 설정 ex)192.168.0.1/httpOnlineTest.php
+                String link = "http://brad903.cafe24.com/AppointmentDetailsCreate.php";// 요청하는 url 설정 ex)192.168.0.1/httpOnlineTest.php
 
                 URL url = new URL(link);
 
@@ -213,6 +248,9 @@ public class appt_create_activity extends AppCompatActivity {
 
                 OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로 뿅 쏴줄라구용
                 wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
+                wr.write(jsonMain.toString());
+                Log.w("asd", String.valueOf(jsonMain));
+                Log.w("userID", USERID);
                 wr.flush();//flush!
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader
@@ -234,4 +272,5 @@ public class appt_create_activity extends AppCompatActivity {
             }//try catch end
         }//doInbackground end
     }//asynctask  end
+
 }

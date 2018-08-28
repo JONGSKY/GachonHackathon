@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class appt_list_view_adapter extends BaseAdapter {
     private LayoutInflater inflater;
@@ -86,8 +85,9 @@ public class appt_list_view_adapter extends BaseAdapter {
                 String Appt_Name = hashMap.get(Date).get(j);
 
                 TextView textView = new TextView(context);
-                textView.setText(Appt_Name);
+                textView.setText("- "+Appt_Name);
                 textView.setTextSize(20);
+                textView.setTextColor(Color.WHITE);
 
                 linearLayout.addView(textView);
             }
