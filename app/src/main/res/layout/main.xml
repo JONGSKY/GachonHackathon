@@ -6,7 +6,6 @@
     android:id="@+id/mainLayout">
 <com.nhn.android.maps.NMapView 
     android:layout_width="fill_parent" 
-    android:layout_height="fill_parent" 
-    android:text="@string/hello"
+    android:layout_height="fill_parent"
     android:id="@+id/mapView"/>
 </LinearLayout>

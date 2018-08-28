@@ -31,6 +31,6 @@ dependencies {
     api 'com.naver.maps.open:naver-map-api:2.1.2@aar'
     implementation 'com.squareup.okhttp3:okhttp:3.8.0'
     implementation files('libs/ftp4j-1.7.2.jar')
-    compile 'com.prolificinteractive:material-calendarview:1.4.3'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
 
 }
