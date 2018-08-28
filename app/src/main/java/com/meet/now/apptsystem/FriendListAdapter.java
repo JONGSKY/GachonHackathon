@@ -56,10 +56,11 @@ public class FriendListAdapter extends BaseAdapter {
         if (photo.equals("null")) {
             userPhoto.setImageResource(R.drawable.ic_person_outline_black_24dp);
         } else {
+            ////////////////// 프로필 로드 이슈 해결 필요 //////////////////
             ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
             Bitmap bitmap = profileLoadActivity.bitmapImgDownload(photo);
             userPhoto.setImageBitmap(bitmap);
-            userPhoto.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+            userPhoto.setBackground(new ShapeDrawable(new OvalShape()));
             userPhoto.setClipToOutline(true);
         }
 

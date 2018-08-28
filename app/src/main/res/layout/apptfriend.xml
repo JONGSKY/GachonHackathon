@@ -11,15 +11,14 @@
         android:gravity="center">
 
         <ImageView
+            android:id="@+id/apptUserPhoto"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_profile_picture"
-            android:tint="@color/colorPrimary"
-            android:id="@+id/b1" />
+            android:src="@drawable/ic_profile_picture"/>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/apptFriendID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

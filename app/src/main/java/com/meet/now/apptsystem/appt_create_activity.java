@@ -115,22 +115,21 @@ public class appt_create_activity extends AppCompatActivity {
 
         switch(resultCode){
             case 1:
-                Log.w("userPhoto", data.getStringExtra("userPhoto"));
-                Log.w("nickname", data.getStringExtra("nickname"));
-                Log.w("freindID", data.getStringExtra("friendID"));
+                String nickname = data.getStringExtra("nickname");
+                String friendID = data.getStringExtra("friendID");
+                String userPhoto = data.getStringExtra("userPhoto");
 
                 boolean flag = false;
                 for(int i=0; i<friendList.size(); i++){
-                    if(friendList.get(i).equals(data.getStringExtra("friendID"))){
+                    if(friendList.get(i).equals(friendID)){
                         flag = true;
                         break;
                     }
                 }
                 if(flag) break;
 
-                friendList.add(data.getStringExtra("friendID"));
-                Log.w("friendList", String.valueOf(friendList));
-                ApptFriend n_layout = new ApptFriend(getApplicationContext(), data.getStringExtra("nickname"));
+                friendList.add(friendID);
+                ApptFriend n_layout = new ApptFriend(getApplicationContext(), nickname, userPhoto);
                 LinearLayout con = (LinearLayout)findViewById(R.id.con);
                 con.addView(n_layout);
                 break;
