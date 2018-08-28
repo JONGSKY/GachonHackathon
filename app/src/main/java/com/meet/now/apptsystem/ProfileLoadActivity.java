@@ -11,6 +11,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
@@ -212,10 +213,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-        Log.w("resultCode", String.valueOf(resultCode));
-        Log.w("requestCode", String.valueOf(requestCode));
-
         if (resultCode == RESULT_OK) {
             Bitmap bitmap = null;
 
@@ -346,19 +343,19 @@ public class ProfileLoadActivity extends AppCompatActivity {
         Bitmap bitmap = null;
         String imgPath=null;
 
-        Log.w("bitmapImgDownload try", "호출");
         imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
         File file = new File(imgPath);
 
         if(file.exists() == false) {
-            Log.w("bitmapImgDownload catch", "호출");
-            Async_ftp_Prepare("download", userPhoto);
+            file = new File(Environment.getExternalStorageDirectory(), userPhoto);
+            if(file.exists() == false){
+                Async_ftp_Prepare("download", userPhoto);
+                file = new File(Environment.getExternalStorageDirectory(), userPhoto);
+            }
             imgPath = file.getAbsolutePath();
-            Log.w("imagePath", imgPath);
-            file.delete();
+//            file.delete();
         }
 
-        Log.w("bitmapFactory", "호출");
         bitmap = BitmapFactory.decodeFile(imgPath);
 
         return bitmap;

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -63,6 +64,8 @@ public class appt_create_activity extends AppCompatActivity {
     private String USERID;
     private JSONArray jsonArray = new JSONArray();
     private JSONObject jsonMain = new JSONObject();
+
+    ArrayList<String> friendList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,6 +127,8 @@ public class appt_create_activity extends AppCompatActivity {
                 startActivityForResult(ApptfriendIntent, 0);
             }
         });
+
+        friendList = new ArrayList<String>();
     }
 
     @Override
@@ -132,9 +137,24 @@ public class appt_create_activity extends AppCompatActivity {
 
         switch(resultCode){
             case 1:
-                Log.w("userPhoto", data.getStringExtra("userPhoto"));
-                Log.w("nickname", data.getStringExtra("nickname"));
-                Log.w("freindID", data.getStringExtra("friendID"));
+                String nickname = data.getStringExtra("nickname");
+                String friendID = data.getStringExtra("friendID");
+                String userPhoto = data.getStringExtra("userPhoto");
+
+                boolean flag = false;
+                for(int i=0; i<friendList.size(); i++){
+                    if(friendList.get(i).equals(friendID)){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag) break;
+
+                friendList.add(friendID);
+                ApptFriend n_layout = new ApptFriend(getApplicationContext(), nickname, userPhoto);
+                LinearLayout con = (LinearLayout)findViewById(R.id.con);
+                con.addView(n_layout);
+
                 try {
                     JSONObject TempFriendID = new JSONObject();
                     TempFriendID.put("FriendID", data.getStringExtra("friendID"));
