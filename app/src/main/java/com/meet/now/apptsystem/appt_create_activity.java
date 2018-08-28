@@ -40,6 +40,8 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.security.AccessController.getContext;
 
@@ -59,7 +61,8 @@ public class appt_create_activity extends AppCompatActivity {
     private static final String TAGApptNo = "ApptNo";
     private String mJsonString;
     private String USERID;
-    private ArrayList<JSONObject> FriendID = new ArrayList<>();
+    private JSONArray jsonArray = new JSONArray();
+    private JSONObject jsonMain = new JSONObject();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,17 +78,6 @@ public class appt_create_activity extends AppCompatActivity {
 
         Intent intent = getIntent();
         USERID = intent.getStringExtra("UserID");
-
-        try {
-            JSONObject TempFriendID = new JSONObject();
-            TempFriendID.put("FriendID", "추가할 친구 아이디");
-            FriendID.add(TempFriendID);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.w("asd", String.valueOf(FriendID));
-
-
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -143,7 +135,14 @@ public class appt_create_activity extends AppCompatActivity {
                 Log.w("userPhoto", data.getStringExtra("userPhoto"));
                 Log.w("nickname", data.getStringExtra("nickname"));
                 Log.w("freindID", data.getStringExtra("friendID"));
-                
+                try {
+                    JSONObject TempFriendID = new JSONObject();
+                    TempFriendID.put("FriendID", data.getStringExtra("friendID"));
+                    jsonArray.put(TempFriendID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 break;
             default:
         }
@@ -168,9 +167,7 @@ public class appt_create_activity extends AppCompatActivity {
         Appt_Age_Set_String(appt_age);
         Appt_Meeting_Type_Set_String(appt_meeting_type);
 
-        String FriendIdString = String.valueOf(FriendID);
-        Log.w("asd", FriendIdString);
-        async_test.execute(Name, Date, Age, Time, Meeting, USERID, FriendIdString);
+        async_test.execute(Name, Date, Age, Time, Meeting, USERID);
     }
 
     class AppointmentDetailPut extends AsyncTask<String, Void, String> {
@@ -207,11 +204,8 @@ public class appt_create_activity extends AppCompatActivity {
                 String Meeting_Type_String = params[4];
                 String USERID = params[5];
 
-
-                String FriendID = params[6];
-
-                JSONObject Temp = new JSONObject(FriendID);
-                JSONArray FriendJson = new JSONArray(Temp);
+                jsonMain.put("FriendList", jsonArray);
+                Log.w("minyong", String.valueOf(jsonMain));
 
                 String data = URLEncoder.encode("appt_name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
                 data += "&" + URLEncoder.encode("Date_String", "UTF-8") + "=" + URLEncoder.encode(Date_String, "UTF-8");
@@ -234,6 +228,9 @@ public class appt_create_activity extends AppCompatActivity {
 
                 OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로 뿅 쏴줄라구용
                 wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
+                wr.write(jsonMain.toString());
+                Log.w("asd", String.valueOf(jsonMain));
+                Log.w("userID", USERID);
                 wr.flush();//flush!
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader
