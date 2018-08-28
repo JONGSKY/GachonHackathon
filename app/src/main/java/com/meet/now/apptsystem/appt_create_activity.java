@@ -233,6 +233,8 @@ public class appt_create_activity extends AppCompatActivity {
                 data += "&" + URLEncoder.encode("Time_String", "UTF-8") + "=" + URLEncoder.encode(Time_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Meeting_Type_String", "UTF-8") + "=" + URLEncoder.encode(Meeting_Type_String, "UTF-8");
                 data += "&" + URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(USERID, "UTF-8");
+                data += "&" + URLEncoder.encode("FriendList", "UTF-8") + "=" + URLEncoder.encode(jsonMain.toString(), "UTF-8");
+                Log.w("minyong", String.valueOf(jsonMain));
 
                 //String data2 = "tmsg="+testMsg+"&tmsg2="+testMsg2;
 
@@ -248,9 +250,6 @@ public class appt_create_activity extends AppCompatActivity {
 
                 OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로 뿅 쏴줄라구용
                 wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
-                wr.write(jsonMain.toString());
-                Log.w("asd", String.valueOf(jsonMain));
-                Log.w("userID", USERID);
                 wr.flush();//flush!
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader
