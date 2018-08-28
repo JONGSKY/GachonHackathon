@@ -23,12 +23,18 @@ public class ApptFriend extends LinearLayout{
         ImageView apptUserPhoto = view.findViewById(R.id.apptUserPhoto);
         apptFriendID.setText(nickname);
 
-        ////////////////// 프로필 로드 이슈 해결 필요 //////////////////
-        ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
-        Bitmap bitmap = profileLoadActivity.bitmapImgDownload(userPhoto);
-        apptUserPhoto.setImageBitmap(bitmap);
-        apptUserPhoto.setBackground(new ShapeDrawable(new OvalShape()));
-        apptUserPhoto.setClipToOutline(true);
+        if(userPhoto.equals("null")){
+            apptUserPhoto.setImageResource(R.drawable.ic_profile_picture);
+            apptUserPhoto.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+        }else {
+            ////////////////// 프로필 로드 이슈 해결 필요 //////////////////
+            ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
+            Bitmap bitmap = profileLoadActivity.bitmapImgDownload(userPhoto);
+            apptUserPhoto.setImageBitmap(bitmap);
+            apptUserPhoto.setBackground(new ShapeDrawable(new OvalShape()));
+            apptUserPhoto.setClipToOutline(true);
+        }
+
 
     }
 }

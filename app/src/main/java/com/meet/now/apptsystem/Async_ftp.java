@@ -2,9 +2,7 @@ package com.meet.now.apptsystem;
 
 import android.os.AsyncTask;
 import android.os.Environment;
-
 import java.io.File;
-
 import it.sauronsoftware.ftp4j.FTPClient;
 
 import static com.meet.now.apptsystem.ProfileLoadActivity.file;
