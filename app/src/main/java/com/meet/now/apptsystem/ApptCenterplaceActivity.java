@@ -1,8 +1,10 @@
 package com.meet.now.apptsystem;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapView;
@@ -16,6 +18,11 @@ public class ApptCenterplaceActivity extends NMapActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appt_centerplace);
+        Intent intent = getIntent();
+        String userID = intent.getStringExtra("userID");
+        String apptNo =  intent.getStringExtra("apptNo");
+        Toast.makeText(getApplicationContext(), userID+" "+apptNo, Toast.LENGTH_SHORT).show();
+
 
         init();
     }
