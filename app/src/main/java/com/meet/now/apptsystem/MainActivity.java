@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_STORAGE = 1111;
 
     public static String userID;
+    public static String userAddress;
 
     private ListView ddayListView;
     private DdayAdapter adapter;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
+        userAddress = intent.getStringExtra("userAddress");
 
         ddayListView = (ListView)findViewById(R.id.ddayListView);
         ddayList = new ArrayList<Dday>();

@@ -1,10 +1,7 @@
 package com.meet.now.apptsystem;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,16 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class appt_detail_date_activity extends AppCompatActivity{
     private ListView appt_detail_listView;
@@ -88,8 +75,14 @@ public class appt_detail_date_activity extends AppCompatActivity{
         appt_detail_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent test = new Intent(getApplicationContext(), ApptCenterplaceActivity.class);
-                startActivity(test);
+                Intent mapIntent = new Intent(getApplicationContext(), ApptCenterplaceActivity.class);
+                try {
+                    JSONObject selectedAppt = TodayApptArray.getJSONObject(i);
+                    mapIntent.putExtra("apptNo", selectedAppt.getString("ApptNo"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(mapIntent);
             }
         });
     }

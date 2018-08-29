@@ -54,6 +54,9 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passwordText = (EditText) findViewById(R.id.passwordText);
         final EditText nicknameText = (EditText) findViewById(R.id.nicknameText);
         addressText = (EditText) findViewById(R.id.addressText);
+        // 주소 수정하지 못하도록 제한
+        addressText.setFocusable(false);
+        addressText.setClickable(false);
 
         final RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
         int genderGroupID = genderGroup.getCheckedRadioButtonId();

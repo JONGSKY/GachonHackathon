@@ -232,4 +232,13 @@ public class appt_list_view_activity extends AppCompatActivity{
             return s.compareTo(t1);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent backIntent = new Intent(getApplicationContext(), MainActivity.class);
+        backIntent.putExtra("userID", userID);
+        startActivity(backIntent);
+    }
 }

@@ -93,6 +93,7 @@
                 android:background="@color/colorPrimary"
                 android:drawableLeft="@drawable/ic_person_black_24dp"
                 android:drawableStart="@drawable/ic_person_black_24dp"
+                android:drawableTint="#ffffff"
                 android:hint="별칭"
                 android:padding="10dp"
                 android:textColor="#ffffff"

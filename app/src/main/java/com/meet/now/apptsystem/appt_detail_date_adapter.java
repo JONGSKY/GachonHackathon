@@ -57,8 +57,11 @@ public class appt_detail_date_adapter extends BaseAdapter {
         JSONObject jsonObject = new JSONObject();
         String Time = "약속시간 : ";
         String RelationGroup = "모임 유형 : ";
-        //String MemberNumber = "멤버 수 : ";
+        String MemberNo = "멤버 수 : ";
         String ApptPlace = "약속 장소 : ";
+
+        String ApptnameValue = null;
+        String ApptplaceValue = null;
 
         try {
             jsonObject = jsonArray.getJSONObject(i);
@@ -67,25 +70,33 @@ public class appt_detail_date_adapter extends BaseAdapter {
         }
 
         try {
+            ApptnameValue = jsonObject.getString("ApptName");
+            ApptplaceValue = jsonObject.getString("ApptPlace");
+            if(ApptplaceValue.equals("null")){
+                ApptplaceValue = "미정";
+            }
+
             Time += jsonObject.getString("ApptTime");
             RelationGroup += jsonObject.getString("RelationGroup");
-            ApptPlace += jsonObject.getString("ApptPlace");
-            //멤버 수에 대한 처리 해야함
-           // MemberNumber += jsonObject.getString("MemberNumber");
+            ApptPlace += ApptplaceValue;
+            MemberNo += jsonObject.getString("MemberNo");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         TextView textView1 = (TextView)view.findViewById(R.id.appt_time_textview);
         TextView textView2 = (TextView)view.findViewById(R.id.appt_group_textview);
-        //TextView textView3 = (TextView)view.findViewById(R.id.appt_member_number_textview);
+        TextView textView3 = (TextView)view.findViewById(R.id.appt_member_number_textview);
         TextView textView4 = (TextView)view.findViewById(R.id.appt_place_textview);
+        TextView textView5 = (TextView)view.findViewById(R.id.appt_name_textview);
 
         textView1.setText(Time);
         textView2.setText(RelationGroup);
-        //textView3.setText(MemberNumber);
+        textView3.setText(MemberNo);
         textView4.setText(ApptPlace);
+        textView5.setText(ApptnameValue);
 
         return view;
     }
+
 }
