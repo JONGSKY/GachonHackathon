@@ -18,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -59,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
         adapter = new DdayAdapter(getApplicationContext(), ddayList);
         ddayListView.setAdapter(adapter);
 
+        // item clicked
+        ddayListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ApptCenterplaceActivity.class);
+                intent.putExtra("userID", userID);
+                intent.putExtra("apptNo", ddayList.get(position).getApptNo());
+                startActivity(intent);
+            }
+        });
+
         Button addfriendButton = (Button) findViewById(R.id.addfriendButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 프로필로드 테스트중
         ImageButton profileLoadBtn = findViewById(R.id.ib_profile_load);
         profileLoadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         checkPermisson();
 
     }
-
 
     // 두번 뒤로가기 누르면 종료되도록
     private long lastTimeBackPressed;
@@ -184,13 +194,14 @@ public class MainActivity extends AppCompatActivity {
                 long l_today = today.getTimeInMillis() / (1000 * 60 * 60 * 24);
                 long l_dday, substract;
 
-                String apptName, apptDate;
+                String apptName, apptDate, apptNo;
                 String[] apptDateArray;
 
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     apptName = object.getString("apptName");
                     apptDate = object.getString("apptDate");
+                    apptNo = object.getString("apptNo");
 
                     apptDateArray = apptDate.split("-");
                     d_day.set(Integer.parseInt(apptDateArray[0]), Integer.parseInt(apptDateArray[1]) - 1, Integer.parseInt(apptDateArray[2]));
@@ -200,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                     substract = l_today - l_dday;
 
                     if (substract <= 0 && substract >= -7) {  // 일주일 이내 데이터만 가져올 수 있도록
-                        Dday dday = new Dday(apptName, apptDate, (int) substract);
+                        Dday dday = new Dday(apptName, apptDate, (int) substract, apptNo);
                         ddayList.add(dday);
                     }
 

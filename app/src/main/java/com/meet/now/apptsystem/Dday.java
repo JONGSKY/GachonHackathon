@@ -4,13 +4,16 @@ public class Dday {
 
     String apptName;
     String apptDate;
+    String apptNo;
     int dDay;
 
-    public Dday(String apptName, String apptDate, int dDay) {
+    public Dday(String apptName, String apptDate, int dDay, String apptNo) {
         this.apptName = apptName;
         this.apptDate = apptDate;
         this.dDay = dDay;
+        this.apptNo = apptNo;
     }
+
 
     public String getApptName() {
         return apptName;
@@ -41,4 +44,13 @@ public class Dday {
     public void setdDay(int dDay) {
         this.dDay = dDay;
     }
+
+    public String getApptNo(){
+        return apptNo;
+    }
+
+    public void setApptNo(String apptNo){
+        this.apptNo = apptNo;
+    }
 }
+
