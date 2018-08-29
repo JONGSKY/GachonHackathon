@@ -3,6 +3,8 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="title_activity_appt_detail">ApptDetailActivity</string>
+    <string name="n_key">L5FRpfj4Qo90C0P53Sgo</string>
+    <string name="str_done">완료</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

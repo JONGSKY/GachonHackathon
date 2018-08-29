@@ -41,14 +41,19 @@
         <activity android:name=".DaumWebViewActivity" />
         <activity android:name=".ProfileLoadActivity" />
         <activity android:name=".ApptAddfriendActivity" />
-        <activity android:name=".appt_create_activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".appt_list_view_activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".appt_calendar_view_activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".appt_detail_date_activity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".appt_create_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".appt_list_view_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".appt_calendar_view_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".appt_detail_date_activity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ApptCenterplaceActivity" />
     </application>
 
 </manifest>
