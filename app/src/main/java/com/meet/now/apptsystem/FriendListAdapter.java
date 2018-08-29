@@ -2,6 +2,10 @@ package com.meet.now.apptsystem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -51,9 +55,15 @@ public class FriendListAdapter extends BaseAdapter {
         String Msg = friendList.get(i).getUserStatusmsg();
 
         if (photo.equals("null")) {
-            userPhoto.setImageResource(R.drawable.ic_person_outline_black_24dp);
+            userPhoto.setImageResource(R.drawable.ic_profile_picture);
+            userPhoto.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
         } else {
-            // 사용자 이미지 추가
+            ////////////////// 프로필 로드 이슈 해결 필요 //////////////////
+            /*ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
+            Bitmap bitmap = profileLoadActivity.bitmapImgDownload(photo);
+            userPhoto.setImageBitmap(bitmap);
+            userPhoto.setBackground(new ShapeDrawable(new OvalShape()));
+            userPhoto.setClipToOutline(true);*/
         }
 
         if(fnickname.equals("null")){

@@ -29,6 +29,7 @@ public class ApptFriend extends LinearLayout{
         }else {
             ////////////////// 프로필 로드 이슈 해결 필요 //////////////////
             ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
+
            /* Bitmap bitmap = profileLoadActivity.bitmapImgDownload(userPhoto);
             apptUserPhoto.setImageBitmap(bitmap);
             apptUserPhoto.setBackground(new ShapeDrawable(new OvalShape()));

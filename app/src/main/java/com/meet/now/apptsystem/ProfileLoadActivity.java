@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,12 +9,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.media.ExifInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,11 +30,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -54,6 +56,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
     private UpdateProfilePhoto updateProfilePhoto;
     public static File file = null;
     ImageView iv = null;
+    public static File cacheDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,16 @@ public class ProfileLoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_load);
         Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
+
+        cacheDir = getApplicationContext().getCacheDir();
+
+        JSONArray todayApptArray = new JSONArray();
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("이름", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // DB 프로필 정보 로드
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -82,7 +95,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
                         nicknameText.setText(userNickname);
                         if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
-
                         if (userPhoto != null) {
                             bitmapImgDownload(userPhoto);
                         }
@@ -148,6 +160,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
         // 위치보기
         ImageButton mapBtn = findViewById(R.id.ib_map);
+
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,11 +190,11 @@ public class ProfileLoadActivity extends AppCompatActivity {
     void showLoc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = (View)inflater.inflate(R.layout.dialog_profile_loc, null);
+        View view =inflater.inflate(R.layout.dialog_profile_loc, null);
         builder.setView(view);
 
-        TextView tvLoc = (TextView) view.findViewById(R.id.tv_loc);
-        ImageButton ibBack = (ImageButton) view.findViewById(R.id.ib_back_loc);
+        TextView tvLoc = view.findViewById(R.id.tv_loc);
+        ImageButton ibBack = view.findViewById(R.id.ib_back_loc);
 
         if (!userAddress.equals("null")) tvLoc.setText(userAddress);
 
@@ -267,7 +280,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
                             buf = new byte[1024];
                             in = new FileInputStream(oldFile);
                             out = new FileOutputStream(newFile);
-                            int read = 0;
+                            int read;
                             while ((read = in.read(buf, 0, buf.length)) != -1) {
                                 out.write(buf, 0, read);
                             }
@@ -408,6 +421,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
     public interface AsyncTaskListener {
         void taskCompleted(File result);
+
     }
 
     // ftp 서버 연결 asyncTask

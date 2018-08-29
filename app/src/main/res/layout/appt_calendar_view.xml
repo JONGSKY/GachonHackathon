@@ -4,63 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#75d0f1">
+    android:background="#ffffff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="약속 목록"
+            android:textColor="#ffffff"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/list_change_button"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_list"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
 
-        //뒤로가기 버튼
-        <ImageButton
-            android:id="@+id/btn_back_calender"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_arrow_left" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="10dp"
-            android:text="약속 목록"
-            android:textSize="40dp"
-            android:textStyle="bold" />
-
-        //appt_list_view layout으로 가는 버튼
-        <ImageButton
-            android:id="@+id/list_change_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="50dp"
-            android:background="@drawable/ic_list"/>
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@android:color/white"/>
 
     </LinearLayout>
-
-    // 캘린더형, list형 fragment
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-        //외부 캘린더로 변경 필요
-        <CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
-
-    //appt_create layout으로 가는 버튼
-    <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/ic_add"/>
 
 </LinearLayout>
 

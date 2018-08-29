@@ -4,8 +4,8 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.meet.now.apptsystem"
-        minSdkVersion 21
-        targetSdkVersion 22
+        minSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -31,5 +31,6 @@ dependencies {
     api 'com.naver.maps.open:naver-map-api:2.1.2@aar'
     implementation 'com.squareup.okhttp3:okhttp:3.8.0'
     implementation files('libs/ftp4j-1.7.2.jar')
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
 
 }

@@ -8,14 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -37,31 +40,28 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.meet.now.apptsystem.MainActivity.userID;
+
 
 public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
-    String userID;
 
-    private ListView friendListView;
-    private FriendListAdapter adapter;
-    private List<Friend> friendList;
-    private List<Friend> saveList;
+    static private ListView friendListView;
+    static private FriendListAdapter adapter;
+    static private List<Friend> friendList;
+    static private List<Friend> saveList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
 
-
         friendListView = (ListView) findViewById(R.id.friendListView);
         friendList = new ArrayList<Friend>();
         saveList = new ArrayList<Friend>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
-
-        Intent intent = getIntent();
-        userID = intent.getStringExtra("userID");
 
         ImageButton addfriendButton = (ImageButton) findViewById(R.id.addfriendlistButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +72,24 @@ public class FriendlistActivity extends AppCompatActivity {
         });
 
         new BackgroundTask().execute();
+
+        EditText search = (EditText)findViewById(R.id.searchFriend);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchFriend(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
     }
 
@@ -194,7 +212,7 @@ public class FriendlistActivity extends AppCompatActivity {
         addfriendDialog.show();
     }
 
-    class BackgroundTask extends AsyncTask<Void, Void, String>{
+    static class BackgroundTask extends AsyncTask<Void, Void, String>{
         String target;
 
         @Override
@@ -253,6 +271,7 @@ public class FriendlistActivity extends AppCompatActivity {
                 friendList.clear();
                 saveList.clear();
 
+                Log.w("freindList", result);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
 
