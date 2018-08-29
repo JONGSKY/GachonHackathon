@@ -84,7 +84,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
                         if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
 
                         if (userPhoto != null) {
-                            bitmapImgDownload();
+                            bitmapImgDownload(userPhoto);
                         }
 
                     } else {
@@ -387,7 +387,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
     }
 
-    private void bitmapImgDownload() {
+    public void bitmapImgDownload(String userPhoto) {
         Bitmap bitmap;
         File file = new File(getApplicationContext().getCacheDir(), userPhoto);
         Log.e("cacheFile", file.getAbsolutePath());

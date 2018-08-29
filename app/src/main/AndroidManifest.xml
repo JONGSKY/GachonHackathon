@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.meet.now.apptsystem">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <!-- 반드시 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 위치정보활용시 추가 -->
@@ -42,16 +40,15 @@
         <activity android:name=".FriendlistActivity" />
         <activity android:name=".DaumWebViewActivity" />
         <activity android:name=".ProfileLoadActivity" />
-        <activity
-            android:name=".appt_create_activity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".appt_list_view_activity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".appt_calendar_view_activity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".UpdateProfileAddr"></activity>
+        <activity android:name=".ApptAddfriendActivity" />
+        <activity android:name=".appt_create_activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".appt_list_view_activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".appt_calendar_view_activity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".appt_detail_date_activity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
