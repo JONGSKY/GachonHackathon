@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class DdayAdapter extends BaseAdapter {
         ddayText.setText(ddayList.get(i).getdDay());
 
         v.setTag(ddayList.get(i).getApptName());
+
+
         return v;
     }
 }

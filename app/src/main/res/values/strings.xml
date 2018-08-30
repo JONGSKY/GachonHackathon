@@ -9,5 +9,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="distance">중간지점 기준\n추천지역을 몇 km 까지 보여드릴까요?</string>
 
 </resources>
