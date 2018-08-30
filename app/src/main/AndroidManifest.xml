@@ -33,23 +33,17 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ApptDetailActivity"
-            android:label="@string/title_activity_appt_detail" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".FriendlistActivity" />
         <activity android:name=".DaumWebViewActivity" />
         <activity android:name=".ProfileLoadActivity" />
         <activity android:name=".ApptAddfriendActivity" />
-        <activity android:name=".appt_create_activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".appt_list_view_activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".appt_calendar_view_activity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".appt_detail_date_activity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".ApptNMapActivity"/>
+        <activity android:name=".appt_create_activity"/>
+        <activity android:name=".appt_list_view_activity"/>
+        <activity android:name=".appt_calendar_view_activity"/>
+        <activity android:name=".appt_detail_date_activity"/>
     </application>
 
 </manifest>

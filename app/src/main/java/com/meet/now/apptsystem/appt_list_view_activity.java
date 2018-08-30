@@ -225,6 +225,14 @@ public class appt_list_view_activity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(appt_list_view_activity.this, MainActivity.class);
+        intent.putExtra("userID", userID);
+        startActivity(intent);
+    }
+
     //ArrayList 오름차순으로 정렬
     class Ascending implements Comparator<String> {
         @Override

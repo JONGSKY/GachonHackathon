@@ -88,7 +88,8 @@ public class appt_detail_date_activity extends AppCompatActivity{
         appt_detail_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                Intent intent1 = new Intent(appt_detail_date_activity.this, ApptNMapActivity.class);
+                startActivity(intent1);
             }
         });
     }
