@@ -1,61 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center"
-    android:layout_margin="16dp"
-    >
+    android:layout_margin="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/colorPrimaryDark"
-        android:layout_height="150dp">
+        android:layout_height="150dp"
+        android:background="@color/colorPrimaryDark">
 
         <ImageButton
             android:id="@+id/ib_back_loc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:layout_alignParentRight="true"/>
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
             android:layout_height="80dp"
-            android:background="#ffffff"
-            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
             android:layout_margin="10dp"
-            >
+            android:background="#ffffff"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_loc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:textSize="20dp"
-            android:text="가천대학교 제 1 기숙사"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_loc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text=""
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/ib_loc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/tv_loc"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_location_on_black_24dp" />
+        </RelativeLayout>
 
     </RelativeLayout>
-
-
-
-
-
-    </RelativeLayout>
-
 
 </RelativeLayout>

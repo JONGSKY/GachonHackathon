@@ -59,11 +59,11 @@ public class FriendListAdapter extends BaseAdapter {
             userPhoto.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
         } else {
             ////////////////// 프로필 로드 이슈 해결 필요 //////////////////
-            ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
+            /*ProfileLoadActivity profileLoadActivity = new ProfileLoadActivity();
             Bitmap bitmap = profileLoadActivity.bitmapImgDownload(photo);
             userPhoto.setImageBitmap(bitmap);
             userPhoto.setBackground(new ShapeDrawable(new OvalShape()));
-            userPhoto.setClipToOutline(true);
+            userPhoto.setClipToOutline(true);*/
         }
 
         if(fnickname.equals("null")){

@@ -60,6 +60,9 @@ public class appt_detail_date_adapter extends BaseAdapter {
         String MemberNo = "멤버 수 : ";
         String ApptPlace = "약속 장소 : ";
 
+        String ApptnameValue = null;
+        String ApptplaceValue = null;
+
         try {
             jsonObject = jsonArray.getJSONObject(i);
         } catch (JSONException e) {
@@ -67,9 +70,15 @@ public class appt_detail_date_adapter extends BaseAdapter {
         }
 
         try {
+            ApptnameValue = jsonObject.getString("ApptName");
+            ApptplaceValue = jsonObject.getString("ApptPlace");
+            if(ApptplaceValue.equals("null")){
+                ApptplaceValue = "미정";
+            }
+
             Time += jsonObject.getString("ApptTime");
             RelationGroup += jsonObject.getString("RelationGroup");
-            ApptPlace += jsonObject.getString("ApptPlace");
+            ApptPlace += ApptplaceValue;
             MemberNo += jsonObject.getString("MemberNo");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -79,12 +88,15 @@ public class appt_detail_date_adapter extends BaseAdapter {
         TextView textView2 = (TextView)view.findViewById(R.id.appt_group_textview);
         TextView textView3 = (TextView)view.findViewById(R.id.appt_member_number_textview);
         TextView textView4 = (TextView)view.findViewById(R.id.appt_place_textview);
+        TextView textView5 = (TextView)view.findViewById(R.id.appt_name_textview);
 
         textView1.setText(Time);
         textView2.setText(RelationGroup);
         textView3.setText(MemberNo);
         textView4.setText(ApptPlace);
+        textView5.setText(ApptnameValue);
 
         return view;
     }
+
 }
