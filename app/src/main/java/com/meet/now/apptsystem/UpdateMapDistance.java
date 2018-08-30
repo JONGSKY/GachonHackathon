@@ -3,14 +3,12 @@ package com.meet.now.apptsystem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.app.Activity;
 
 /*
 centerPlace의 추천지역 반경을 변경한다.
@@ -44,16 +42,16 @@ public class UpdateMapDistance extends AppCompatActivity implements View.OnClick
         Log.e("id", id+"");
         switch (id) {
             case R.id.btn_dis1:
-                intent.putExtra(INTENT_RESULT,"500");
+                intent.putExtra(INTENT_RESULT,"11");
                 break;
             case R.id.btn_dis2:
-                intent.putExtra(INTENT_RESULT,"750");
+                intent.putExtra(INTENT_RESULT,"10");
                 break;
             case R.id.btn_dis3:
-                intent.putExtra(INTENT_RESULT,"1000");
+                intent.putExtra(INTENT_RESULT,"9");
                 break;
             case R.id.btn_dis4:
-                intent.putExtra(INTENT_RESULT,"1250");
+                intent.putExtra(INTENT_RESULT,"8");
                 break;
             default:
                 break;

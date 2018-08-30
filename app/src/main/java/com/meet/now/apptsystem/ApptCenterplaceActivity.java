@@ -98,7 +98,12 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
                 if(result != 0){
                     Toast.makeText(getApplicationContext(),result+"",Toast.LENGTH_SHORT).show();
+
                     // 지도 축척 변경
+                    NMapController nMapController = mMapView.getMapController();
+                    NGeoPoint nGeoPoint = nMapController.getMapCenter();
+                    nMapController.setMapCenter(nGeoPoint, result);
+                    // 추천 위치 추가 필요 및 단위 변경
 
                 }
 
