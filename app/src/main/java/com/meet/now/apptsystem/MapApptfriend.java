@@ -1,14 +1,18 @@
 package com.meet.now.apptsystem;
 
+import android.graphics.PointF;
+
 public class MapApptfriend {
 
     String friendID, friendNickname, userNickname, friendAddress;
+    PointF point;
 
-    public MapApptfriend(String friendID, String friendNickname, String userNickname, String friendAddress) {
+    public MapApptfriend(String friendID, String friendNickname, String userNickname, String friendAddress, PointF point) {
         this.friendID = friendID;
         this.friendNickname = friendNickname;
         this.userNickname = userNickname;
         this.friendAddress = friendAddress;
+        this.point = point;
     }
 
     public String getFriendID() {
@@ -41,5 +45,13 @@ public class MapApptfriend {
 
     public void setFriendAddress(String friendAddress) {
         this.friendAddress = friendAddress;
+    }
+
+    public PointF getPoint() {
+        return point;
+    }
+
+    public void setPoint(PointF point) {
+        this.point = point;
     }
 }

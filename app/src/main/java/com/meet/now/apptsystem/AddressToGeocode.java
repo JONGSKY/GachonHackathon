@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +17,7 @@ public class AddressToGeocode {
     static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
     static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
 
-    public static PointF getGeocode(String address){
+    public static PointF getGeocode(String address) {
 
         String clientId = YOUR_CLIENT_ID;//애플리케이션 클라이언트 아이디값";
         String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
@@ -45,12 +46,15 @@ public class AddressToGeocode {
             }
             br.close();
 
+            Float coordX = 0.0f;
+            Float coordY = 0.0f;
             JSONObject jsonObject = new JSONObject(response.toString());
+
             JSONArray jsonArray = new JSONObject(jsonObject.get("result").toString()).getJSONArray("items");
 
             JSONObject object = new JSONObject(jsonArray.getJSONObject(0).get("point").toString());
-            Float coordX = Float.parseFloat(object.getString("x"));
-            Float coordY = Float.parseFloat(object.getString("y"));
+            coordX = Float.parseFloat(object.getString("x"));
+            coordY = Float.parseFloat(object.getString("y"));
 
             point.set(coordX, coordY);
 
@@ -58,9 +62,11 @@ public class AddressToGeocode {
 
         } catch (Exception e) {
             System.out.println(e);
-        }
 
-        return null;
+            point.set(200f, 200f);  // 잘못된 주소 예외처리
+            return point;
+
+        }
     }
 
 }

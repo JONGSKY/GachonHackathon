@@ -5,52 +5,56 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import com.nhn.android.maps.NMapActivity;
+import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.maplib.NGeoPoint;
+import com.nhn.android.maps.nmapmodel.NMapError;
+import com.nhn.android.maps.overlay.NMapPOIdata;
+import com.nhn.android.maps.overlay.NMapPOIitem;
+import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
+import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.meet.now.apptsystem.MainActivity.userID;
-import static com.meet.now.apptsystem.MainActivity.userAddress;
 
 public class ApptCenterplaceActivity extends NMapActivity {
 
-    private ViewGroup mapLayout;
-    private NMapView mMapView;
-    static private List<MapApptfriend> mapApptfriendList;
+    private final String TAG = "ApptCenterplaceActivity";
 
-    @Override
+    private NMapView mMapView;
+    private NMapController mMapController;
+
+    private NMapResourceProvider nMapResourceProvider;
+    private NMapOverlayManager mapOverlayManager;
+
+    private ViewGroup mapLayout;
+
+    LoadFriendaddress loadFriendaddress;
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appt_centerplace);
 
-        mapApptfriendList = new ArrayList<MapApptfriend>();
-
         Intent intent = getIntent();
         String apptNo = intent.getStringExtra("apptNo");
 
-        new LoadFriendaddress().execute(apptNo);
+        loadFriendaddress = new LoadFriendaddress();
+        loadFriendaddress.execute(apptNo);
 
         init();
 
+        nMapResourceProvider = new NMapViewerResourceProvider(this);
+        mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
     }
 
-    private void init(){
+    private void init() {
 
         mapLayout = findViewById(R.id.map_view);
 
@@ -63,84 +67,124 @@ public class ApptCenterplaceActivity extends NMapActivity {
         mMapView.setScalingFactor(1.7f);
         mMapView.requestFocus();
 
+        mMapView.setOnMapStateChangeListener(changeListener);
+        mMapView.setOnMapViewTouchEventListener(mapListener);
         mapLayout.addView(mMapView);
-    }
 
+        mMapController = mMapView.getMapController();
+        mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
 
-    static class LoadFriendaddress extends AsyncTask<String, Void, Void> {
-        String target;
-
-        @Override
-        protected void onPreExecute() {
-            target = "http://brad903.cafe24.com/LoadFriendaddress.php";
-        }
-
-        @Override
-        protected Void doInBackground(String... Apptinfo) {
-            try{
-                URL url = new URL(target);
-                Map<String,Object> params = new LinkedHashMap<>();
-
-                params.put("userID", userID);
-                params.put("apptNo", Apptinfo[0]);
-
-                StringBuilder postData = new StringBuilder();
-                for (Map.Entry<String,Object> param : params.entrySet()) {
-                    if (postData.length() != 0) postData.append('&');
-                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-                    postData.append('=');
-                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-                }
-                byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-                conn.setDoOutput(true);
-                conn.getOutputStream().write(postDataBytes);
-
-                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-
-                StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
-                String response = sb.toString().trim();
-
-                in.close();
-                conn.disconnect();
-
-                JSONObject jsonObject = new JSONObject(response);
-                JSONArray jsonArray = jsonObject.getJSONArray("response");
-
-                int count = 0;
-                String friendID, friendNickname, userNickname, friendAddress;
-                while(count < jsonArray.length()) {
-                    JSONObject object = jsonArray.getJSONObject(count);
-                    friendID = object.getString("friendID");
-                    friendNickname = object.getString("friendNickname");
-                    userNickname = object.getString("userNickname");
-                    friendAddress = object.getString("userAddress");
-
-                    MapApptfriend mapApptfriend = new MapApptfriend(friendID, friendNickname, userNickname, friendAddress);
-                    mapApptfriendList.add(mapApptfriend);
-                    count++;
-
-                    PointF point = AddressToGeocode.getGeocode(mapApptfriend.getFriendAddress());
-                    Log.w(String.valueOf(point.x), String.valueOf(point.y));
-                }
-
-                // 해당 로그인 유저 userID, userAddress 리스트에 삽입
-                MapApptfriend mapApptfriend = new MapApptfriend(userID, null, null, userAddress);
-                mapApptfriendList.add(mapApptfriend);
-
-            }catch(Exception e){
-                e.printStackTrace();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setMarker();
             }
-            return null;
+        }, 3000);
+
+    }
+
+    private void setMarker() {
+        List<MapApptfriend> mapApptfriendList = loadFriendaddress.mapApptfriendList;
+
+        int markerId = NMapPOIflagType.PIN;
+
+        // set POI data
+        NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size(), nMapResourceProvider);
+        poiData.beginPOIdata(mapApptfriendList.size());
+        for(int i=0; i<mapApptfriendList.size(); i++){
+            MapApptfriend mapApptfriend = mapApptfriendList.get(i);
+            double coordX = mapApptfriend.getPoint().x;
+            double coordY = mapApptfriend.getPoint().y;
+            if(coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650){  // 경기, 서울로 마크 표시 제한
+                poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
+            }
+        }
+        poiData.endPOIdata();
+
+        // create POI data overlay
+        NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
+        poiDataOverlay.showAllPOIdata(0);
+        poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
+    }
+
+    private NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = new NMapPOIdataOverlay.OnStateChangeListener() {
+        @Override
+        public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
 
         }
 
-    }
+        @Override
+        public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+            if (nMapPOIitem != null) {
+                Log.e(TAG, "onFocusChanged: " + nMapPOIitem.toString());
+            } else {
+                Log.e(TAG, "onFocusChanged: ");
+            }
+        }
+    };
+
+
+    private NMapView.OnMapStateChangeListener changeListener = new NMapView.OnMapStateChangeListener() {
+        @Override
+        public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
+            Log.e(TAG, "OnMapStateChangeListener onMapInitHandler : ");
+        }
+
+        @Override
+        public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
+            Log.e(TAG, "OnMapStateChangeListener onMapCenterChange : " + nGeoPoint.getLatitude() + " ㅡ  " + nGeoPoint.getLongitude());
+        }
+
+        @Override
+        public void onMapCenterChangeFine(NMapView nMapView) {
+            Log.e(TAG, "OnMapStateChangeListener onMapCenterChangeFine : ");
+        }
+
+        @Override
+        public void onZoomLevelChange(NMapView nMapView, int i) {
+            Log.e(TAG, "OnMapStateChangeListener onZoomLevelChange : " + i);
+        }
+
+        @Override
+        public void onAnimationStateChange(NMapView nMapView, int i, int i1) {
+            Log.e(TAG, "OnMapStateChangeListener onAnimationStateChange : ");
+        }
+    };
+
+    private NMapView.OnMapViewTouchEventListener mapListener = new NMapView.OnMapViewTouchEventListener() {
+        @Override
+        public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onLongPress : ");
+        }
+
+        @Override
+        public void onLongPressCanceled(NMapView nMapView) {
+            Log.e(TAG, "OnMapViewTouchEventListener onLongPressCanceled : ");
+        }
+
+        @Override
+        public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onTouchDown : ");
+        }
+
+        @Override
+        public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onTouchUp : ");
+        }
+
+        @Override
+        public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent1) {
+            Log.e(TAG, "OnMapViewTouchEventListener onScroll : ");
+        }
+
+        @Override
+        public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onSingleTapUp : ");
+        }
+    };
+
 }
+
+
+
 
