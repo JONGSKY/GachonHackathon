@@ -23,13 +23,13 @@
             android:layout_weight="1">
 
             //뒤로 가기 버튼
-
             <ImageButton
                 android:id="@+id/ib_back"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/ic_arrow_left" />
+
 
             <!--상태메세지-->
             <TextView

@@ -56,7 +56,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
         new ApptAddfriendActivity.BackgroundTask().execute();
 
-        /*EditText search = (EditText)findViewById(R.id.searchFriend);
+        EditText search = (EditText)findViewById(R.id.searchFriend);
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -73,7 +73,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
             public void afterTextChanged(Editable editable) {
 
             }
-        });*/
+        });
 
         friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

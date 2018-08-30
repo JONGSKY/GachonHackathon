@@ -28,18 +28,15 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ApptDetailActivity"
-            android:label="@string/title_activity_appt_detail" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
+
         <activity android:name=".FriendlistActivity" />
         <activity android:name=".DaumWebViewActivity" />
-        <activity android:name=".ProfileLoadActivity" />
+        <activity android:name=".ProfileLoadActivity"/>
         <activity android:name=".ApptAddfriendActivity" />
         <activity
             android:name=".appt_create_activity"
@@ -54,6 +51,9 @@
             android:name=".appt_detail_date_activity"
             android:screenOrientation="portrait" />
         <activity android:name=".ApptCenterplaceActivity" />
+        <activity android:name=".UpdateMapDistance"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"/>
     </application>
 
 </manifest>
