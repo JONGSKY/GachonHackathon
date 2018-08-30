@@ -87,18 +87,27 @@ public class ApptCenterplaceActivity extends NMapActivity {
         List<MapApptfriend> mapApptfriendList = loadFriendaddress.mapApptfriendList;
 
         int markerId = NMapPOIflagType.PIN;
+        int spotId = NMapPOIflagType.SPOT;
 
         // set POI data
-        NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size(), nMapResourceProvider);
-        poiData.beginPOIdata(mapApptfriendList.size());
+        NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size()+1, nMapResourceProvider);
+        poiData.beginPOIdata(mapApptfriendList.size()+1);
+        NGeoPoint middleSpot = new NGeoPoint();
+        int spotCount = 0;
         for(int i=0; i<mapApptfriendList.size(); i++){
             MapApptfriend mapApptfriend = mapApptfriendList.get(i);
             double coordX = mapApptfriend.getPoint().x;
             double coordY = mapApptfriend.getPoint().y;
             if(coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650){  // 경기, 서울로 마크 표시 제한
                 poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
+
+                middleSpot.longitude += coordX;
+                middleSpot.latitude += coordY;
+                spotCount++;
             }
         }
+        poiData.addPOIitem(middleSpot.longitude/spotCount, middleSpot.latitude/spotCount, "중간지점", spotId, 0);
+
         poiData.endPOIdata();
 
         // create POI data overlay
