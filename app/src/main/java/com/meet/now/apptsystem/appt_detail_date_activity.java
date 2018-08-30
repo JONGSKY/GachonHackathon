@@ -59,7 +59,6 @@ public class appt_detail_date_activity extends AppCompatActivity{
         for(int j=0; j < jsonArray_intent.length(); j++){
             try {
                 JSONObject item = jsonArray_intent.getJSONObject(j);
-                Log.w(Date, item.getString(TAG_Date));
                 if(Date.equals(item.getString(TAG_Date))){
                     count++;
                     TodayApptArray.put(item);

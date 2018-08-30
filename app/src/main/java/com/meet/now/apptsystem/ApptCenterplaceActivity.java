@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class ApptCenterplaceActivity extends NMapActivity {
         new LoadFriendaddress().execute(apptNo);
 
         init();
+
     }
 
     private void init(){
@@ -58,14 +60,14 @@ public class ApptCenterplaceActivity extends NMapActivity {
         mMapView.setEnabled(true);
         mMapView.setFocusable(true);
         mMapView.setFocusableInTouchMode(true);
-        mMapView.setScalingFactor(1.5f);
+        mMapView.setScalingFactor(1.7f);
         mMapView.requestFocus();
 
         mapLayout.addView(mMapView);
     }
 
 
-    static class LoadFriendaddress extends AsyncTask<String, Void, String> {
+    static class LoadFriendaddress extends AsyncTask<String, Void, Void> {
         String target;
 
         @Override
@@ -74,7 +76,7 @@ public class ApptCenterplaceActivity extends NMapActivity {
         }
 
         @Override
-        protected String doInBackground(String... Apptinfo) {
+        protected Void doInBackground(String... Apptinfo) {
             try{
                 URL url = new URL(target);
                 Map<String,Object> params = new LinkedHashMap<>();
@@ -107,19 +109,8 @@ public class ApptCenterplaceActivity extends NMapActivity {
 
                 in.close();
                 conn.disconnect();
-                return response;
 
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            try{
-                JSONObject jsonObject = new JSONObject(result);
+                JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
 
                 int count = 0;
@@ -134,19 +125,22 @@ public class ApptCenterplaceActivity extends NMapActivity {
                     MapApptfriend mapApptfriend = new MapApptfriend(friendID, friendNickname, userNickname, friendAddress);
                     mapApptfriendList.add(mapApptfriend);
                     count++;
+
+                    PointF point = AddressToGeocode.getGeocode(mapApptfriend.getFriendAddress());
+                    Log.w(String.valueOf(point.x), String.valueOf(point.y));
                 }
 
                 // 해당 로그인 유저 userID, userAddress 리스트에 삽입
                 MapApptfriend mapApptfriend = new MapApptfriend(userID, null, null, userAddress);
                 mapApptfriendList.add(mapApptfriend);
 
-
             }catch(Exception e){
                 e.printStackTrace();
             }
-
+            return null;
 
         }
+
     }
 }
 
