@@ -1,17 +1,15 @@
 package com.meet.now.apptsystem;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
@@ -26,53 +24,50 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 
 import java.util.List;
 
-public class ApptCenterplaceActivity extends NMapActivity implements View.OnClickListener {
-
-    private final String TAG = "ApptCenterplaceActivity";
+public class UpdateMapPersonAddAddr extends NMapActivity {
+    private final String TAG = "UpdateMapPersonAddAddr";
 
     private NMapView mMapView;
-    private NMapController mMapController;
 
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
 
-    private ViewGroup mapLayout;
-
     LoadFriendaddress loadFriendaddress;
+    TextView nowAddr;
 
-    private Animation fab_open, fab_close;
-    private Animation rotate_forward, rotate_backward;
-    private Boolean isFabOpen = false;
-    // fab1 주소검색, fab2 인원추가, fab3 지도축척변경
-    private FloatingActionButton fab, fab1, fab2, fab3;
-
-    private static final int UPDATE_DISTANCE = 3;
-    private static final int UPDATE_PERSON = 2;
-    private static final int SEARCH_MAP = 1;
-
-    String apptNo;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_appt_centerplace);
+        setContentView(R.layout.dialog_map_add_addr);
         Intent intent = getIntent();
-        String userID = intent.getStringExtra("userID");
-        apptNo = intent.getStringExtra("apptNo");
-        Toast.makeText(getApplicationContext(), userID + " " + apptNo, Toast.LENGTH_SHORT).show();
+        String apptNo = intent.getStringExtra("apptNo");
 
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
+        TextView tv = findViewById(R.id.tv_add_addr);
+        ImageView placeImg1 = findViewById(R.id.iv_center_place_above);
+        ImageView placeImg2 = findViewById(R.id.iv_center_place);
+        nowAddr = findViewById(R.id.tv_add_addr_now);
+        Button ok = findViewById(R.id.btn_map_ok);
+        tv.bringToFront();
+        placeImg1.bringToFront();
+        placeImg2.bringToFront();
+        nowAddr.bringToFront();
 
-        fab = findViewById(R.id.fab);
-        fab1 = findViewById(R.id.fab1);
-        fab2 = findViewById(R.id.fab2);
-        fab3 = findViewById(R.id.fab3);
+        // 중심 경위도와 주소 전달.
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NGeoPoint nGeoPoint = new NGeoPoint();
+                Intent intent = getIntent();
+                double longitude = nGeoPoint.getLongitude();
+                double latitude = nGeoPoint.getLatitude();
+                String address = nowAddr.getText().toString();
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("friendAddr", address);
 
-        fab.setOnClickListener(this);
-        fab1.setOnClickListener(this);
-        fab2.setOnClickListener(this);
-        fab3.setOnClickListener(this);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
 
         loadFriendaddress = new LoadFriendaddress();
         loadFriendaddress.execute(apptNo);
@@ -83,95 +78,11 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
     }
 
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.fab:
-                anim();
-                break;
-            case R.id.fab1:
-                anim();
-                Toast.makeText(this, "지도검색", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.fab2:
-                anim();
-                Toast.makeText(this, "인원추가", Toast.LENGTH_SHORT).show();
-                Intent addPerson = new Intent(ApptCenterplaceActivity.this, UpdateMapPerson.class);
-                addPerson.putExtra("apptNo", apptNo);
-                startActivityForResult(addPerson, UPDATE_PERSON);
 
-                break;
-            case R.id.fab3:
-                anim();
-                Toast.makeText(this, "지도축척변경", Toast.LENGTH_SHORT).show();
-                Intent editDis = new Intent(ApptCenterplaceActivity.this, UpdateMapDistance.class);
-                startActivityForResult(editDis, UPDATE_DISTANCE);
-
-        }
-
-    }
-
-    // 지도 축척 변경 결과값
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.e("result", requestCode +" " + resultCode);
-        if(resultCode == RESULT_OK){
-            if(requestCode == SEARCH_MAP){
-
-            }
-            else if(requestCode == UPDATE_PERSON){
-                // 이름과 주소로 핀찍기
-                String friendName = data.getStringExtra("friendName");
-                String friendAddr = data.getStringExtra("friendAddr");
-                Toast.makeText(getApplicationContext(), friendName + " " + friendAddr, Toast.LENGTH_SHORT).show();
-
-            }
-            else if(requestCode == UPDATE_DISTANCE) {
-                int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
-                if (result != 0) {
-                    Toast.makeText(getApplicationContext(), result + "", Toast.LENGTH_SHORT).show();
-
-                    // 지도 축척 변경
-                    NMapController nMapController = mMapView.getMapController();
-                    NGeoPoint nGeoPoint = nMapController.getMapCenter();
-                    nMapController.setMapCenter(nGeoPoint, result);
-                    // 추천 위치 추가 필요 및 단위 변경
-
-                }
-            }
-
-        }
-
-    }
-
-    public void anim() {
-
-        if (isFabOpen) {
-            fab.startAnimation(rotate_backward);
-            fab3.startAnimation(fab_close);
-            fab2.startAnimation(fab_close);
-            fab1.startAnimation(fab_close);
-            fab3.setClickable(false);
-            fab2.setClickable(false);
-            fab1.setClickable(false);
-            isFabOpen = false;
-        } else {
-            fab.startAnimation(rotate_forward);
-            fab1.startAnimation(fab_open);
-            fab2.startAnimation(fab_open);
-            fab3.startAnimation(fab_open);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
-            fab3.setClickable(true);
-            isFabOpen = true;
-        }
-    }
 
     private void init() {
 
-        mapLayout = findViewById(R.id.map_view);
+        ViewGroup mapLayout = findViewById(R.id.map_view);
 
         mMapView = new NMapView(this);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
@@ -186,7 +97,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         mMapView.setOnMapViewTouchEventListener(mapListener);
         mapLayout.addView(mMapView);
 
-        mMapController = mMapView.getMapController();
+        NMapController mMapController = mMapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
 
         new Handler().postDelayed(new Runnable() {
@@ -215,13 +126,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             double coordY = mapApptfriend.getPoint().y;
             if(coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650){  // 경기, 서울로 마크 표시 제한
                 poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
-
-                middleSpot.longitude += coordX;
-                middleSpot.latitude += coordY;
-                spotCount++;
             }
         }
-        poiData.addPOIitem(middleSpot.longitude/spotCount, middleSpot.latitude/spotCount, "중간지점", spotId, 0);
 
         poiData.endPOIdata();
 
@@ -257,6 +163,11 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         @Override
         public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
             Log.e(TAG, "OnMapStateChangeListener onMapCenterChange : " + nGeoPoint.getLatitude() + " ㅡ  " + nGeoPoint.getLongitude());
+            // 손떼고 한참지나면 현재 중심좌표와 주소를 가져온다.
+
+            nowAddr.setText("강동구 암사동");
+            // 주소로 바꿔서 창에 띄운다.
+
         }
 
         @Override
@@ -304,11 +215,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         @Override
         public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
             Log.e(TAG, "OnMapViewTouchEventListener onSingleTapUp : ");
+
+
         }
     };
-
 }
-
-
-
-

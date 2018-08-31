@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_center_place"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    >
+
+    <ImageView
+        android:id="@+id/iv_center_place_above"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_place_black_32dp"
+        android:tint="@color/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/iv_center_place"
+        />
+    <ImageView
+        android:id="@+id/iv_center_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_adjust_black_24dp"
+        android:tint="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/tv_add_addr"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text="지도를 움직여 위치를 지정하세요."
+        android:textSize="12dp"
+        android:textColor="#ffffff"
+        android:background="#c38f8f8f"/>
+
+    <com.nhn.android.maps.NMapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/tv_add_addr_now"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/btn_map_ok"
+        android:layout_margin="16dp"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/btn_map_ok"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:text="OK"
+        android:textColor="#ffffff"
+        android:background="@color/colorPrimaryDark"/>
+</RelativeLayout>
