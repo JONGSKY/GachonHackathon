@@ -39,6 +39,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private ViewGroup mapLayout;
 
     LoadFriendaddress loadFriendaddress;
+    NGeoPoint middleSpot;
 
     private Animation fab_open, fab_close;
     private Animation rotate_forward, rotate_backward;
@@ -99,13 +100,10 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 Toast.makeText(this, "지도축척변경", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ApptCenterplaceActivity.this, UpdateMapDistance.class);
                 startActivityForResult(intent, UPDATE_DISTANCE); // 다시 돌아올 액티비티 콜
-
         }
-
     }
 
     // 지도 축척 변경 결과값
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -117,10 +115,10 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
                     // 지도 축척 변경
                     NMapController nMapController = mMapView.getMapController();
-                    NGeoPoint nGeoPoint = nMapController.getMapCenter();
-                    nMapController.setMapCenter(nGeoPoint, result);
+                    nMapController.setMapCenter(middleSpot, result);
                     // 추천 위치 추가 필요 및 단위 변경
 
+                    
                 }
 
         }
@@ -188,7 +186,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         // set POI data
         NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size()+1, nMapResourceProvider);
         poiData.beginPOIdata(mapApptfriendList.size()+1);
-        NGeoPoint middleSpot = new NGeoPoint();
+        middleSpot = new NGeoPoint();
         int spotCount = 0;
         for(int i=0; i<mapApptfriendList.size(); i++){
             MapApptfriend mapApptfriend = mapApptfriendList.get(i);
@@ -202,7 +200,10 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 spotCount++;
             }
         }
-        poiData.addPOIitem(middleSpot.longitude/spotCount, middleSpot.latitude/spotCount, "중간지점", spotId, 0);
+        middleSpot.longitude = middleSpot.longitude / spotCount;
+        middleSpot.latitude = middleSpot.latitude / spotCount;
+
+        poiData.addPOIitem(middleSpot.longitude, middleSpot.latitude, "중간지점", spotId, 0);
 
         poiData.endPOIdata();
 
