@@ -51,9 +51,20 @@
             android:name=".appt_detail_date_activity"
             android:screenOrientation="portrait" />
         <activity android:name=".ApptCenterplaceActivity" />
+
         <activity android:name=".UpdateMapDistance"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"/>
+        <activity android:name=".UpdateMapPersonNon"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"/>
+        <activity android:name=".UpdateMapPersonMem"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"/>
+        <activity android:name=".UpdateMapPerson"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"/>
+        <activity android:name=".UpdateMapPersonAddAddr"/>
     </application>
 
 </manifest>
