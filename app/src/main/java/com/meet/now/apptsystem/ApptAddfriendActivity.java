@@ -57,6 +57,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
         new ApptAddfriendActivity.BackgroundTask().execute();
 
         EditText search = (EditText)findViewById(R.id.searchFriend);
+
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

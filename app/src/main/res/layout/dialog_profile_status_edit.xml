@@ -27,10 +27,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_centerInParent="true"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:hint="상태메세지를 입력해주세요."
                 android:maxLength="20"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:inputType="text" />
 
         </RelativeLayout>
 
@@ -40,11 +41,11 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="6dp"
             android:text="OK"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>
 

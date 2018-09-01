@@ -1,6 +1,5 @@
 package com.meet.now.apptsystem;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,18 +11,18 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -34,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -105,6 +103,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
             }
         };
 
@@ -121,7 +121,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         // 닉네임 수정
         ImageButton ibNickname = (ImageButton) findViewById(R.id.ib_edit_nickname);
         ibNickname.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +192,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
         builder.setView(view);
 
         TextView tvLoc = (TextView) view.findViewById(R.id.tv_loc);
-        ImageButton ibLoc = (ImageButton) view.findViewById(R.id.ib_loc);
         ImageButton ibBack = (ImageButton) view.findViewById(R.id.ib_back_loc);
 
         if (!userAddress.equals(null)) tvLoc.setText(userAddress);
