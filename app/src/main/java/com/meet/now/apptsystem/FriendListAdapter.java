@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ShapeDrawable;
@@ -17,7 +18,7 @@ public class FriendListAdapter extends BaseAdapter {
     private Context context;
     private List<Friend> friendList;
 
-    public FriendListAdapter(Context context, List<Friend> friendList) {
+    FriendListAdapter(Context context, List<Friend> friendList) {
         this.context = context;
         this.friendList = friendList;
     }
@@ -39,7 +40,7 @@ public class FriendListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = View.inflate(context, R.layout.friend, null);
+        @SuppressLint("ViewHolder") View v = View.inflate(context, R.layout.friend, null);
         ImageView userPhoto = v.findViewById(R.id.userPhoto);
         TextView userNickname = v.findViewById(R.id.userNickname);
         TextView statusMsg = v.findViewById(R.id.statusMsg);

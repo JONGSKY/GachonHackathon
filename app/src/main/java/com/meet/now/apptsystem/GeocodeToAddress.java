@@ -12,13 +12,11 @@ import java.util.HashMap;
 
 public class GeocodeToAddress {
 
-    static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
-    static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
+    private static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
+    private static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
 
     public HashMap<String, String> getAddress(String geocode) {
 
-        String clientId = YOUR_CLIENT_ID;//애플리케이션 클라이언트 아이디값";
-        String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
         HashMap<String, String> addressData = new HashMap<>();
 
         try {
@@ -27,8 +25,8 @@ public class GeocodeToAddress {
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("X-Naver-Client-Id", clientId);
-            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            con.setRequestProperty("X-Naver-Client-Id", YOUR_CLIENT_ID);
+            con.setRequestProperty("X-Naver-Client-Secret", YOUR_CLIENT_SECRET);
             int responseCode = con.getResponseCode();  // 멈추는 시점
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
@@ -60,7 +58,6 @@ public class GeocodeToAddress {
             return addressData;
 
         } catch (Exception e) {
-            System.out.println(e);
             return null;  // 잘못된 좌표로 오류가 발생할 경우
         }
     }

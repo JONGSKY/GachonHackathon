@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import static com.meet.now.apptsystem.MainActivity.userID;
 
 public class ApptAddfriendActivity extends AppCompatActivity{
 
-    static private ListView friendListView;
+    @SuppressLint("StaticFieldLeak")
     static private FriendListAdapter adapter;
     static private List<Friend> friendList;
     static private List<Friend> saveList;
@@ -45,7 +46,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
         ImageButton addfriendButton = findViewById(R.id.addfriendlistButton);
         addfriendButton.setVisibility(GONE);
 
-        friendListView = findViewById(R.id.friendListView);
+        ListView friendListView = findViewById(R.id.friendListView);
         friendList = new ArrayList<>();
         saveList = new ArrayList<>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
@@ -76,7 +77,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent apptFriendIntent = new Intent();
-                String nickname = null;
+                String nickname;
                 if(friendList.get(position).getFriendNickname().equals("null")){
                     nickname = friendList.get(position).getUserNickname();
                 }else{

@@ -89,8 +89,6 @@ public class RequestHttpURLConnection {
 
             return page.toString();
 
-        } catch (MalformedURLException e) { // for URL.
-            e.printStackTrace();
         } catch (IOException e) { // for openConnection().
             e.printStackTrace();
         } finally {

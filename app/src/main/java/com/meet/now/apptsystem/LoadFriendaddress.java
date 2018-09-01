@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 import android.graphics.PointF;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ import static com.meet.now.apptsystem.MainActivity.userID;
 class LoadFriendaddress extends AsyncTask<String, Void, Void> {
 
     static public List<MapApptfriend> mapApptfriendList;
-    String target;
+    private String target;
 
     @Override
     protected void onPreExecute() {
@@ -88,7 +89,9 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             // 해당 로그인 유저 userID, userAddress 리스트에 삽입
             PointF point = AddressToGeocode.getGeocode(userAddress);
             MapApptfriend mapApptfriend = new MapApptfriend(userID, null, "나", userAddress, point);
+            Log.w("BugTest", String.valueOf(mapApptfriend));
             mapApptfriendList.add(mapApptfriend);
+            Log.w("ApptMemberNumber", String.valueOf(mapApptfriendList));
 
         } catch (Exception e) {
             e.printStackTrace();

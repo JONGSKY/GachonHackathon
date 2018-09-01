@@ -4,9 +4,9 @@ public class Friend {
 
     String userID;
     String userPhoto;
-    String friendNickname;
+    private String friendNickname;
     String userNickname;
-    String userStatusmsg;
+    private String userStatusmsg;
 
     public String getUserID() {
         return userID;
@@ -48,7 +48,7 @@ public class Friend {
         this.userStatusmsg = userStatusmsg;
     }
 
-    public Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg) {
+    Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg) {
         this.userID = userID;
         this.userPhoto = userPhoto;
         this.friendNickname = friendNickname;

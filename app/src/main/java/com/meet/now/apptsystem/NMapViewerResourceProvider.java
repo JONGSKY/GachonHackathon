@@ -50,7 +50,6 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 	private static final int POI_FONT_COLOR_ALPHABET = 0xFFFFFFFF;
 	private static final float POI_FONT_OFFSET_ALPHABET = 6.0F;
-	private static final Typeface POI_FONT_TYPEFACE = null;//Typeface.DEFAULT_BOLD;
 
 	private static final int CALLOUT_TEXT_COLOR_NORMAL = 0xFFFFFFFF;
 	private static final int CALLOUT_TEXT_COLOR_PRESSED = 0xFF9CA1AA;
@@ -60,7 +59,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	private final Rect mTempRect = new Rect();
 	private final Paint mTextPaint = new Paint();
 
-	public NMapViewerResourceProvider(Context context) {
+	NMapViewerResourceProvider(Context context) {
 		super(context);
 
 		mTextPaint.setAntiAlias(true);
@@ -73,7 +72,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * @param focused true for focused state, false otherwise.
 	 * @return
 	 */
-	public Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
+	private Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
 		Drawable marker = null;
 
 		int resourceId = findResourceIdForMarker(markerId, focused);
@@ -280,7 +279,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		return drawable;
 	}
 
-	public Drawable getDrawableWithNumber(int resourceId, String strNumber, float offsetY, int fontColor, float fontSize) {
+	private Drawable getDrawableWithNumber(int resourceId, String strNumber, float offsetY, int fontColor, float fontSize) {
 
 		Bitmap textBitmap = getBitmapWithText(resourceId, strNumber, fontColor, fontSize, offsetY);
 
@@ -368,14 +367,11 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 			NMapPOIitem poiItem = (NMapPOIitem)item;
 
 			if (poiItem.showRightButton()) {
-				Drawable drawable = mContext.getResources().getDrawable(R.drawable.bg_speech);
-				return drawable;
+				return mContext.getResources().getDrawable(R.drawable.bg_speech);
 			}
 		}
 
-		Drawable drawable = mContext.getResources().getDrawable(R.drawable.pin_ballon_bg);
-
-		return drawable;
+		return mContext.getResources().getDrawable(R.drawable.pin_ballon_bg);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class appt_list_view_adapter extends BaseAdapter {
     private int layout;
     private Context context;
 
-    public appt_list_view_adapter(Context context,  int layout, ArrayList<HashMap<String, ArrayList<String>>> arrayList) {
+    appt_list_view_adapter(Context context, int layout, ArrayList<HashMap<String, ArrayList<String>>> arrayList) {
         this.context = context;
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.arrayList = arrayList;
@@ -95,8 +95,8 @@ public class appt_list_view_adapter extends BaseAdapter {
         return view;
     }
 
-    public String week_result(String date) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    private String week_result(String date) throws ParseException {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         Date date1 = formatter.parse(date);  // 날짜 입력하는곳 .
         date1 = new Date(date1.getTime() + (1000 * 60 * 60 * 24));  // 날짜에 하루를 더한 값

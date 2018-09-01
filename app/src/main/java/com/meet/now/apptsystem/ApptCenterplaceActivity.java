@@ -1,6 +1,5 @@
 package com.meet.now.apptsystem;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,12 +30,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private final String TAG = "ApptCenterplaceActivity";
 
     private NMapView mMapView;
-    private NMapController mMapController;
 
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
-
-    private ViewGroup mapLayout;
 
     LoadFriendaddress loadFriendaddress;
 
@@ -118,28 +114,30 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("result", requestCode +" " + resultCode);
         if(resultCode == RESULT_OK){
-            if(requestCode == SEARCH_MAP){
+            switch (requestCode) {
+                case SEARCH_MAP:
 
-            }
-            else if(requestCode == UPDATE_PERSON){
-                // 이름과 주소로 핀찍기
-                String friendName = data.getStringExtra("friendName");
-                String friendAddr = data.getStringExtra("friendAddr");
-                Toast.makeText(getApplicationContext(), friendName + " " + friendAddr, Toast.LENGTH_SHORT).show();
+                    break;
+                case UPDATE_PERSON:
+                    // 이름과 주소로 핀찍기
+                    String friendName = data.getStringExtra("friendName");
+                    String friendAddr = data.getStringExtra("friendAddr");
+                    Toast.makeText(getApplicationContext(), friendName + " " + friendAddr, Toast.LENGTH_SHORT).show();
 
-            }
-            else if(requestCode == UPDATE_DISTANCE) {
-                int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
-                if (result != 0) {
-                    Toast.makeText(getApplicationContext(), result + "", Toast.LENGTH_SHORT).show();
+                    break;
+                case UPDATE_DISTANCE:
+                    int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
+                    if (result != 0) {
+                        Toast.makeText(getApplicationContext(), result + "", Toast.LENGTH_SHORT).show();
 
-                    // 지도 축척 변경
-                    NMapController nMapController = mMapView.getMapController();
-                    NGeoPoint nGeoPoint = nMapController.getMapCenter();
-                    nMapController.setMapCenter(nGeoPoint, result);
-                    // 추천 위치 추가 필요 및 단위 변경
+                        // 지도 축척 변경
+                        NMapController nMapController = mMapView.getMapController();
+                        NGeoPoint nGeoPoint = nMapController.getMapCenter();
+                        nMapController.setMapCenter(nGeoPoint, result);
+                        // 추천 위치 추가 필요 및 단위 변경
 
-                }
+                    }
+                    break;
             }
 
         }
@@ -171,7 +169,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     private void init() {
 
-        mapLayout = findViewById(R.id.map_view);
+        ViewGroup mapLayout = findViewById(R.id.map_view);
 
         mMapView = new NMapView(this);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
@@ -186,7 +184,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         mMapView.setOnMapViewTouchEventListener(mapListener);
         mapLayout.addView(mMapView);
 
-        mMapController = mMapView.getMapController();
+        NMapController mMapController = mMapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
 
         new Handler().postDelayed(new Runnable() {
@@ -203,6 +201,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
         int markerId = NMapPOIflagType.PIN;
         int spotId = NMapPOIflagType.SPOT;
+
+        SetCenterPlace setCenterPlace = new SetCenterPlace(mapApptfriendList);
+        NGeoPoint newMiddlePoint = setCenterPlace.CenterPlace();
 
         // set POI data
         NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size()+1, nMapResourceProvider);
@@ -221,7 +222,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 spotCount++;
             }
         }
-        poiData.addPOIitem(middleSpot.longitude/spotCount, middleSpot.latitude/spotCount, "중간지점", spotId, 0);
+
+        poiData.addPOIitem(newMiddlePoint.latitude, newMiddlePoint.longitude, "중간지점", spotId, 0);
 
         poiData.endPOIdata();
 

@@ -18,7 +18,6 @@ public class AddressToGeocode {
 
     public static PointF getGeocode(String address) {
 
-        String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
         PointF point = new PointF();
 
         try {
@@ -29,7 +28,7 @@ public class AddressToGeocode {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("X-Naver-Client-Id", YOUR_CLIENT_ID);
-            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            con.setRequestProperty("X-Naver-Client-Secret", YOUR_CLIENT_SECRET);
             int responseCode = con.getResponseCode();  // 멈추는 시점
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
@@ -44,8 +43,8 @@ public class AddressToGeocode {
             }
             br.close();
 
-            Float coordX = 0.0f;
-            Float coordY = 0.0f;
+            Float coordX;
+            Float coordY;
             JSONObject jsonObject = new JSONObject(response.toString());
 
             JSONArray jsonArray = new JSONObject(jsonObject.get("result").toString()).getJSONArray("items");
@@ -59,8 +58,6 @@ public class AddressToGeocode {
             return point;
 
         } catch (Exception e) {
-            System.out.println(e);
-
             point.set(200f, 200f);  // 잘못된 주소 예외처리
             return point;
 

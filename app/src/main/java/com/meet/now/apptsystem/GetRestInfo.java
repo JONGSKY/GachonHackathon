@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,6 +26,7 @@ public class GetRestInfo {
         return JsonArray;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class GetData extends AsyncTask<String, Void, JSONArray>{
         @Override
         protected JSONArray doInBackground(String... strings) {

@@ -7,7 +7,7 @@ public class Dday {
     private String apptNo;
     private int dDay;
 
-    public Dday(String apptName, String apptDate, int dDay, String apptNo) {
+    Dday(String apptName, String apptDate, int dDay, String apptNo) {
         this.apptName = apptName;
         this.apptDate = apptDate;
         this.dDay = dDay;

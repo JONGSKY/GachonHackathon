@@ -15,13 +15,11 @@ public class appt_detail_date_adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private JSONArray jsonArray;
     private int layout;
-    private Context context;
 
-    public appt_detail_date_adapter(Context context, int layout, JSONArray jsonArray) {
+    appt_detail_date_adapter(Context context, int layout, JSONArray jsonArray) {
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.jsonArray = jsonArray;
         this.layout = layout;
-        this.context = context;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class appt_detail_date_adapter extends BaseAdapter {
         String ApptPlace = "약속 장소 : ";
 
         String ApptnameValue = null;
-        String ApptplaceValue = null;
+        String ApptplaceValue;
 
         try {
             jsonObject = jsonArray.getJSONObject(i);
