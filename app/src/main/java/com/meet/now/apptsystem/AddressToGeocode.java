@@ -1,7 +1,6 @@
 package com.meet.now.apptsystem;
 
 import android.graphics.PointF;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,12 +13,11 @@ import java.net.URLEncoder;
 
 public class AddressToGeocode {
 
-    static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
-    static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
+    private static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
+    private static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
 
     public static PointF getGeocode(String address) {
 
-        String clientId = YOUR_CLIENT_ID;//애플리케이션 클라이언트 아이디값";
         String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
         PointF point = new PointF();
 
@@ -30,7 +28,7 @@ public class AddressToGeocode {
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Id", YOUR_CLIENT_ID);
             con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
             int responseCode = con.getResponseCode();  // 멈추는 시점
             BufferedReader br;
