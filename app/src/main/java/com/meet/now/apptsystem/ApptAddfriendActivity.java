@@ -1,20 +1,17 @@
 package com.meet.now.apptsystem;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,18 +42,18 @@ public class ApptAddfriendActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
 
-        ImageButton addfriendButton = (ImageButton) findViewById(R.id.addfriendlistButton);
+        ImageButton addfriendButton = findViewById(R.id.addfriendlistButton);
         addfriendButton.setVisibility(GONE);
 
-        friendListView = (ListView) findViewById(R.id.friendListView);
-        friendList = new ArrayList<Friend>();
-        saveList = new ArrayList<Friend>();
+        friendListView = findViewById(R.id.friendListView);
+        friendList = new ArrayList<>();
+        saveList = new ArrayList<>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
         new ApptAddfriendActivity.BackgroundTask().execute();
 
-        EditText search = (EditText)findViewById(R.id.searchFriend);
+        EditText search = findViewById(R.id.searchFriend);
 
         search.addTextChangedListener(new TextWatcher() {
             @Override

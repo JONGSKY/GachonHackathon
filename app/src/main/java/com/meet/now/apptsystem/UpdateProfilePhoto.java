@@ -3,7 +3,6 @@ package com.meet.now.apptsystem;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,14 +16,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.util.Objects;
 
 import static com.meet.now.apptsystem.ProfileLoadActivity.file;
 
@@ -45,7 +38,7 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.dialog_profile_photo_edit, null);
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        Objects.requireNonNull(getDialog().getWindow()).requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -57,11 +50,11 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         super.onActivityCreated(savedInstanceState);
         Log.d("시작", "onActivityCreated()");
 
-        Button camera = (Button) getView().findViewById(R.id.camera_btn);
+        Button camera = Objects.requireNonNull(getView()).findViewById(R.id.camera_btn);
         camera.setOnClickListener(this);
-        Button photoAlbum = (Button) getView().findViewById(R.id.photoAlbum_btn);
+        Button photoAlbum = getView().findViewById(R.id.photoAlbum_btn);
         photoAlbum.setOnClickListener(this);
-        Button back = (Button) getView().findViewById(R.id.btn_back_photo);
+        Button back = getView().findViewById(R.id.btn_back_photo);
         back.setOnClickListener(this);
     }
 
@@ -96,7 +89,7 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         String sampleImg = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".JPEG"; // 파일이름.
         file = new File(Environment.getExternalStorageDirectory(), sampleImg); // sdcard에 새로운 파일 생성. 경로, 이름
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-        getActivity().startActivityForResult(intent, REQUEST_PICTURE);
+        Objects.requireNonNull(getActivity()).startActivityForResult(intent, REQUEST_PICTURE);
 
     }
 
@@ -105,7 +98,7 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        getActivity().startActivityForResult(intent, REQUEST_PHOTO_ALBUM);
+        Objects.requireNonNull(getActivity()).startActivityForResult(intent, REQUEST_PHOTO_ALBUM);
     }
 
 }

@@ -19,7 +19,7 @@ public class GeocodeToAddress {
 
         String clientId = YOUR_CLIENT_ID;//애플리케이션 클라이언트 아이디값";
         String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
-        HashMap<String, String> addressData = new HashMap<String, String>();
+        HashMap<String, String> addressData = new HashMap<>();
 
         try {
             String geo = URLEncoder.encode(geocode, "UTF-8");
@@ -37,7 +37,7 @@ public class GeocodeToAddress {
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -49,7 +49,7 @@ public class GeocodeToAddress {
 
             JSONObject object = new JSONObject(jsonArray.getJSONObject(0).get("addrdetail").toString());
 
-            String address = jsonArray.getJSONObject(0).getString("address").toString();
+            String address = jsonArray.getJSONObject(0).getString("address");
             String gu = object.getString("sigugun");
             String dong = object.getString("dongmyun");
 

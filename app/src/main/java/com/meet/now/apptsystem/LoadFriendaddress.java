@@ -2,7 +2,6 @@ package com.meet.now.apptsystem;
 
 import android.graphics.PointF;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,7 +28,7 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPreExecute() {
         target = "http://brad903.cafe24.com/LoadFriendaddress.php";
-        mapApptfriendList = new ArrayList<MapApptfriend>();
+        mapApptfriendList = new ArrayList<>();
     }
 
     @Override

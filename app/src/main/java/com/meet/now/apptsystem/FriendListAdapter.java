@@ -1,17 +1,12 @@
 package com.meet.now.apptsystem;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,9 +40,9 @@ public class FriendListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = View.inflate(context, R.layout.friend, null);
-        ImageView userPhoto = (ImageView) v.findViewById(R.id.userPhoto);
-        TextView userNickname = (TextView) v.findViewById(R.id.userNickname);
-        TextView statusMsg = (TextView) v.findViewById(R.id.statusMsg);
+        ImageView userPhoto = v.findViewById(R.id.userPhoto);
+        TextView userNickname = v.findViewById(R.id.userNickname);
+        TextView statusMsg = v.findViewById(R.id.statusMsg);
 
         String photo = friendList.get(i).getUserPhoto();
         String fnickname = friendList.get(i).getFriendNickname();

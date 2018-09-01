@@ -110,16 +110,14 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
     }
 
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList = loadFriendaddress.mapApptfriendList;
+        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
 
         int markerId = NMapPOIflagType.PIN;
-        int spotId = NMapPOIflagType.SPOT;
 
         // set POI data
         NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size()+1, nMapResourceProvider);
         poiData.beginPOIdata(mapApptfriendList.size()+1);
         NGeoPoint middleSpot = new NGeoPoint();
-        int spotCount = 0;
         for(int i=0; i<mapApptfriendList.size(); i++){
             MapApptfriend mapApptfriend = mapApptfriendList.get(i);
             double coordX = mapApptfriend.getPoint().x;

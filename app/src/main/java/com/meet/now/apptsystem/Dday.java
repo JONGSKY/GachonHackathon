@@ -2,10 +2,10 @@ package com.meet.now.apptsystem;
 
 public class Dday {
 
-    String apptName;
-    String apptDate;
-    String apptNo;
-    int dDay;
+    private String apptName;
+    private String apptDate;
+    private String apptNo;
+    private int dDay;
 
     public Dday(String apptName, String apptDate, int dDay, String apptNo) {
         this.apptName = apptName;

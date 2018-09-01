@@ -15,6 +15,7 @@
  */
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -194,6 +195,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * 
 	 * @see NMapPOIflagType
 	 */
+	@SuppressLint("LongLogTag")
 	@Override
 	protected int findResourceIdForMarker(int markerId, boolean focused) {
 		int resourceId = 0;
@@ -253,11 +255,11 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		drawable[0] = mContext.getResources().getDrawable(R.drawable.pubtrans_ic_mylocation_off);
 		drawable[1] = mContext.getResources().getDrawable(R.drawable.pubtrans_ic_mylocation_on);
 
-		for (int i = 0; i < drawable.length; i++) {
-			int w = drawable[i].getIntrinsicWidth() / 2;
-			int h = drawable[i].getIntrinsicHeight() / 2;
+		for (Drawable aDrawable : drawable) {
+			int w = aDrawable.getIntrinsicWidth() / 2;
+			int h = aDrawable.getIntrinsicHeight() / 2;
 
-			drawable[i].setBounds(-w, -h, w, h);
+			aDrawable.setBounds(-w, -h, w, h);
 		}
 
 		return drawable;
@@ -286,9 +288,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 		// set bounds
 		Drawable marker = new BitmapDrawable(mContext.getResources(), textBitmap);
-		if (marker != null) {
-			NMapOverlayItem.boundCenter(marker);
-		}
+		NMapOverlayItem.boundCenter(marker);
 
 		//Log.i(LOG_TAG, "getDrawableWithNumber: width=" + marker.getIntrinsicWidth() + ", height=" + marker.getIntrinsicHeight());
 
@@ -301,9 +301,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 		// set bounds
 		Drawable marker = new BitmapDrawable(mContext.getResources(), textBitmap);
-		if (marker != null) {
-			NMapOverlayItem.boundCenterBottom(marker);
-		}
+		NMapOverlayItem.boundCenterBottom(marker);
 
 		return marker;
 	}
@@ -344,9 +342,6 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		// set font size
 		mTextPaint.setTextSize(fontSize * mScaleFactor);
 		// set font type
-		if (POI_FONT_TYPEFACE != null) {
-			mTextPaint.setTypeface(POI_FONT_TYPEFACE);
-		}
 
 		// get text offset		
 		mTextPaint.getTextBounds(strNumber, 0, strNumber.length(), mTempRect);

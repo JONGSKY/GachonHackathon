@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="230dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:src="@drawable/baseline_map_black_18dp"
             android:visibility="invisible"
             app:backgroundTint="#ffffff"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="160dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:src="@drawable/baseline_add_location_black_18dp"
             android:visibility="invisible"
             app:backgroundTint="#ffffff"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="90dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:src="@android:drawable/ic_search_category_default"
             android:tint="@android:color/black"
             android:visibility="invisible"
@@ -67,10 +67,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="20dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:clickable="true"
             android:src="@drawable/ic_add"
-            app:backgroundTint="@color/colorAccent" />
+            app:backgroundTint="@color/colorAccent"
+            android:focusable="true" />
 
     </FrameLayout>
 </RelativeLayout>

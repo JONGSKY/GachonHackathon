@@ -1,19 +1,15 @@
 package com.meet.now.apptsystem;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 public class DaumWebViewActivity extends AppCompatActivity {
-    private WebView daum_webView;
     private Handler handler;
 
     @Override
@@ -29,9 +25,10 @@ public class DaumWebViewActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void init_webView() {
         // WebView 설정
-        daum_webView = (WebView) findViewById(R.id.daum_webview);
+        WebView daum_webView = findViewById(R.id.daum_webview);
 
         // JavaScript 허용
         daum_webView.getSettings().setJavaScriptEnabled(true);

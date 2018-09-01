@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -75,6 +76,7 @@ public class appt_list_view_activity extends AppCompatActivity{
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class GetData extends AsyncTask<String, Void, String>{
         ProgressDialog progressDialog;
         String errorString = null;

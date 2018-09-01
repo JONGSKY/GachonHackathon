@@ -2,9 +2,6 @@ package com.meet.now.apptsystem;
 
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -23,8 +20,8 @@ class Async_db extends AsyncTask<String, Void, String> {
             String userID = params[0];
             String userPhoto = params[1];
 
-            String data = null;
-            String link = null;
+            String data;
+            String link;
 
 
             data = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
@@ -56,8 +53,9 @@ class Async_db extends AsyncTask<String, Void, String> {
             httpURLConnection.disconnect();
             return sb.toString();
         } catch (Exception e) {
+            assert httpURLConnection != null;
             httpURLConnection.disconnect();
-            return new String("Exception Occure" + e.getMessage());
+            return "Exception Occure" + e.getMessage();
         }
     }
 }

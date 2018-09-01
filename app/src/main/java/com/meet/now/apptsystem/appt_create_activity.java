@@ -1,11 +1,13 @@
 package com.meet.now.apptsystem;
 
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,77 +20,59 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import com.meet.now.apptsystem.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.security.AccessController.getContext;
 
 public class appt_create_activity extends AppCompatActivity {
 
     private EditText appt_name;
-    private CalendarView appt_date;
     private Spinner appt_age;
-    private TimePicker appt_time;
     private Spinner appt_meeting_type;
-    private ImageButton apptAddfriend;
-    private Button createCancelBtn;
     private String Name;
     private String Date;
     private String Age;
     private String Time;
     private String Meeting;
-    private static final String TAGApptNo = "ApptNo";
-    private String mJsonString;
     private String USERID;
     private JSONArray jsonArray = new JSONArray();
     private JSONObject jsonMain = new JSONObject();
 
     ArrayList<String> friendList;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_create);
 
         appt_name = findViewById(R.id.appt_name_edit);
-        appt_date = findViewById(R.id.calendarView);
+        CalendarView appt_date = findViewById(R.id.calendarView);
         appt_age = findViewById(R.id.age_spinner);
-        appt_time = findViewById(R.id.appt_time_spinner);
+        TimePicker appt_time = findViewById(R.id.appt_time_spinner);
         appt_meeting_type = findViewById(R.id.appt_meeting_type_spinner);
-        apptAddfriend = findViewById(R.id.apptAddfriend);
-        createCancelBtn = findViewById(R.id.createCancelBtn);
+        ImageButton apptAddfriend = findViewById(R.id.apptAddfriend);
+        Button createCancelBtn = findViewById(R.id.createCancelBtn);
 
         Intent intent = getIntent();
         USERID = intent.getStringExtra("UserID");
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
-        SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
-        SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
-        SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
         Date = CurYearFormat.format(date) + "-" + CurMonthFormat.format(date) + "-" + CurDayFormat.format(date);
 
         appt_date.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -112,7 +96,7 @@ public class appt_create_activity extends AppCompatActivity {
         ArrayAdapter appt_meeting_type_adapter = ArrayAdapter.createFromResource(this, R.array.meeting_type_array, android.R.layout.simple_spinner_item);
         appt_meeting_type.setAdapter(appt_meeting_type_adapter);
 
-        Button button = (Button) findViewById(R.id.appt_create_button);
+        Button button = findViewById(R.id.appt_create_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,7 +116,7 @@ public class appt_create_activity extends AppCompatActivity {
             }
         });
 
-        friendList = new ArrayList<String>();
+        friendList = new ArrayList<>();
 
         createCancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +135,7 @@ public class appt_create_activity extends AppCompatActivity {
 
         switch(resultCode){
             case 1:
+                assert data != null;
                 String nickname = data.getStringExtra("nickname");
                 String friendID = data.getStringExtra("friendID");
                 String userPhoto = data.getStringExtra("userPhoto");
@@ -166,7 +151,7 @@ public class appt_create_activity extends AppCompatActivity {
 
                 friendList.add(friendID);
                 ApptFriend n_layout = new ApptFriend(getApplicationContext(), nickname, userPhoto);
-                LinearLayout con = (LinearLayout)findViewById(R.id.con);
+                LinearLayout con = findViewById(R.id.con);
                 con.addView(n_layout);
 
                 try {
@@ -204,6 +189,13 @@ public class appt_create_activity extends AppCompatActivity {
         async_test.execute(Name, Date, Age, Time, Meeting, USERID);
     }
 
+    public void createCancelBtnClicked(View view) {
+    }
+
+    public void createApptBtnClicked(View view) {
+    }
+
+    @SuppressLint("StaticFieldLeak")
     class AppointmentDetailPut extends AsyncTask<String, Void, String> {
 
         int cnt = 0;
@@ -280,8 +272,9 @@ public class appt_create_activity extends AppCompatActivity {
                 return sb.toString();//자 이렇게 리턴이되면 이제 post로 가겠습니다.
             } catch (Exception e) {
 
+                assert httpURLConnection != null;
                 httpURLConnection.disconnect();
-                return new String("Exception Occure" + e.getMessage());
+                return "Exception Occure" + e.getMessage();
             }//try catch end
         }//doInbackground end
     }//asynctask  end

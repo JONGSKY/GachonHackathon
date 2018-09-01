@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         userAddress = intent.getStringExtra("userAddress");
 
         ListView ddayListView = findViewById(R.id.ddayListView);
-        ddayList = new ArrayList<Dday>();
+        ddayList = new ArrayList<>();
         adapter = new DdayAdapter(getApplicationContext(), ddayList);
         ddayListView.setAdapter(adapter);
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button addfriendButton = (Button) findViewById(R.id.addfriendButton);
+        Button addfriendButton = findViewById(R.id.addfriendButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         lastTimeBackPressed = System.currentTimeMillis();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class BackgroundTask extends AsyncTask<Void, Void, String> {
         String target;
 
@@ -258,9 +260,9 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case MY_PERMISSION_STORAGE:
-                for(int i=0; i<grantResults.length; i++){
+                for (int grantResult : grantResults) {
                     // grantResult[] : 허용된 권한은 0, 거부한 권한은 -1
-                    if(grantResults[i] < 0){
+                    if (grantResult < 0) {
                         Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }

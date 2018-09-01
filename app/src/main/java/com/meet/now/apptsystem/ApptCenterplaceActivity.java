@@ -199,7 +199,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     }
 
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList = loadFriendaddress.mapApptfriendList;
+        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
 
         int markerId = NMapPOIflagType.PIN;
         int spotId = NMapPOIflagType.SPOT;
@@ -306,7 +306,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             Log.e(TAG, "OnMapViewTouchEventListener onSingleTapUp : ");
         }
     };
-
 }
 
 
