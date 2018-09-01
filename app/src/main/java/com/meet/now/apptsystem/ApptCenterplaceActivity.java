@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
+import com.nhn.android.maps.NMapOverlay;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
@@ -23,6 +24,9 @@ import com.nhn.android.maps.overlay.NMapPOIitem;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -39,7 +43,10 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private ViewGroup mapLayout;
 
     LoadFriendaddress loadFriendaddress;
+    LoadHotplace loadHotplace;
     NGeoPoint middleSpot;
+
+    NMapPOIdata hotplacePoiData;
 
     private Animation fab_open, fab_close;
     private Animation rotate_forward, rotate_backward;
@@ -74,6 +81,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
         loadFriendaddress = new LoadFriendaddress();
         loadFriendaddress.execute(apptNo);
+
+        loadHotplace = new LoadHotplace();
+        loadHotplace.execute();
 
         init();
 
@@ -111,14 +121,53 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         if(resultCode == RESULT_OK && requestCode == UPDATE_DISTANCE){
                 int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
                 if(result != 0){
-                    Toast.makeText(getApplicationContext(),result+"",Toast.LENGTH_SHORT).show();
-
                     // 지도 축척 변경
                     NMapController nMapController = mMapView.getMapController();
-                    nMapController.setMapCenter(middleSpot, result);
-                    // 추천 위치 추가 필요 및 단위 변경
 
-                    
+                    int hotspotId = NMapPOIflagType.HOTSPOT;
+                    JSONArray hotplaceList = LoadHotplace.hotplaceList;
+                    hotplacePoiData.removeAllPOIdata();  //  기존 띄워져있는 핀 지우기
+                    hotplacePoiData = new NMapPOIdata(hotplaceList.length(), nMapResourceProvider);  // 새로운 객체 생성
+                    hotplacePoiData.beginPOIdata(hotplaceList.length());
+                    double manify = 0.008*1;
+                    switch(result){
+                        case 11:
+                            break;
+                        case 10:
+                            manify = 0.008*2;
+                            break;
+                        case 9:
+                            manify = 0.008*3;
+                            break;
+                        case 8:
+                            manify = 0.008*5;
+                            break;
+                        default:
+                    }
+
+                    for(int i=0; i<hotplaceList.length(); i++){
+                        try{
+                            JSONObject hotplace = hotplaceList.getJSONObject(i);
+                            NGeoPoint hotPoint = new NGeoPoint();
+                            hotPoint.latitude = Double.parseDouble(hotplace.getString("latitude"));
+                            hotPoint.longitude = Double.parseDouble(hotplace.getString("longitude"));
+
+                            if(hotPoint.longitude-middleSpot.longitude>-manify && hotPoint.longitude-middleSpot.longitude<manify && hotPoint.latitude-middleSpot.latitude<manify && hotPoint.latitude-middleSpot.latitude>-manify){
+                                hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    hotplacePoiData.endPOIdata();
+
+                    // create POI data overlay
+                    NMapPOIdataOverlay hotplacePoiDataOverlay = mapOverlayManager.createPOIdataOverlay(hotplacePoiData, null);
+
+                    nMapController.setMapCenter(middleSpot, result);
+
                 }
 
         }
@@ -179,13 +228,17 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     private void setMarker() {
         List<MapApptfriend> mapApptfriendList = loadFriendaddress.mapApptfriendList;
+        JSONArray hotplaceList = LoadHotplace.hotplaceList;
 
         int markerId = NMapPOIflagType.PIN;
         int spotId = NMapPOIflagType.SPOT;
+        int hotspotId = NMapPOIflagType.HOTSPOT;
 
         // set POI data
         NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size()+1, nMapResourceProvider);
+        hotplacePoiData = new NMapPOIdata(hotplaceList.length(), nMapResourceProvider);
         poiData.beginPOIdata(mapApptfriendList.size()+1);
+        hotplacePoiData.beginPOIdata(hotplaceList.length());
         middleSpot = new NGeoPoint();
         int spotCount = 0;
         for(int i=0; i<mapApptfriendList.size(); i++){
@@ -207,10 +260,31 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
         poiData.endPOIdata();
 
+        for(int i=0; i<hotplaceList.length(); i++){
+            try{
+                JSONObject hotplace = hotplaceList.getJSONObject(i);
+                NGeoPoint hotPoint = new NGeoPoint();
+                hotPoint.latitude = Double.parseDouble(hotplace.getString("latitude"));
+                hotPoint.longitude = Double.parseDouble(hotplace.getString("longitude"));
+
+                double manify = 0.008*1;
+                if(hotPoint.longitude-middleSpot.longitude>-manify && hotPoint.longitude-middleSpot.longitude<manify && hotPoint.latitude-middleSpot.latitude<manify && hotPoint.latitude-middleSpot.latitude>-manify){
+                    hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+        hotplacePoiData.endPOIdata();
+
         // create POI data overlay
         NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
+        NMapPOIdataOverlay hotplacePoiDataOverlay = mapOverlayManager.createPOIdataOverlay(hotplacePoiData, null);
         poiDataOverlay.showAllPOIdata(0);
         poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
+        hotplacePoiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
     }
 
     private NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = new NMapPOIdataOverlay.OnStateChangeListener() {
