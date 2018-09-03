@@ -8,14 +8,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
-import com.nhn.android.maps.NMapOverlay;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
@@ -28,6 +26,7 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ApptCenterplaceActivity extends NMapActivity implements View.OnClickListener {
@@ -39,8 +38,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
-
-    private ViewGroup mapLayout;
 
     LoadFriendaddress loadFriendaddress;
     LoadHotplace loadHotplace;
@@ -153,7 +150,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                             hotPoint.longitude = Double.parseDouble(hotplace.getString("longitude"));
 
                             if(hotPoint.longitude-middleSpot.longitude>-manify && hotPoint.longitude-middleSpot.longitude<manify && hotPoint.latitude-middleSpot.latitude<manify && hotPoint.latitude-middleSpot.latitude>-manify){
-                                hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                                NMapPOIitem item = hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                                item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
                             }
                         }catch(Exception e){
                             e.printStackTrace();
@@ -165,6 +163,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
                     // create POI data overlay
                     NMapPOIdataOverlay hotplacePoiDataOverlay = mapOverlayManager.createPOIdataOverlay(hotplacePoiData, null);
+                    hotplacePoiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
 
                     nMapController.setMapCenter(middleSpot, result);
 
@@ -199,9 +198,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     private void init() {
 
-        mapLayout = findViewById(R.id.map_view);
-
-        mMapView = new NMapView(this);
+        mMapView = findViewById(R.id.map_view);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
         mMapView.setClickable(true);
         mMapView.setEnabled(true);
@@ -212,7 +209,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
         mMapView.setOnMapStateChangeListener(changeListener);
         mMapView.setOnMapViewTouchEventListener(mapListener);
-        mapLayout.addView(mMapView);
 
         mMapController = mMapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
@@ -269,7 +265,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
                 double manify = 0.008*1;
                 if(hotPoint.longitude-middleSpot.longitude>-manify && hotPoint.longitude-middleSpot.longitude<manify && hotPoint.latitude-middleSpot.latitude<manify && hotPoint.latitude-middleSpot.latitude>-manify){
-                    hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                    NMapPOIitem item = hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                    item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
                 }
             }catch(Exception e){
                 e.printStackTrace();
@@ -288,17 +285,32 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     }
 
     private NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = new NMapPOIdataOverlay.OnStateChangeListener() {
+
+        String dong = null;
+        String gu = null;
+
         @Override
         public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-
+            Log.w(TAG, "onFocusChanged: ");
         }
 
         @Override
         public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
             if (nMapPOIitem != null) {
-                Log.e(TAG, "onFocusChanged: " + nMapPOIitem.toString());
+
+                GeocodeToAddress geoToadd = new GeocodeToAddress(new AddressAsyncResponse(){
+                    @Override
+                    public void processFinish(HashMap<String, String> output) {
+                        dong = output.get("dong").toString();
+                        gu = output.get("gu").toString();
+
+                    }
+                });
+                geoToadd.execute(nMapPOIitem.toString());
+
+                Log.w(TAG, "onCalloutClick: " + nMapPOIitem.toString());
             } else {
-                Log.e(TAG, "onFocusChanged: ");
+                Log.w(TAG, "onCalloutClick: ");
             }
         }
     };

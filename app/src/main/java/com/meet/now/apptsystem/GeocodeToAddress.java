@@ -1,5 +1,7 @@
 package com.meet.now.apptsystem;
 
+import android.os.AsyncTask;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,16 +12,25 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class GeocodeToAddress {
+public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, String>> {
+
+    public AddressAsyncResponse delegate = null;
+
+    public GeocodeToAddress(AddressAsyncResponse delegate){
+        this.delegate = delegate;
+    }
 
     static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
     static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
+    HashMap<String, String> addressData;
 
-    public HashMap<String, String> getAddress(String geocode) {
+    @Override
+    protected HashMap<String, String> doInBackground(String... geocodeInfo) {
 
+        String geocode = geocodeInfo[0];
         String clientId = YOUR_CLIENT_ID;//애플리케이션 클라이언트 아이디값";
         String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
-        HashMap<String, String> addressData = new HashMap<String, String>();
+        addressData = new HashMap<String, String>();
 
         try {
             String geo = URLEncoder.encode(geocode, "UTF-8");
@@ -63,6 +74,13 @@ public class GeocodeToAddress {
             System.out.println(e);
             return null;  // 잘못된 좌표로 오류가 발생할 경우
         }
+
     }
 
+    @Override
+    protected void onPostExecute(HashMap<String, String> stringStringHashMap) {
+        super.onPostExecute(stringStringHashMap);
+
+        delegate.processFinish(addressData);
+    }
 }
