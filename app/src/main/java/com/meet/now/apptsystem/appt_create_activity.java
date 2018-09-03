@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -98,7 +100,17 @@ public class appt_create_activity extends AppCompatActivity {
             }
         });
 
-        Time = String.valueOf(appt_time.getHour()) + ":" + String.valueOf(appt_time.getMinute());
+        // TimePicker 버전호환
+        int hour, min;
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1){
+            hour = appt_time.getHour();
+            min = appt_time.getMinute();
+        } else {
+            hour = appt_time.getCurrentHour();
+            min = appt_time.getCurrentMinute();
+        }
+        Time = String.valueOf(hour) + ":" + String.valueOf(min);
         appt_time.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hour, int minute) {

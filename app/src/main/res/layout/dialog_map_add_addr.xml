@@ -38,7 +38,7 @@
         android:background="#c38f8f8f"/>
 
     <com.nhn.android.maps.NMapView
-        android:id="@+id/map_view"
+        android:id="@+id/map_view_non"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="32dp"
@@ -48,13 +48,14 @@
     <TextView
         android:id="@+id/tv_add_addr_now"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="60dp"
         android:layout_above="@+id/btn_map_ok"
         android:layout_margin="16dp"
-        android:background="#ffffff"
+        android:background="@drawable/border"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:textSize="20sp"/>
+        android:textSize="16sp"
+        android:textColor="#ffffff"/>
     <Button
         android:id="@+id/btn_map_ok"
         android:layout_width="match_parent"

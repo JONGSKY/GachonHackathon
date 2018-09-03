@@ -2,6 +2,8 @@ package com.meet.now.apptsystem;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static com.meet.now.apptsystem.MainActivity.userID;
 
@@ -56,6 +59,7 @@ public class FriendlistActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
+        Intent intent = getIntent();
 
         friendListView = (ListView) findViewById(R.id.friendListView);
         friendList = new ArrayList<Friend>();
@@ -63,6 +67,28 @@ public class FriendlistActivity extends AppCompatActivity {
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
+        friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent mapAddMember = getIntent();
+                if (mapAddMember !=null) {
+                    Log.e("mapAddMember", "성공");
+                    // 아이템 클릭시 돌아가기
+                    String friendID = friendList.get(position).getUserID();
+                    String friendNickname = friendList.get(position).getFriendNickname();
+                    String userNickname = friendList.get(position).getUserNickname();
+
+                    mapAddMember.putExtra("friendID", friendID);
+                    mapAddMember.putExtra("friendNickname", friendNickname);
+                    mapAddMember.putExtra("userNickname", userNickname);
+
+                    setResult(RESULT_OK, mapAddMember);
+                    finish();
+
+                }
+                Log.e("mapAddMember", "실패");
+            }
+        });
         ImageButton addfriendButton = (ImageButton) findViewById(R.id.addfriendlistButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,10 +96,12 @@ public class FriendlistActivity extends AppCompatActivity {
                 customAddfriendDialog();
             }
         });
-
+        if(intent.getStringExtra("apptNo") != null){
+            addfriendButton.setVisibility(View.GONE);
+        }
         new BackgroundTask().execute();
 
-        EditText search = (EditText)findViewById(R.id.searchFriend);
+        EditText search = (EditText) findViewById(R.id.searchFriend);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -93,10 +121,10 @@ public class FriendlistActivity extends AppCompatActivity {
 
     }
 
-    public void searchFriend(String search){
+    public void searchFriend(String search) {
         friendList.clear();
-        for(int i=0; i<saveList.size(); i++){
-            if(saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)){
+        for (int i = 0; i < saveList.size(); i++) {
+            if (saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)) {
                 friendList.add(saveList.get(i));
             }
         }
@@ -121,7 +149,7 @@ public class FriendlistActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                final String friendID = findfriendID.getText().toString().replaceAll("\\p{Z}","");  // 공백제거
+                final String friendID = findfriendID.getText().toString().replaceAll("\\p{Z}", "");  // 공백제거
                 dialogsearch.setVisibility(View.GONE);
 
                 if (friendID.equals(userID) || friendID.equals("")) {
@@ -160,14 +188,14 @@ public class FriendlistActivity extends AppCompatActivity {
                                             Response.Listener<String> responseListener = new Response.Listener<String>() {
                                                 @Override
                                                 public void onResponse(String response) {
-                                                    try{
+                                                    try {
                                                         JSONObject jsonResponse = new JSONObject(response);
                                                         boolean success = jsonResponse.getBoolean("success");
-                                                        if(success){
+                                                        if (success) {
                                                             new BackgroundTask().execute();
                                                             addfriendDialog.cancel();
 
-                                                        }else{
+                                                        } else {
                                                             dialogmessage.setText("이미 추가된 친구입니다. 다시 검색해주세요.");
                                                             searchfriendButton.setText("다시 검색");
                                                             searchfriendButton.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +206,7 @@ public class FriendlistActivity extends AppCompatActivity {
                                                                 }
                                                             });
                                                         }
-                                                    }catch(JSONException e){
+                                                    } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
                                                 }
@@ -212,7 +240,7 @@ public class FriendlistActivity extends AppCompatActivity {
         addfriendDialog.show();
     }
 
-    static class BackgroundTask extends AsyncTask<Void, Void, String>{
+    static class BackgroundTask extends AsyncTask<Void, Void, String> {
         String target;
 
         @Override
@@ -222,13 +250,13 @@ public class FriendlistActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
-            try{
+            try {
                 URL url = new URL(target);
-                Map<String,Object> params = new LinkedHashMap<>();
+                Map<String, Object> params = new LinkedHashMap<>();
                 params.put("userID", userID);
 
                 StringBuilder postData = new StringBuilder();
-                for (Map.Entry<String,Object> param : params.entrySet()) {
+                for (Map.Entry<String, Object> param : params.entrySet()) {
                     if (postData.length() != 0) postData.append('&');
                     postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
                     postData.append('=');
@@ -236,7 +264,7 @@ public class FriendlistActivity extends AppCompatActivity {
                 }
                 byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
@@ -246,15 +274,15 @@ public class FriendlistActivity extends AppCompatActivity {
                 Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
                 StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
+                for (int c; (c = in.read()) >= 0; )
+                    sb.append((char) c);
                 String response = sb.toString().trim();
 
                 in.close();
                 conn.disconnect();
                 return response;
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -267,7 +295,7 @@ public class FriendlistActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {   // 결과 처리부분
-            try{
+            try {
                 friendList.clear();
                 saveList.clear();
 
@@ -277,7 +305,7 @@ public class FriendlistActivity extends AppCompatActivity {
 
                 int count = 0;
                 String userID, userPhoto, friendNickname, userNickname, userStatusmsg;
-                while(count < jsonArray.length()) {
+                while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     userID = object.getString("friendID");
                     userPhoto = object.getString("userPhoto");
@@ -292,7 +320,7 @@ public class FriendlistActivity extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

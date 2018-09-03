@@ -1,12 +1,12 @@
 package com.meet.now.apptsystem;
 
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +22,7 @@ import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class UpdateMapPersonAddAddr extends NMapActivity {
@@ -32,6 +33,7 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
 
+    LoadNonaddress loadNonaddress;
     LoadFriendaddress loadFriendaddress;
     TextView nowAddr;
 
@@ -69,6 +71,8 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             }
         });
 
+        loadNonaddress = new LoadNonaddress();
+        loadNonaddress.execute(apptNo);
         loadFriendaddress = new LoadFriendaddress();
         loadFriendaddress.execute(apptNo);
 
@@ -79,12 +83,10 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
     }
 
 
-
     private void init() {
 
-        ViewGroup mapLayout = findViewById(R.id.map_view);
-
-        mMapView = new NMapView(this);
+        mMapView = findViewById(R.id.map_view_non);
+        mMapView.setVisibility(View.INVISIBLE);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
         mMapView.setClickable(true);
         mMapView.setEnabled(true);
@@ -95,7 +97,6 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
 
         mMapView.setOnMapStateChangeListener(changeListener);
         mMapView.setOnMapViewTouchEventListener(mapListener);
-        mapLayout.addView(mMapView);
 
         NMapController mMapController = mMapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
@@ -104,31 +105,44 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             @Override
             public void run() {
                 setMarker();
+                mMapView.setVisibility(View.VISIBLE);
             }
         }, 3000);
 
     }
 
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList = loadFriendaddress.mapApptfriendList;
-
+        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
+        List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
         int markerId = NMapPOIflagType.PIN;
-        int spotId = NMapPOIflagType.SPOT;
+
+        int size = mapApptfriendList.size() + 1;
+        if (mapApptNonList != null) {
+            size += mapApptNonList.size();
+        }
 
         // set POI data
-        NMapPOIdata poiData = new NMapPOIdata(mapApptfriendList.size()+1, nMapResourceProvider);
-        poiData.beginPOIdata(mapApptfriendList.size()+1);
-        NGeoPoint middleSpot = new NGeoPoint();
-        int spotCount = 0;
-        for(int i=0; i<mapApptfriendList.size(); i++){
+        NMapPOIdata poiData = new NMapPOIdata(size, nMapResourceProvider);
+        poiData.beginPOIdata(size);
+        for (int i = 0; i < mapApptfriendList.size(); i++) {
             MapApptfriend mapApptfriend = mapApptfriendList.get(i);
             double coordX = mapApptfriend.getPoint().x;
             double coordY = mapApptfriend.getPoint().y;
-            if(coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650){  // 경기, 서울로 마크 표시 제한
+            if (coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650) {  // 경기, 서울로 마크 표시 제한
                 poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
             }
         }
-
+        if (mapApptNonList != null) {
+            // 비회원 마크
+            for (int i = 0; i < mapApptNonList.size(); i++) {
+                MapApptfriend mapApptfriend = mapApptNonList.get(i);
+                double coordX = mapApptfriend.getPoint().x;
+                double coordY = mapApptfriend.getPoint().y;
+                if (coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650) {  // 경기, 서울로 마크 표시 제한
+                    poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
+                }
+            }
+        }
         poiData.endPOIdata();
 
         // create POI data overlay
@@ -140,7 +154,6 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
     private NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = new NMapPOIdataOverlay.OnStateChangeListener() {
         @Override
         public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-
         }
 
         @Override
@@ -163,12 +176,24 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         @Override
         public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
             Log.e(TAG, "OnMapStateChangeListener onMapCenterChange : " + nGeoPoint.getLatitude() + " ㅡ  " + nGeoPoint.getLongitude());
-            // 손떼고 한참지나면 현재 중심좌표와 주소를 가져온다.
+            final double longitude = nGeoPoint.getLongitude();
+            final double latitude = nGeoPoint.getLatitude();
 
-            nowAddr.setText("강동구 암사동");
-            // 주소로 바꿔서 창에 띄운다.
+            GeocodeToAddress geocodeToAddress = new GeocodeToAddress(new AsyncListener() {
+                @Override
+                public void taskComplete(PointF point) {
+                }
 
+                @Override
+                public void taskComplete(HashMap<String, String> hashMap) {
+                    String address = null;
+                    if (hashMap != null) address = hashMap.get("address");
+                    nowAddr.setText(address);
+                }
+            });
+            geocodeToAddress.execute(longitude + "," + latitude);
         }
+
 
         @Override
         public void onMapCenterChangeFine(NMapView nMapView) {
@@ -205,11 +230,13 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         @Override
         public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
             Log.e(TAG, "OnMapViewTouchEventListener onTouchUp : ");
+
         }
 
         @Override
         public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent1) {
             Log.e(TAG, "OnMapViewTouchEventListener onScroll : ");
+
         }
 
         @Override

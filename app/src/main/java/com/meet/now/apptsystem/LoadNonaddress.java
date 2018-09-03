@@ -21,15 +21,15 @@ import java.util.Map;
 import static com.meet.now.apptsystem.MainActivity.userAddress;
 import static com.meet.now.apptsystem.MainActivity.userID;
 
-class LoadFriendaddress extends AsyncTask<String, Void, Void> {
+class LoadNonaddress extends AsyncTask<String, Void, Void> {
 
-    static public List<MapApptfriend> mapApptfriendList;
+    static public List<MapApptfriend> mapApptNonList;
     String target;
 
     @Override
     protected void onPreExecute() {
-        target = "http://brad903.cafe24.com/LoadFriendaddress.php";
-        mapApptfriendList = new ArrayList<MapApptfriend>();
+        target = "http://brad903.cafe24.com/LoadNonaddress.php";
+        mapApptNonList = new ArrayList<MapApptfriend>();
     }
 
     @Override
@@ -37,9 +37,7 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
         try {
             URL url = new URL(target);
             Map<String, Object> params = new LinkedHashMap<>();
-
-            params.put("userID", userID);
-            params.put("apptNo", Apptinfo[0]);
+            params.put("ApptNo", Apptinfo[0]);
 
             StringBuilder postData = new StringBuilder();
             for (Map.Entry<String, Object> param : params.entrySet()) {
@@ -49,7 +47,6 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
                 postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
             }
             byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -69,27 +66,17 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
 
             JSONObject jsonObject = new JSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("response");
-
             int count = 0;
-            String friendID, friendNickname, userNickname, friendAddress;
+            String userNickname, friendAddress;
             while (count < jsonArray.length()) {
                 JSONObject object = jsonArray.getJSONObject(count);
-                friendID = object.getString("friendID");
-                friendNickname = object.getString("friendNickname");
-                userNickname = object.getString("userNickname");
-                friendAddress = object.getString("userAddress");
-
+                userNickname = object.getString("NonNickName");
+                friendAddress = object.getString("NonAddr");
                 PointF point = AddressToGeocode.getGeocode(friendAddress);
-
-                MapApptfriend mapApptfriend = new MapApptfriend(friendID, friendNickname, userNickname, friendAddress, point);
-                mapApptfriendList.add(mapApptfriend);
+                MapApptfriend mapApptfriend = new MapApptfriend(null, "비회원", userNickname, friendAddress, point);
+                mapApptNonList.add(mapApptfriend);
                 count++;
             }
-
-            // 해당 로그인 유저 userID, userAddress 리스트에 삽입
-            PointF point = AddressToGeocode.getGeocode(userAddress);
-            MapApptfriend mapApptfriend = new MapApptfriend(userID, null, "나", userAddress, point);
-            mapApptfriendList.add(mapApptfriend);
 
         } catch (Exception e) {
             e.printStackTrace();

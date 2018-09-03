@@ -1,5 +1,8 @@
 package com.meet.now.apptsystem;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,16 +13,29 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-public class GeocodeToAddress {
+public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, String>> {
 
-    static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
-    static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
+    AsyncListener listener;
+    private static final String YOUR_CLIENT_ID = "L5FRpfj4Qo90C0P53Sgo";
+    private static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
 
-    public HashMap<String, String> getAddress(String geocode) {
+    GeocodeToAddress(){}
+    GeocodeToAddress(AsyncListener listener){
+        this.listener = listener;
+    }
 
-        String clientId = YOUR_CLIENT_ID;//애플리케이션 클라이언트 아이디값";
-        String clientSecret = YOUR_CLIENT_SECRET;//애플리케이션 클라이언트 시크릿값";
-        HashMap<String, String> addressData = new HashMap<String, String>();
+    @Override
+    protected void onPostExecute(HashMap<String, String> hashMap) {
+        super.onPostExecute(hashMap);
+        if(this.listener != null){
+            listener.taskComplete(hashMap);
+        }
+    }
+
+    @Override
+    protected HashMap<String, String> doInBackground(String... strings) {
+        HashMap<String, String> addressData = new HashMap<>();
+        String geocode = strings[0];
 
         try {
             String geo = URLEncoder.encode(geocode, "UTF-8");
@@ -27,8 +43,8 @@ public class GeocodeToAddress {
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("X-Naver-Client-Id", clientId);
-            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            con.setRequestProperty("X-Naver-Client-Id", YOUR_CLIENT_ID);
+            con.setRequestProperty("X-Naver-Client-Secret", YOUR_CLIENT_SECRET);
             int responseCode = con.getResponseCode();  // 멈추는 시점
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
@@ -37,7 +53,7 @@ public class GeocodeToAddress {
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -49,7 +65,7 @@ public class GeocodeToAddress {
 
             JSONObject object = new JSONObject(jsonArray.getJSONObject(0).get("addrdetail").toString());
 
-            String address = jsonArray.getJSONObject(0).getString("address").toString();
+            String address = jsonArray.getJSONObject(0).getString("address");
             String gu = object.getString("sigugun");
             String dong = object.getString("dongmyun");
 
@@ -57,12 +73,12 @@ public class GeocodeToAddress {
             addressData.put("gu", gu);
             addressData.put("dong", dong);
 
+            Log.e("address", address);
             return addressData;
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             return null;  // 잘못된 좌표로 오류가 발생할 경우
         }
     }
-
 }

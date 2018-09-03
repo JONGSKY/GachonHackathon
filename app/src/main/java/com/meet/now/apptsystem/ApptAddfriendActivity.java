@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.content.Intent;
+import android.graphics.PointF;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +17,12 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -29,11 +35,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static android.view.View.GONE;
 import static com.meet.now.apptsystem.MainActivity.userID;
 
-public class ApptAddfriendActivity extends AppCompatActivity{
+public class ApptAddfriendActivity extends AppCompatActivity {
 
     static private ListView friendListView;
     static private FriendListAdapter adapter;
@@ -56,7 +63,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
         new ApptAddfriendActivity.BackgroundTask().execute();
 
-        EditText search = (EditText)findViewById(R.id.searchFriend);
+        EditText search = (EditText) findViewById(R.id.searchFriend);
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,26 +86,26 @@ public class ApptAddfriendActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent apptFriendIntent = new Intent();
-                String nickname = null;
-                if(friendList.get(position).getFriendNickname().equals("null")){
-                    nickname = friendList.get(position).getUserNickname();
-                }else{
-                    nickname = friendList.get(position).getFriendNickname();
+                    String nickname = null;
+                    if (friendList.get(position).getFriendNickname().equals("null")) {
+                        nickname = friendList.get(position).getUserNickname();
+                    } else {
+                        nickname = friendList.get(position).getFriendNickname();
+                    }
+                    apptFriendIntent.putExtra("nickname", nickname);
+                    apptFriendIntent.putExtra("friendID", friendList.get(position).getUserID());
+                    apptFriendIntent.putExtra("userPhoto", friendList.get(position).getUserPhoto());
+                    setResult(1, apptFriendIntent);
+                    finish();
                 }
-                apptFriendIntent.putExtra("nickname", nickname);
-                apptFriendIntent.putExtra("friendID", friendList.get(position).getUserID());
-                apptFriendIntent.putExtra("userPhoto", friendList.get(position).getUserPhoto());
-                setResult(1, apptFriendIntent);
-                finish();
-            }
         });
 
     }
 
-    public void searchFriend(String search){
+    public void searchFriend(String search) {
         friendList.clear();
-        for(int i=0; i<saveList.size(); i++){
-            if(saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)){
+        for (int i = 0; i < saveList.size(); i++) {
+            if (saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)) {
                 friendList.add(saveList.get(i));
             }
         }
@@ -116,13 +123,13 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
         @Override
         protected String doInBackground(Void... voids) {
-            try{
+            try {
                 URL url = new URL(target);
-                Map<String,Object> params = new LinkedHashMap<>();
+                Map<String, Object> params = new LinkedHashMap<>();
                 params.put("userID", userID);
 
                 StringBuilder postData = new StringBuilder();
-                for (Map.Entry<String,Object> param : params.entrySet()) {
+                for (Map.Entry<String, Object> param : params.entrySet()) {
                     if (postData.length() != 0) postData.append('&');
                     postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
                     postData.append('=');
@@ -130,7 +137,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
                 }
                 byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
@@ -140,15 +147,15 @@ public class ApptAddfriendActivity extends AppCompatActivity{
                 Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
                 StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
+                for (int c; (c = in.read()) >= 0; )
+                    sb.append((char) c);
                 String response = sb.toString().trim();
 
                 in.close();
                 conn.disconnect();
                 return response;
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -161,7 +168,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String result) {   // 결과 처리부분
-            try{
+            try {
                 friendList.clear();
                 saveList.clear();
 
@@ -170,7 +177,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
                 int count = 0;
                 String userID, userPhoto, friendNickname, userNickname, userStatusmsg;
-                while(count < jsonArray.length()) {
+                while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     userID = object.getString("friendID");
                     userPhoto = object.getString("userPhoto");
@@ -185,7 +192,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
                 adapter.notifyDataSetChanged();
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
