@@ -62,33 +62,11 @@ public class UpdateMapPerson extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == ADD_MEMBER && data != null) {
-                // 받아온 변수로 서버저장 및 돌려주기
-                final String friendID = data.getStringExtra("friendID");
-                // 약속에 추가하기, 초기화
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JSONObject jsonResponse = null;
-                        try {
-                            jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success) {
-                                Intent intent = new Intent(UpdateMapPerson.this, ApptCenterplaceActivity.class);
-                                apptCenterplaceActivity.finish();
-                                finish();
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(getApplicationContext(), "추가 실패했습니다.다시 시도해주세요!", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                AddMemberRequest addMemberRequest = new AddMemberRequest(friendID, apptNo, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(UpdateMapPerson.this);
-                queue.add(addMemberRequest);
+            if (requestCode == ADD_MEMBER) {
+                Intent intent = new Intent(UpdateMapPerson.this, ApptCenterplaceActivity.class);
+                apptCenterplaceActivity.finish();
+                finish();
+                startActivity(intent);
 
             } else if (requestCode == ADD_NONMEMBER && data != null) {
                 // 비회원 추가 및 point 변환

@@ -75,15 +75,30 @@ public class FriendlistActivity extends AppCompatActivity {
                     Log.e("mapAddMember", "성공");
                     // 아이템 클릭시 돌아가기
                     String friendID = friendList.get(position).getUserID();
-                    String friendNickname = friendList.get(position).getFriendNickname();
-                    String userNickname = friendList.get(position).getUserNickname();
-
-                    mapAddMember.putExtra("friendID", friendID);
-                    mapAddMember.putExtra("friendNickname", friendNickname);
-                    mapAddMember.putExtra("userNickname", userNickname);
-
+                    String apptNo = mapAddMember.getStringExtra("apptNo");
                     setResult(RESULT_OK, mapAddMember);
-                    finish();
+                    // 받아온 변수로 서버저장 및 돌려주기
+                    // 약속에 추가하기, 초기화
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            JSONObject jsonResponse = null;
+                            try {
+                                jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success) {
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "추가 실패했습니다.다시 시도해주세요!", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    AddMemberRequest addMemberRequest = new AddMemberRequest(friendID, apptNo, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
+                    queue.add(addMemberRequest);
 
                 }
                 Log.e("mapAddMember", "실패");

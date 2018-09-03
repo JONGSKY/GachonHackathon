@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
@@ -51,6 +56,12 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appt_centerplace);
+        EditText editText = findViewById(R.id.et_center_place);
+        editText.setVisibility(View.GONE);
+        ImageButton imageButton = findViewById(R.id.ib_center_place);
+        imageButton.setVisibility(View.GONE);
+
+
         apptCenterplaceActivity = ApptCenterplaceActivity.this;
 
         Intent intent = getIntent();
@@ -81,6 +92,23 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
         nMapResourceProvider = new NMapViewerResourceProvider(this);
         mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
+
+        View view = this.getCurrentFocus();
+        if(view!= null){
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v != null){
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                }
+
+            }
+        });
+
     }
 
     public void onClick(View v) {
@@ -92,6 +120,12 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             case R.id.fab1:
                 anim();
                 Toast.makeText(this, "지도검색", Toast.LENGTH_SHORT).show();
+                EditText editText = findViewById(R.id.et_center_place);
+                editText.setVisibility(View.VISIBLE);
+                editText.bringToFront();
+                ImageButton imageButton = findViewById(R.id.ib_center_place);
+                imageButton.setVisibility(View.VISIBLE);
+                imageButton.bringToFront();
                 break;
             case R.id.fab2:
                 anim();
@@ -121,14 +155,15 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             if(requestCode == SEARCH_MAP){
                 Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
             }}
-            else if(requestCode == UPDATE_DISTANCE) {
+            else if(requestCode == UPDATE_DISTANCE && data != null) {
                 int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
                 if (result != 0) {
-
                     // 지도 축척 변경
                     NGeoPoint nGeoPoint = mMapController.getMapCenter();
                     mMapController.setMapCenter(nGeoPoint, result);
                     // 추천 위치 추가 필요 및 단위 변경
+
+
 
                 }
             }
@@ -310,6 +345,16 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         @Override
         public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
             Log.e(TAG, "OnMapViewTouchEventListener onSingleTapUp : ");
+            EditText editText = findViewById(R.id.et_center_place);
+            editText.setVisibility(View.GONE);
+            ImageButton imageButton = findViewById(R.id.ib_center_place);
+            imageButton.setVisibility(View.GONE);
+
+            View view = nMapView;
+            if(view!= null){
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+            }
         }
     };
 }
