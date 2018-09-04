@@ -6,6 +6,4 @@ import java.util.HashMap;
 
 public interface AsyncListener {
     void taskComplete(PointF point);
-
-    void taskComplete(HashMap<String, String> hashMap);
 }

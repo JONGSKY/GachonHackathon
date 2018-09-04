@@ -179,13 +179,10 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             final double longitude = nGeoPoint.getLongitude();
             final double latitude = nGeoPoint.getLatitude();
 
-            GeocodeToAddress geocodeToAddress = new GeocodeToAddress(new AsyncListener() {
-                @Override
-                public void taskComplete(PointF point) {
-                }
+            GeocodeToAddress geocodeToAddress = new GeocodeToAddress(new AddressAsyncResponse() {
 
                 @Override
-                public void taskComplete(HashMap<String, String> hashMap) {
+                public void processFinish(HashMap<String, String> hashMap) {
                     String address = null;
                     if (hashMap != null) address = hashMap.get("address");
                     nowAddr.setText(address);
