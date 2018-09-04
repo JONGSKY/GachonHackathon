@@ -10,10 +10,10 @@ import static com.meet.now.apptsystem.ProfileLoadActivity.file;
 // ftp 서버 연결 asyncTask
 class Async_ftp extends AsyncTask<String, Void, String> {
 
-    private static final String FTP_HOST = "brad903.cafe24.com";
-    private static final String FTP_USER = "brad903";
-    private static final String FTP_PASS = "Nvo78/fd4h";
-    private static final String FTP_PATH = "../userphoto/";
+    static final String FTP_HOST = "brad903.cafe24.com";
+    static final String FTP_USER = "brad903";
+    static final String FTP_PASS = "Nvo78/fd4h";
+    static final String FTP_PATH = "../userphoto/";
 
     @Override
     protected String doInBackground(String... params) {

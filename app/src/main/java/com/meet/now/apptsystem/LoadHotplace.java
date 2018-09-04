@@ -18,28 +18,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.meet.now.apptsystem.MainActivity.userAddress;
-import static com.meet.now.apptsystem.MainActivity.userID;
+class LoadHotplace extends AsyncTask<Void, Void, Void> {
 
-class LoadFriendaddress extends AsyncTask<String, Void, Void> {
-
-    static public List<MapApptfriend> mapApptfriendList;
+    static public JSONArray hotplaceList;
     String target;
 
     @Override
     protected void onPreExecute() {
-        target = "http://brad903.cafe24.com/LoadFriendaddress.php";
-        mapApptfriendList = new ArrayList<MapApptfriend>();
+        target = "http://brad903.cafe24.com/LoadHotplace.php";
     }
 
     @Override
-    protected Void doInBackground(String... Apptinfo) {
+    protected Void doInBackground(Void... Void) {
         try {
             URL url = new URL(target);
             Map<String, Object> params = new LinkedHashMap<>();
-
-            params.put("userID", userID);
-            params.put("apptNo", Apptinfo[0]);
 
             StringBuilder postData = new StringBuilder();
             for (Map.Entry<String, Object> param : params.entrySet()) {
@@ -68,28 +61,8 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             conn.disconnect();
 
             JSONObject jsonObject = new JSONObject(response);
-            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            hotplaceList = jsonObject.getJSONArray("response");
 
-            int count = 0;
-            String friendID, friendNickname, userNickname, friendAddress;
-            while (count < jsonArray.length()) {
-                JSONObject object = jsonArray.getJSONObject(count);
-                friendID = object.getString("friendID");
-                friendNickname = object.getString("friendNickname");
-                userNickname = object.getString("userNickname");
-                friendAddress = object.getString("userAddress");
-
-                PointF point = AddressToGeocode.getGeocode(friendAddress);
-
-                MapApptfriend mapApptfriend = new MapApptfriend(friendID, friendNickname, userNickname, friendAddress, point);
-                mapApptfriendList.add(mapApptfriend);
-                count++;
-            }
-
-            // 해당 로그인 유저 userID, userAddress 리스트에 삽입
-            PointF point = AddressToGeocode.getGeocode(userAddress);
-            MapApptfriend mapApptfriend = new MapApptfriend(userID, null, "나", userAddress, point);
-            mapApptfriendList.add(mapApptfriend);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,3 +72,4 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
     }
 
 }
+

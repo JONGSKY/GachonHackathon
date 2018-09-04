@@ -2,7 +2,6 @@ package com.meet.now.apptsystem;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -33,6 +32,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         userAddress = intent.getStringExtra("userAddress");
 
         ListView ddayListView = findViewById(R.id.ddayListView);
-        ddayList = new ArrayList<>();
+        ddayList = new ArrayList<Dday>();
         adapter = new DdayAdapter(getApplicationContext(), ddayList);
         ddayListView.setAdapter(adapter);
 
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button addfriendButton = findViewById(R.id.addfriendButton);
+        Button addfriendButton = (Button) findViewById(R.id.addfriendButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         lastTimeBackPressed = System.currentTimeMillis();
     }
 
-    @SuppressLint("StaticFieldLeak")
     class BackgroundTask extends AsyncTask<Void, Void, String> {
         String target;
 
@@ -169,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                 in.close();
                 conn.disconnect();
+
                 return response;
 
             }catch(Exception e){
@@ -260,9 +260,9 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case MY_PERMISSION_STORAGE:
-                for (int grantResult : grantResults) {
+                for(int i=0; i<grantResults.length; i++){
                     // grantResult[] : 허용된 권한은 0, 거부한 권한은 -1
-                    if (grantResult < 0) {
+                    if(grantResults[i] < 0){
                         Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }

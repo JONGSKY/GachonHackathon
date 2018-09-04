@@ -21,7 +21,7 @@ package com.meet.now.apptsystem;
  * @author kyjkim
  */
 public class NMapPOIflagType {
-	private static final int UNKNOWN = 0x0000;
+	public static final int UNKNOWN = 0x0000;
 
 	// Single POI icons
 	private static final int SINGLE_POI_BASE = 0x0100;
@@ -29,6 +29,7 @@ public class NMapPOIflagType {
 	// Spot, Pin icons
 	public static final int SPOT = SINGLE_POI_BASE + 1;
 	public static final int PIN = SPOT + 1;
+	public static final int HOTSPOT = PIN + 1;
 
 	// Direction POI icons: From, To
 	private static final int DIRECTION_POI_BASE = 0x0200;
@@ -66,8 +67,9 @@ public class NMapPOIflagType {
 	}
 
 	public static int getMarkerId(int poiFlagType, int iconIndex) {
+		int markerId = poiFlagType + iconIndex;
 
-		return poiFlagType + iconIndex;
+		return markerId;
 	}
 
 	public static int getPOIflagType(int markerId) {

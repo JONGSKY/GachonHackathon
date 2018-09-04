@@ -1,6 +1,5 @@
 package com.meet.now.apptsystem;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ShapeDrawable;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-@SuppressLint("ViewConstructor")
 public class ApptFriend extends LinearLayout{
 
     public ApptFriend(Context context, String nickname, String userPhoto) {
@@ -20,7 +18,6 @@ public class ApptFriend extends LinearLayout{
     }
     private void init(Context context, String nickname, String userPhoto){
         LayoutInflater inflater =(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        assert inflater != null;
         View view = inflater.inflate(R.layout.apptfriend,this,true);
         TextView apptFriendID = view.findViewById(R.id.apptFriendID);
         ImageView apptUserPhoto = view.findViewById(R.id.apptUserPhoto);
@@ -38,5 +35,7 @@ public class ApptFriend extends LinearLayout{
             apptUserPhoto.setBackground(new ShapeDrawable(new OvalShape()));
             apptUserPhoto.setClipToOutline(true);
         }
+
+
     }
 }

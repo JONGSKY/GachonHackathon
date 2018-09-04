@@ -15,7 +15,6 @@
  */
 package com.meet.now.apptsystem;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,6 +49,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 	private static final int POI_FONT_COLOR_ALPHABET = 0xFFFFFFFF;
 	private static final float POI_FONT_OFFSET_ALPHABET = 6.0F;
+	private static final Typeface POI_FONT_TYPEFACE = null;//Typeface.DEFAULT_BOLD;
 
 	private static final int CALLOUT_TEXT_COLOR_NORMAL = 0xFFFFFFFF;
 	private static final int CALLOUT_TEXT_COLOR_PRESSED = 0xFF9CA1AA;
@@ -59,7 +59,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	private final Rect mTempRect = new Rect();
 	private final Paint mTextPaint = new Paint();
 
-	NMapViewerResourceProvider(Context context) {
+	public NMapViewerResourceProvider(Context context) {
 		super(context);
 
 		mTextPaint.setAntiAlias(true);
@@ -72,7 +72,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * @param focused true for focused state, false otherwise.
 	 * @return
 	 */
-	private Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
+	public Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
 		Drawable marker = null;
 
 		int resourceId = findResourceIdForMarker(markerId, focused);
@@ -178,6 +178,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		// Spot, Pin icons
 		new ResourceIdsOnMap(NMapPOIflagType.PIN, R.drawable.ic_pin_01, R.drawable.ic_pin_02),
 		new ResourceIdsOnMap(NMapPOIflagType.SPOT, R.drawable.ic_star_black_24dp, R.drawable.ic_star_black_24dp),
+        new ResourceIdsOnMap(NMapPOIflagType.HOTSPOT, R.drawable.hotspot_marker, R.drawable.hotspot_marker),
 
 		// Direction POI icons: From, To
 		new ResourceIdsOnMap(NMapPOIflagType.FROM, R.drawable.ic_map_start, R.drawable.ic_map_start_over),
@@ -194,7 +195,6 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * 
 	 * @see NMapPOIflagType
 	 */
-	@SuppressLint("LongLogTag")
 	@Override
 	protected int findResourceIdForMarker(int markerId, boolean focused) {
 		int resourceId = 0;
@@ -254,11 +254,11 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		drawable[0] = mContext.getResources().getDrawable(R.drawable.pubtrans_ic_mylocation_off);
 		drawable[1] = mContext.getResources().getDrawable(R.drawable.pubtrans_ic_mylocation_on);
 
-		for (Drawable aDrawable : drawable) {
-			int w = aDrawable.getIntrinsicWidth() / 2;
-			int h = aDrawable.getIntrinsicHeight() / 2;
+		for (int i = 0; i < drawable.length; i++) {
+			int w = drawable[i].getIntrinsicWidth() / 2;
+			int h = drawable[i].getIntrinsicHeight() / 2;
 
-			aDrawable.setBounds(-w, -h, w, h);
+			drawable[i].setBounds(-w, -h, w, h);
 		}
 
 		return drawable;
@@ -279,7 +279,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		return drawable;
 	}
 
-	private Drawable getDrawableWithNumber(int resourceId, String strNumber, float offsetY, int fontColor, float fontSize) {
+	public Drawable getDrawableWithNumber(int resourceId, String strNumber, float offsetY, int fontColor, float fontSize) {
 
 		Bitmap textBitmap = getBitmapWithText(resourceId, strNumber, fontColor, fontSize, offsetY);
 
@@ -287,7 +287,9 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 		// set bounds
 		Drawable marker = new BitmapDrawable(mContext.getResources(), textBitmap);
-		NMapOverlayItem.boundCenter(marker);
+		if (marker != null) {
+			NMapOverlayItem.boundCenter(marker);
+		}
 
 		//Log.i(LOG_TAG, "getDrawableWithNumber: width=" + marker.getIntrinsicWidth() + ", height=" + marker.getIntrinsicHeight());
 
@@ -300,7 +302,9 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 		// set bounds
 		Drawable marker = new BitmapDrawable(mContext.getResources(), textBitmap);
-		NMapOverlayItem.boundCenterBottom(marker);
+		if (marker != null) {
+			NMapOverlayItem.boundCenterBottom(marker);
+		}
 
 		return marker;
 	}
@@ -341,6 +345,9 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		// set font size
 		mTextPaint.setTextSize(fontSize * mScaleFactor);
 		// set font type
+		if (POI_FONT_TYPEFACE != null) {
+			mTextPaint.setTypeface(POI_FONT_TYPEFACE);
+		}
 
 		// get text offset		
 		mTextPaint.getTextBounds(strNumber, 0, strNumber.length(), mTempRect);
@@ -367,11 +374,14 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 			NMapPOIitem poiItem = (NMapPOIitem)item;
 
 			if (poiItem.showRightButton()) {
-				return mContext.getResources().getDrawable(R.drawable.bg_speech);
+				Drawable drawable = mContext.getResources().getDrawable(R.drawable.bg_speech);
+				return drawable;
 			}
 		}
 
-		return mContext.getResources().getDrawable(R.drawable.pin_ballon_bg);
+		Drawable drawable = mContext.getResources().getDrawable(R.drawable.pin_ballon_bg);
+
+		return drawable;
 	}
 
 	@Override

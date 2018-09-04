@@ -15,10 +15,10 @@
  */
 package com.meet.now.apptsystem;
 
-import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -41,6 +41,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 
 	private static final int CALLOUT_TEXT_COLOR = 0xFFFFFFFF;
 	private static final float CALLOUT_TEXT_SIZE = 16.0F;
+	private static final Typeface CALLOUT_TEXT_TYPEFACE = null;//Typeface.DEFAULT_BOLD;
 
 	private static final float CALLOUT_RIGHT_BUTTON_WIDTH = 50.67F;
 	private static final float CALLOUT_RIGHT_BUTTON_HEIGHT = 34.67F;
@@ -57,6 +58,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 	private static final float CALLOUT_TITLE_OFFSET_Y = -2.0F;
 
 	private final TextPaint mTextPaint = new TextPaint();
+	private float mOffsetX, mOffsetY;
 
 	private final float mMarginX;
 	private final float mPaddingX, mPaddingY, mPaddingOffset;
@@ -68,12 +70,13 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 	private final float mTitleOffsetY;
 
 	private final Drawable mBackgroundDrawable;
-	private final Rect mTemp2Rect = new Rect();
+	protected final Rect mTemp2Rect = new Rect();
 	private final Rect mRightButtonRect;
 	private final String mRightButtonText;
 	private final int mCalloutRightButtonWidth;
 	private final int mCalloutRightButtonHeight;
 	private Drawable[] mDrawableRightButton;
+	private final int mCalloutButtonCount = 1;
 
 	private String mTitleTruncated;
 	private int mWidthTitleTruncated;
@@ -84,15 +87,15 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 	/** 
 	 * Resource provider should implement this interface
 	 */
-	public interface ResourceProvider {
+	public static interface ResourceProvider {
 
-		Drawable getCalloutBackground(NMapOverlayItem item);
+		public Drawable getCalloutBackground(NMapOverlayItem item);
 
-		String getCalloutRightButtonText(NMapOverlayItem item);
+		public String getCalloutRightButtonText(NMapOverlayItem item);
 
-		Drawable[] getCalloutRightButton(NMapOverlayItem item);
+		public Drawable[] getCalloutRightButton(NMapOverlayItem item);
 
-		Drawable[] getCalloutRightAccessory(NMapOverlayItem item);
+		public Drawable[] getCalloutRightAccessory(NMapOverlayItem item);
 	}
 
 	public NMapCalloutCustomOldOverlay(NMapOverlay itemOverlay, NMapOverlayItem item, Rect itemBounds,
@@ -106,6 +109,9 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		// set font size
 		mTextPaint.setTextSize(CALLOUT_TEXT_SIZE * NMapResourceProvider.getScaleFactor());
 		// set font type
+		if (CALLOUT_TEXT_TYPEFACE != null) {
+			mTextPaint.setTypeface(CALLOUT_TEXT_TYPEFACE);
+		}
 
 		mMarginX = NMapResourceProvider.toPixelFromDIP(CALLOUT_MARGIN_X);
 		mPaddingX = NMapResourceProvider.toPixelFromDIP(CALLOUT_PADDING_X);
@@ -150,7 +156,6 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 
 			mRightButtonRect = new Rect();
 
-			int mCalloutButtonCount = 1;
 			super.setItemCount(mCalloutButtonCount);
 		} else {
 			mCalloutRightButtonWidth = 0;
@@ -175,7 +180,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 
 	@Override
 	protected boolean isTitleTruncated() {
-		return (!mTitleTruncated.equals(mOverlayItem.getTitle()));
+		return (mTitleTruncated != mOverlayItem.getTitle());
 	}
 
 	@Override
@@ -216,9 +221,9 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		float left, top;
 
 		// draw title
-		float mOffsetX = mTempPoint.x - mTempRect.width() / 2;
+		mOffsetX = mTempPoint.x - mTempRect.width() / 2;
 		mOffsetX -= mPaddingOffset;
-		float mOffsetY = mTempRectF.top + mPaddingY + mTextPaint.getTextSize() + mTitleOffsetY;
+		mOffsetY = mTempRectF.top + mPaddingY + mTextPaint.getTextSize() + mTitleOffsetY;
 		canvas.drawText(mTitleTruncated, mOffsetX, mOffsetY, mTextPaint);
 
 		// draw right button
@@ -276,7 +281,6 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		mBackgroundDrawable.draw(canvas);
 	}
 
-	@SuppressLint("LongLogTag")
 	private void adjustTextBounds(NMapView mapView) {
 
 		//  First determine the screen coordinates of the selected MapLocation
@@ -302,8 +306,10 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 				maxWidth -= mTailGapX + mTailTextWidth;
 			}
 
-			mTitleTruncated = TextUtils.ellipsize(mOverlayItem.getTitle(), mTextPaint, maxWidth,
+			final String title = TextUtils.ellipsize(mOverlayItem.getTitle(), mTextPaint, maxWidth,
 				TextUtils.TruncateAt.END).toString();
+
+			mTitleTruncated = title;
 
 			if (DEBUG) {
 				Log.i(LOG_TAG, "adjustTextBounds: mTitleTruncated=" + mTitleTruncated + ", length="
@@ -357,7 +363,8 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 			} else if (NMapOverlayItem.isFocusedState(itemState)) {
 				idxDrawable = 2;
 			}
-			return mDrawableRightButton[idxDrawable];
+			Drawable drawable = mDrawableRightButton[idxDrawable];
+			return drawable;
 		}
 
 		return null;

@@ -1,14 +1,8 @@
 package com.meet.now.apptsystem;
 
-import android.util.Log;
-
 import com.nhn.android.maps.maplib.NGeoPoint;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 class SetCenterPlace {
     private List<MapApptfriend> mapApptfriendList;

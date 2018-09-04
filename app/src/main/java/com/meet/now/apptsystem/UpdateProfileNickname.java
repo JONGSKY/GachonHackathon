@@ -1,6 +1,5 @@
 package com.meet.now.apptsystem;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,7 +20,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Objects;
 
 public class UpdateProfileNickname extends DialogFragment {
 
@@ -33,7 +32,7 @@ public class UpdateProfileNickname extends DialogFragment {
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             super.onCreateView(inflater, container, savedInstanceState);
-            @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_profile_nickname_edit, null);
+            View view = inflater.inflate(R.layout.dialog_profile_nickname_edit, null);
 
             return view;
         }
@@ -41,20 +40,26 @@ public class UpdateProfileNickname extends DialogFragment {
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            assert getArguments() != null;
             userID = getArguments().getString("userID");
             userNickname = getArguments().getString("userNickname");
-            final EditText tvNick = Objects.requireNonNull(getView()).findViewById(R.id.tv_nick);
+            final EditText tvNick = (EditText) getView().findViewById(R.id.tv_nick);
 
-            tvNick.setText(userNickname);
+            if (userNickname.equals(null)) tvNick.setHint("별칭을 입력해주세요.");
+            else tvNick.setText(userNickname);
 
-            Button button = getView().findViewById(R.id.ib_back_nick);
+            Button button = (Button) getView().findViewById(R.id.ib_back_nick);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     userNickname = ((EditText) getView().findViewById(R.id.tv_nick)).getText().toString();
-                    Async_Prepare();
-                    dismiss();
+                    if (!userNickname.equals(null)){
+                        Async_Prepare();
+                        dismiss();
+                    }
+                    else Toast.makeText(getContext(),"별칭을 입력해주세요.",Toast.LENGTH_SHORT).show();
+
+
                 }
             });
         }
@@ -67,7 +72,6 @@ public class UpdateProfileNickname extends DialogFragment {
             async_test.execute(userID, userNickname);//요렇게 스트링값들을 넘겨줍시다. 저번시간에 포스팅을 보시면 Data Type을 어떻게 할지 결정 할 수 있습니다. 힘내봅시다.
         }
 
-        @SuppressLint("StaticFieldLeak")
         class Async_test extends AsyncTask<String, Void, String> {
 
             @Override
@@ -113,9 +117,8 @@ public class UpdateProfileNickname extends DialogFragment {
                     return sb.toString();//자 이렇게 리턴이되면 이제 post로 가겠습니다.
                 } catch (Exception e) {
 
-                    assert httpURLConnection != null;
                     httpURLConnection.disconnect();
-                    return "Exception Occure" + e.getMessage();
+                    return new String("Exception Occure" + e.getMessage());
                 }//try catch end
             }//doInbackground end
         }//asynctask  end
@@ -123,7 +126,7 @@ public class UpdateProfileNickname extends DialogFragment {
         @Override
         public void onDismiss(DialogInterface dialog) {
             super.onDismiss(dialog);
-            Objects.requireNonNull(getActivity()).recreate();
+            getActivity().recreate();
 
         }
 

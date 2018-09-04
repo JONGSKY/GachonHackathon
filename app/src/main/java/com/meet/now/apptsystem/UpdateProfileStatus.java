@@ -1,26 +1,33 @@
 package com.meet.now.apptsystem;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Objects;
 
 public class UpdateProfileStatus extends DialogFragment {
     String userID = null;
@@ -28,30 +35,30 @@ public class UpdateProfileStatus extends DialogFragment {
 
     public UpdateProfileStatus(){}
 
-    @SuppressLint("InflateParams")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.dialog_profile_status_edit, null);
 
-        return inflater.inflate(R.layout.dialog_profile_status_edit, null);
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        assert getArguments() != null;
         userID = getArguments().getString("userID");
         userStatusmsg = getArguments().getString("userStatusmsg");
 
         Log.d("userID", userID);
         Log.d("userStatusmsg", userStatusmsg);
 
-        final EditText tvStatus = Objects.requireNonNull(getView()).findViewById(R.id.tv_status);
+        final EditText tvStatus = (EditText) getView().findViewById(R.id.tv_status);
 
-        tvStatus.setText(userStatusmsg);
+        if (userStatusmsg.equals(null)) tvStatus.setHint("상태메세지를 입력해주세요.");
+        else tvStatus.setText(userStatusmsg);
 
-        Button button = getView().findViewById(R.id.ib_back_status);
+        Button button = (Button) getView().findViewById(R.id.ib_back_status);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +77,6 @@ public class UpdateProfileStatus extends DialogFragment {
         async_test.execute(userID, userStatusmsg);//요렇게 스트링값들을 넘겨줍시다. 저번시간에 포스팅을 보시면 Data Type을 어떻게 할지 결정 할 수 있습니다. 힘내봅시다.
     }
 
-    @SuppressLint("StaticFieldLeak")
     class Async_test extends AsyncTask<String, Void, String> {
 
         @Override
@@ -119,9 +125,8 @@ public class UpdateProfileStatus extends DialogFragment {
                 return sb.toString();//자 이렇게 리턴이되면 이제 post로 가겠습니다.
             } catch (Exception e) {
 
-                assert httpURLConnection != null;
                 httpURLConnection.disconnect();
-                return "Exception Occure" + e.getMessage();
+                return new String("Exception Occure" + e.getMessage());
             }//try catch end
         }//doInbackground end
     }//asynctask  end
@@ -129,7 +134,7 @@ public class UpdateProfileStatus extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        Objects.requireNonNull(getActivity()).recreate();
+        getActivity().recreate();
 
     }
 }
