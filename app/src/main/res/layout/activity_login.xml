@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="우리 지금 만나"
+                android:text="한날, 한시"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
                 android:textStyle="bold"

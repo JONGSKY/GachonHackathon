@@ -3,6 +3,7 @@ package com.meet.now.apptsystem;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,9 +41,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.meet.now.apptsystem.MainActivity.userID;
-
-
 public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
@@ -56,7 +54,7 @@ public class FriendlistActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         ListView friendListView = findViewById(R.id.friendListView);
         friendList = new ArrayList<>();
@@ -71,8 +69,28 @@ public class FriendlistActivity extends AppCompatActivity {
                 if (mapAddMember !=null) {
                     // 아이템 클릭시 돌아가기
                     String friendID = friendList.get(position).getUserID();
+                    final String friendAddress = friendList.get(position).getUserAddress();
                     String apptNo = mapAddMember.getStringExtra("apptNo");
-                    setResult(RESULT_OK, mapAddMember);
+                    final String friendNickname = friendList.get(position).getFriendNickname();
+                    final String userNickname = friendList.get(position).getUserNickname();
+
+                    Async_geo async_geo = new Async_geo(new AsyncListener() {
+                        @Override
+                        public void taskComplete(PointF point) {
+                            Intent intent = getIntent();
+                            if(friendNickname == null){
+                                intent.putExtra("userNickname", userNickname);
+                            }else{
+                                intent.putExtra("userNickname", friendAddress);
+                            }
+                            intent.putExtra("longitude", point.x);
+                            intent.putExtra("latitude", point.y);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    });
+                    async_geo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, friendAddress);
+
                     // 받아온 변수로 서버저장 및 돌려주기
                     // 약속에 추가하기, 초기화
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -82,9 +100,7 @@ public class FriendlistActivity extends AppCompatActivity {
                             try {
                                 jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
-                                if (success) {
-                                    finish();
-                                } else {
+                                if (!success) {
                                     Toast.makeText(getApplicationContext(), "추가 실패했습니다.다시 시도해주세요!", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
@@ -95,6 +111,7 @@ public class FriendlistActivity extends AppCompatActivity {
                     AddMemberRequest addMemberRequest = new AddMemberRequest(friendID, apptNo, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
                     queue.add(addMemberRequest);
+
 
                 }
             }
@@ -164,7 +181,7 @@ public class FriendlistActivity extends AppCompatActivity {
                 final String friendID = findfriendID.getText().toString().replaceAll("\\p{Z}", "");  // 공백제거
                 dialogsearch.setVisibility(View.GONE);
 
-                if (friendID.equals(userID) || friendID.equals("")) {
+                if (friendID.equals(MyApplication.userID) || friendID.equals("")) {
                     dialogmessage.setText("친구ID를 다시 확인해주세요.");
                     searchfriendButton.setText("다시 검색");
                     searchfriendButton.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +241,7 @@ public class FriendlistActivity extends AppCompatActivity {
                                                 }
                                             };
 
-                                            AddfriendRequest addfriendRequest = new AddfriendRequest(userID, friendID, responseListener);
+                                            AddfriendRequest addfriendRequest = new AddfriendRequest(MyApplication.userID, friendID, responseListener);
                                             RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
                                             queue.add(addfriendRequest);
                                         }
@@ -265,7 +282,7 @@ public class FriendlistActivity extends AppCompatActivity {
             try {
                 URL url = new URL(target);
                 Map<String, Object> params = new LinkedHashMap<>();
-                params.put("userID", userID);
+                params.put("userID", MyApplication.userID);
 
                 StringBuilder postData = new StringBuilder();
                 for (Map.Entry<String, Object> param : params.entrySet()) {
@@ -316,7 +333,7 @@ public class FriendlistActivity extends AppCompatActivity {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
 
                 int count = 0;
-                String userID, userPhoto, friendNickname, userNickname, userStatusmsg;
+                String userID, userPhoto, friendNickname, userNickname, userStatusmsg, userAddress;
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     userID = object.getString("friendID");
@@ -324,7 +341,8 @@ public class FriendlistActivity extends AppCompatActivity {
                     friendNickname = object.getString("friendNickname");
                     userNickname = object.getString("userNickname");
                     userStatusmsg = object.getString("userStatusmsg");
-                    Friend friend = new Friend(userID, userPhoto, friendNickname, userNickname, userStatusmsg);
+                    userAddress = object.getString("userAddress");
+                    Friend friend = new Friend(userID, userPhoto, friendNickname, userNickname, userStatusmsg, userAddress);
                     friendList.add(friend);
                     saveList.add(friend);
                     count++;

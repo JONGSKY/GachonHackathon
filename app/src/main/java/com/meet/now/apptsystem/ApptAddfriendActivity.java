@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import static android.view.View.GONE;
-import static com.meet.now.apptsystem.MainActivity.userID;
 
 public class ApptAddfriendActivity extends AppCompatActivity {
 
@@ -118,7 +117,7 @@ public class ApptAddfriendActivity extends AppCompatActivity {
             try {
                 URL url = new URL(target);
                 Map<String, Object> params = new LinkedHashMap<>();
-                params.put("userID", userID);
+                params.put("userID", MyApplication.userID);
 
                 StringBuilder postData = new StringBuilder();
                 for (Map.Entry<String, Object> param : params.entrySet()) {

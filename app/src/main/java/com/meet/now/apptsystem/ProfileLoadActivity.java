@@ -1,6 +1,8 @@
 package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -110,6 +113,14 @@ public class ProfileLoadActivity extends AppCompatActivity {
         queue.add(profileLoadRequest);
 
         // 이벤트
+        ImageButton logout = findViewById(R.id.ib_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              showLogout();
+            }
+        });
+
         // 뒤로가기 버튼
         ImageButton backBtn = findViewById(R.id.ib_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -357,6 +368,26 @@ public class ProfileLoadActivity extends AppCompatActivity {
         bitmap = BitmapFactory.decodeFile(imgPath);
 
         return bitmap;
+    }
+
+    void showLogout(){
+        new AlertDialog.Builder(this)
+                .setMessage("로그아웃 하시겠습니까?")
+                .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        MyApplication.userID="";
+                        MyApplication.password="";
+                        MyApplication.Address="";
+                        finishAffinity();
+                        Intent logoutIntent = new Intent(ProfileLoadActivity.this , LoginActivity.class);
+                        startActivity(logoutIntent);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
     }
 
 

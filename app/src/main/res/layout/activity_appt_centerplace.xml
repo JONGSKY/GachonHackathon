@@ -26,6 +26,19 @@
         android:src="@drawable/ic_search_black_24dp"
         android:tint="@color/colorPrimaryMoreDark"/>
 
+    <Button
+        android:id="@+id/btn_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="중간위치 다시찾기"
+        android:layout_below="@+id/ib_center_place"
+        android:layout_alignParentRight="true"
+        android:padding="4dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/border_white"
+        android:textColor="@color/colorAccent"
+        />
+
 
     <com.nhn.android.maps.NMapView
         android:id="@+id/map_view"

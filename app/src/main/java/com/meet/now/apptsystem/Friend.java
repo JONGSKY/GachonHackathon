@@ -7,6 +7,7 @@ public class Friend {
     private String friendNickname;
     String userNickname;
     private String userStatusmsg;
+    String userAddress;
 
     public String getUserID() {
         return userID;
@@ -48,11 +49,28 @@ public class Friend {
         this.userStatusmsg = userStatusmsg;
     }
 
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
     Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg) {
         this.userID = userID;
         this.userPhoto = userPhoto;
         this.friendNickname = friendNickname;
         this.userNickname = userNickname;
         this.userStatusmsg = userStatusmsg;
+    }
+
+    Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg, String userAddress) {
+        this.userID = userID;
+        this.userPhoto = userPhoto;
+        this.friendNickname = friendNickname;
+        this.userNickname = userNickname;
+        this.userStatusmsg = userStatusmsg;
+        this.userAddress = userAddress;
     }
 }

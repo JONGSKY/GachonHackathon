@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +24,8 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
 
     TextView friendAddr;
     EditText friendName;
-
+    double longitude;
+    double latitude;
     String nonMemberID, apptNo, nonNickName, addr;
 
     @Override
@@ -66,19 +68,35 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
                     Toast.makeText(getApplicationContext(), "주소를 입력해주세요!", Toast.LENGTH_SHORT).show();
                     break;
                 } else {
+                    // 비회원 등록하고 포인트와 닉네임 반환
                     // nonMemberID,apptNo,nonNickName,nonAddr
                     nonMemberID = "non_" + System.currentTimeMillis();
                     nonNickName = friendName.getText().toString();
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success) {
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "추가 실패했습니다.다시 시도해주세요!", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    AddNonMemberRequest addNonMemberRequest = new AddNonMemberRequest(nonMemberID, apptNo, nonNickName, addr, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(UpdateMapPersonNon.this);
+                    queue.add(addNonMemberRequest);
 
-                    Intent returnIntent = getIntent();
-                    returnIntent.putExtra("nonMemberID", nonMemberID);
-                    returnIntent.putExtra("nonNickName", nonNickName);
-                    returnIntent.putExtra("apptNo", apptNo);
-                    returnIntent.putExtra("addr", addr);
-
-                    setResult(RESULT_OK, returnIntent);
+                    intent.putExtra("longitude", longitude );
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("userNickname", nonNickName);
+                    Log.e("longitude", longitude+"");
+                    setResult(RESULT_OK, intent);
                     finish();
-
                 }
             case R.id.btn_non_cancel:
                 finish();
@@ -94,16 +112,10 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
                 if (data != null) {
                     addr = data.getStringExtra("friendAddr");
                     if (addr != null) friendAddr.setText(addr);
+                    longitude = data.getDoubleExtra("longitude",0);
+                    latitude = data.getDoubleExtra("latitude", 0);
                 }
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Intent intent = new Intent(UpdateMapPersonNon.this, ApptCenterplaceActivity.class);
-
-        startActivity(intent);
     }
 }

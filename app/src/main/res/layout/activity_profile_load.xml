@@ -28,6 +28,16 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_arrow_left"
                 android:tint="@color/colorAccent" />
+            <ImageButton
+                android:id="@+id/ib_logout"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_exit_to_app_black_24dp"
+                android:layout_alignParentRight="true"
+                android:backgroundTint="@android:color/transparent"
+                android:tint="@color/colorAccent"
+                />
 
 
             <!--상태메세지-->

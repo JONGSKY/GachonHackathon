@@ -18,12 +18,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.meet.now.apptsystem.MainActivity.userAddress;
-import static com.meet.now.apptsystem.MainActivity.userID;
-
 class LoadFriendaddress extends AsyncTask<String, Void, Void> {
 
-    static public List<MapApptfriend> mapApptfriendList;
+    public static List<MapApptfriend> mapApptfriendList;
     private String target;
 
     @Override
@@ -38,7 +35,7 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             URL url = new URL(target);
             Map<String, Object> params = new LinkedHashMap<>();
 
-            params.put("userID", userID);
+            params.put("userID", MyApplication.userID);
             params.put("apptNo", Apptinfo[0]);
 
             StringBuilder postData = new StringBuilder();
@@ -87,11 +84,15 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             }
 
             // 해당 로그인 유저 userID, userAddress 리스트에 삽입
-            PointF point = AddressToGeocode.getGeocode(userAddress);
-            MapApptfriend mapApptfriend = new MapApptfriend(userID, null, "나", userAddress, point);
+            PointF point = AddressToGeocode.getGeocode(MyApplication.Address);
+            MapApptfriend mapApptfriend = new MapApptfriend(MyApplication.userID, null, "나", MyApplication.Address, point);
             Log.w("BugTest", String.valueOf(mapApptfriend));
             mapApptfriendList.add(mapApptfriend);
             Log.w("ApptMemberNumber", String.valueOf(mapApptfriendList));
+            Log.w("ApptMember", mapApptfriendList.get(0).friendID +" "+
+                    mapApptfriendList.get(0).friendAddress +" "+ mapApptfriendList.get(0).point.x +" "+ mapApptfriendList.get(0).point.y);
+            Log.w("ApptMember", mapApptfriendList.get(1).friendID +" "+
+                    mapApptfriendList.get(1).friendAddress +" "+ mapApptfriendList.get(1).point.x +" "+ mapApptfriendList.get(1).point.y);
 
         } catch (Exception e) {
             e.printStackTrace();

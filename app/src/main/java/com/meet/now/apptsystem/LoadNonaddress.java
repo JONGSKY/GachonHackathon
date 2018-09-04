@@ -2,8 +2,6 @@ package com.meet.now.apptsystem;
 
 import android.graphics.PointF;
 import android.os.AsyncTask;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,18 +16,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.meet.now.apptsystem.MainActivity.userAddress;
-import static com.meet.now.apptsystem.MainActivity.userID;
-
 class LoadNonaddress extends AsyncTask<String, Void, Void> {
 
-    static public List<MapApptfriend> mapApptNonList;
-    String target;
+    public static List<MapApptfriend> mapApptNonList;
+    private String target;
 
     @Override
     protected void onPreExecute() {
         target = "http://brad903.cafe24.com/LoadNonaddress.php";
-        mapApptNonList = new ArrayList<MapApptfriend>();
+        mapApptNonList = new ArrayList<>();
     }
 
     @Override

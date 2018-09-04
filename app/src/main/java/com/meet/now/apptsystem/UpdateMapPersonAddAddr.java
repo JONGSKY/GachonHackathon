@@ -37,6 +37,9 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
     LoadFriendaddress loadFriendaddress;
     TextView nowAddr;
 
+    double longitude;
+    double latitude;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_map_add_addr);
@@ -57,10 +60,7 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NGeoPoint nGeoPoint = new NGeoPoint();
                 Intent intent = getIntent();
-                double longitude = nGeoPoint.getLongitude();
-                double latitude = nGeoPoint.getLatitude();
                 String address = nowAddr.getText().toString();
                 intent.putExtra("longitude", longitude);
                 intent.putExtra("latitude", latitude);
@@ -173,11 +173,12 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             Log.e(TAG, "OnMapStateChangeListener onMapInitHandler : ");
         }
 
+
         @Override
         public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
             Log.e(TAG, "OnMapStateChangeListener onMapCenterChange : " + nGeoPoint.getLatitude() + " ㅡ  " + nGeoPoint.getLongitude());
-            final double longitude = nGeoPoint.getLongitude();
-            final double latitude = nGeoPoint.getLatitude();
+            longitude = nGeoPoint.getLongitude();
+            latitude = nGeoPoint.getLatitude();
 
             GeocodeToAddress geocodeToAddress = new GeocodeToAddress(new AddressAsyncResponse() {
 
