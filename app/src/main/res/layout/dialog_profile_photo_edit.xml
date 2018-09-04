@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/camera_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="카메라로 사진찍기"
-        />
+        <Button
+            android:id="@+id/camera_btn"
+            android:layout_above="@+id/photoAlbum_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="카메라로 사진찍기"
+            android:background="#f3546e7a"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="4dp"
+            />
 
-    <Button
-        android:id="@+id/photoAlbum_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="앨범에서 가져오기"
-        />
+        <Button
+            android:id="@+id/photoAlbum_btn"
+            android:layout_above="@+id/btn_back_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="앨범에서 가져오기"
+            android:background="#f3546e7a"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="4dp"
+            />
 
-    <Button
-        android:id="@+id/btn_back_photo"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="취소"
-        />
+        <Button
+            android:id="@+id/btn_back_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="취소"
+            android:background="#f3546e7a"
+            android:textColor="#ffffff"
+            />
 
-</LinearLayout>
+</RelativeLayout>
