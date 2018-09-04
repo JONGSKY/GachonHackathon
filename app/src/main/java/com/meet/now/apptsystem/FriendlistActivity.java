@@ -261,11 +261,6 @@ public class FriendlistActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
         protected void onPostExecute(String result) {   // 결과 처리부분
             try{
                 friendList.clear();

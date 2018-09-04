@@ -58,7 +58,7 @@ public class StoreListActivity extends AppCompatActivity {
                 storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item);
                 listView.setAdapter(storeListAdapter);
             }
-        }, 2500);
+        }, 3000);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
