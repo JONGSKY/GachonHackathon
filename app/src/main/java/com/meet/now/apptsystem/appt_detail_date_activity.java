@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 public class appt_detail_date_activity extends AppCompatActivity{
     private ListView appt_detail_listView;
     private String mJsonString;

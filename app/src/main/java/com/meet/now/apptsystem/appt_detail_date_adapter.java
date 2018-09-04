@@ -19,13 +19,11 @@ public class appt_detail_date_adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private JSONArray jsonArray;
     private int layout;
-    private Context context;
 
     public appt_detail_date_adapter(Context context, int layout, JSONArray jsonArray) {
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.jsonArray = jsonArray;
         this.layout = layout;
-        this.context = context;
     }
 
     @Override
