@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    //배경화면과 흰색화면 나누기 위해서 사용
-
+    <!--배경화면과 흰색화면 나누기 위해서 사용-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,14 +13,13 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        //프로필 배경 화면
-
+        <!--프로필 배경 화면-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            //뒤로 가기 버튼
+            <!--뒤로 가기 버튼-->
             <ImageButton
                 android:id="@+id/ib_back"
                 android:layout_width="50dp"
@@ -67,10 +64,11 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/baseline_add_comment_black_24" />
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/baseline_add_comment_black_24"
+                android:contentDescription="TODO" />
 
             <ImageButton
                 android:id="@+id/ib_edit_nickname"
@@ -78,8 +76,8 @@
                 android:layout_height="24dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@+id/ib_edit_status"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@+id/ib_edit_status"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_person_black_24dp" />
 
@@ -113,9 +111,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iv_user"
-        android:layout_alignRight="@+id/iv_user"
+        android:layout_alignEnd="@+id/iv_user"
         android:layout_marginBottom="15dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_photo_camera_black_24dp" />
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,15 +20,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:text="약속이름"
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp"
+            tools:ignore="RtlHardcoded" />
 
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="120dp"
-            android:layout_below="@id/appt_name_textview"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:background="@drawable/appt_list_item_edge">
@@ -39,8 +40,8 @@
                 android:layout_marginTop="10dp"
                 android:text="약속 장소 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_marginLeft="20dp"/>
+                android:textSize="15sp"
+                android:layout_marginStart="20dp"/>
 
             <TextView
                 android:id="@+id/appt_time_textview"
@@ -48,9 +49,8 @@
                 android:layout_height="wrap_content"
                 android:text="약속 시간 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_below="@id/appt_place_textview"
-                android:layout_marginLeft="20dp"
+                android:textSize="15sp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"/>
 
             <TextView
@@ -59,9 +59,8 @@
                 android:layout_height="wrap_content"
                 android:text="그룹 유형 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_below="@id/appt_time_textview"
-                android:layout_marginLeft="20dp"
+                android:textSize="15sp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"/>
 
             <TextView
@@ -70,14 +69,11 @@
                 android:layout_height="wrap_content"
                 android:text="참여 인원 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_below="@id/appt_group_textview"
-                android:layout_marginLeft="20dp"
+                android:textSize="15sp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"/>
 
-
         </LinearLayout>
-
 
     </LinearLayout>
 

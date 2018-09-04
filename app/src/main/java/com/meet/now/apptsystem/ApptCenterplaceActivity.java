@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
@@ -16,7 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
@@ -35,12 +35,12 @@ import java.util.List;
 
 public class ApptCenterplaceActivity extends NMapActivity implements View.OnClickListener {
 
+    @SuppressLint("StaticFieldLeak")
     public static ApptCenterplaceActivity apptCenterplaceActivity;
     private final String TAG = "ApptCenterplaceActivity";
 
     private NMapView mMapView;
     private NMapController mMapController;
-
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
 
@@ -54,7 +54,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private FloatingActionButton fab, fab1, fab2, fab3;
 
     private static final int UPDATE_DISTANCE = 3;
-    private static final int SEARCH_MAP = 1;
 
     String apptNo;
 
@@ -101,18 +100,21 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v != null) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
+                    if(imm!= null){
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
                     String address = editText.getText().toString().trim();
                     Log.e("address", address);
-                    if (address.equals("") || address == null) {
+                    if (address.equals("")) {
                         Toast.makeText(getApplicationContext(), "검색어를 입력해주세요!", Toast.LENGTH_SHORT).show();
                     } else {
                         Async_geo async_geo = new Async_geo(new AsyncListener() {
@@ -147,15 +149,13 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         editText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == event.KEYCODE_ENTER) {
-                    return true;
-                }
-                return false;
+                return keyCode == KeyEvent.KEYCODE_ENTER;
             }
         });
 
     } // onCreate end
 
+    @SuppressLint("StaticFieldLeak")
     class Async_geo extends AsyncTask<String, Void, PointF> {
         AsyncListener asyncListener;
 
@@ -172,8 +172,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
         @Override
         protected PointF doInBackground(String... address) {
-            PointF point = AddressToGeocode.getGeocode(address[0]);
-            return point;
+            return AddressToGeocode.getGeocode(address[0]);
         }
     }
 
@@ -231,194 +230,194 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         }
     }
 
-        public void anim () {
+    public void anim() {
 
-            if (isFabOpen) {
-                fab.startAnimation(rotate_backward);
-                fab3.startAnimation(fab_close);
-                fab2.startAnimation(fab_close);
-                fab1.startAnimation(fab_close);
-                fab3.setClickable(false);
-                fab2.setClickable(false);
-                fab1.setClickable(false);
-                isFabOpen = false;
-            } else {
-                fab.startAnimation(rotate_forward);
-                fab1.startAnimation(fab_open);
-                fab2.startAnimation(fab_open);
-                fab3.startAnimation(fab_open);
-                fab1.setClickable(true);
-                fab2.setClickable(true);
-                fab3.setClickable(true);
-                isFabOpen = true;
+        if (isFabOpen) {
+            fab.startAnimation(rotate_backward);
+            fab3.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.startAnimation(fab_close);
+            fab3.setClickable(false);
+            fab2.setClickable(false);
+            fab1.setClickable(false);
+            isFabOpen = false;
+        } else {
+            fab.startAnimation(rotate_forward);
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab3.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            fab3.setClickable(true);
+            isFabOpen = true;
+        }
+    }
+
+    private void init() {
+
+        mMapView = findViewById(R.id.map_view);
+        mMapView.setVisibility(View.INVISIBLE);
+        mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
+        mMapView.setClickable(true);
+        mMapView.setEnabled(true);
+        mMapView.setFocusable(true);
+        mMapView.setFocusableInTouchMode(true);
+        mMapView.setScalingFactor(1.7f);
+        mMapView.requestFocus();
+        mMapView.setOnMapStateChangeListener(changeListener);
+        mMapView.setOnMapViewTouchEventListener(mapListener);
+        mMapController = mMapView.getMapController();
+        mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setMarker();
+                mMapView.setVisibility(View.VISIBLE);
             }
+        }, 3000);
+
+
+    }
+
+    private void setMarker() {
+        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
+        List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
+        int markerId = NMapPOIflagType.PIN;
+        int spotId = NMapPOIflagType.SPOT;
+
+
+        int size = mapApptfriendList.size() + 1;
+        if (mapApptNonList != null) {
+            size += mapApptNonList.size();
         }
 
-        private void init () {
+        // set POI data
+        NMapPOIdata poiData = new NMapPOIdata(size, nMapResourceProvider);
+        poiData.beginPOIdata(size);
+        NGeoPoint middleSpot = new NGeoPoint();
+        int spotCount = 0;
+        for (int i = 0; i < mapApptfriendList.size(); i++) {
+            MapApptfriend mapApptfriend = mapApptfriendList.get(i);
+            double coordX = mapApptfriend.getPoint().x;
+            double coordY = mapApptfriend.getPoint().y;
+            if (coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650) {  // 경기, 서울로 마크 표시 제한
+                poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
 
-            mMapView = findViewById(R.id.map_view);
-            mMapView.setVisibility(View.INVISIBLE);
-            mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
-            mMapView.setClickable(true);
-            mMapView.setEnabled(true);
-            mMapView.setFocusable(true);
-            mMapView.setFocusableInTouchMode(true);
-            mMapView.setScalingFactor(1.7f);
-            mMapView.requestFocus();
-            mMapView.setOnMapStateChangeListener(changeListener);
-            mMapView.setOnMapViewTouchEventListener(mapListener);
-            mMapController = mMapView.getMapController();
-            mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setMarker();
-                    mMapView.setVisibility(View.VISIBLE);
-                }
-            }, 3000);
-
-
-        }
-
-        private void setMarker () {
-            List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
-            List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
-            int markerId = NMapPOIflagType.PIN;
-            int spotId = NMapPOIflagType.SPOT;
-
-            int size = mapApptfriendList.size() + 1;
-            if (mapApptNonList != null) {
-                size += mapApptNonList.size();
+                middleSpot.longitude += coordX;
+                middleSpot.latitude += coordY;
+                spotCount++;
             }
-
-            // set POI data
-            NMapPOIdata poiData = new NMapPOIdata(size, nMapResourceProvider);
-            poiData.beginPOIdata(size);
-            NGeoPoint middleSpot = new NGeoPoint();
-            int spotCount = 0;
-            for (int i = 0; i < mapApptfriendList.size(); i++) {
-                MapApptfriend mapApptfriend = mapApptfriendList.get(i);
+        }
+        if (mapApptNonList != null) {
+            // 비회원 마크
+            for (int i = 0; i < mapApptNonList.size(); i++) {
+                MapApptfriend mapApptfriend = mapApptNonList.get(i);
                 double coordX = mapApptfriend.getPoint().x;
                 double coordY = mapApptfriend.getPoint().y;
                 if (coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650) {  // 경기, 서울로 마크 표시 제한
                     poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
-
                     middleSpot.longitude += coordX;
                     middleSpot.latitude += coordY;
                     spotCount++;
                 }
             }
-            if (mapApptNonList != null) {
-                // 비회원 마크
-                for (int i = 0; i < mapApptNonList.size(); i++) {
-                    MapApptfriend mapApptfriend = mapApptNonList.get(i);
-                    double coordX = mapApptfriend.getPoint().x;
-                    double coordY = mapApptfriend.getPoint().y;
-                    if (coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650) {  // 경기, 서울로 마크 표시 제한
-                        poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
-                        middleSpot.longitude += coordX;
-                        middleSpot.latitude += coordY;
-                        spotCount++;
-                    }
-                }
-            }
-            poiData.addPOIitem(middleSpot.longitude / spotCount, middleSpot.latitude / spotCount, "중간지점", spotId, 0);
+        }
+        poiData.addPOIitem(middleSpot.longitude / spotCount, middleSpot.latitude / spotCount, "중간지점", spotId, 0);
 
-            Log.e("middle", middleSpot.longitude / spotCount + " " + middleSpot.latitude / spotCount + " spotCount " + spotCount);
-            poiData.endPOIdata();
+        Log.e("middle", middleSpot.longitude / spotCount + " " + middleSpot.latitude / spotCount + " spotCount " + spotCount);
+        poiData.endPOIdata();
 
-            // create POI data overlay
-            NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
-            poiDataOverlay.showAllPOIdata(0);
-            poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
+        // create POI data overlay
+        NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
+        poiDataOverlay.showAllPOIdata(0);
+        poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
+    }
+
+    private NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = new NMapPOIdataOverlay.OnStateChangeListener() {
+        @Override
+        public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+
         }
 
-        private NMapPOIdataOverlay.OnStateChangeListener onPOIdataStateChangeListener = new NMapPOIdataOverlay.OnStateChangeListener() {
-            @Override
-            public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-
+        @Override
+        public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+            if (nMapPOIitem != null) {
+                Log.e(TAG, "onFocusChanged: " + nMapPOIitem.toString());
+            } else {
+                Log.e(TAG, "onFocusChanged: ");
             }
+        }
+    };
 
-            @Override
-            public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
-                if (nMapPOIitem != null) {
-                    Log.e(TAG, "onFocusChanged: " + nMapPOIitem.toString());
-                } else {
-                    Log.e(TAG, "onFocusChanged: ");
-                }
+
+    private NMapView.OnMapStateChangeListener changeListener = new NMapView.OnMapStateChangeListener() {
+        @Override
+        public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
+            Log.e(TAG, "OnMapStateChangeListener onMapInitHandler : ");
+        }
+
+        @Override
+        public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
+            Log.e(TAG, "OnMapStateChangeListener onMapCenterChange : " + nGeoPoint.getLatitude() + " ㅡ  " + nGeoPoint.getLongitude());
+        }
+
+        @Override
+        public void onMapCenterChangeFine(NMapView nMapView) {
+            Log.e(TAG, "OnMapStateChangeListener onMapCenterChangeFine : ");
+        }
+
+        @Override
+        public void onZoomLevelChange(NMapView nMapView, int i) {
+            Log.e(TAG, "OnMapStateChangeListener onZoomLevelChange : " + i);
+        }
+
+        @Override
+        public void onAnimationStateChange(NMapView nMapView, int i, int i1) {
+            Log.e(TAG, "OnMapStateChangeListener onAnimationStateChange : ");
+        }
+    };
+
+    private NMapView.OnMapViewTouchEventListener mapListener = new NMapView.OnMapViewTouchEventListener() {
+        @Override
+        public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onLongPress : ");
+        }
+
+        @Override
+        public void onLongPressCanceled(NMapView nMapView) {
+            Log.e(TAG, "OnMapViewTouchEventListener onLongPressCanceled : ");
+        }
+
+        @Override
+        public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onTouchDown : ");
+        }
+
+        @Override
+        public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onTouchUp : ");
+        }
+
+        @Override
+        public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent1) {
+            Log.e(TAG, "OnMapViewTouchEventListener onScroll : ");
+        }
+
+        @Override
+        public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
+            Log.e(TAG, "OnMapViewTouchEventListener onSingleTapUp : ");
+            EditText editText = findViewById(R.id.et_center_place);
+            editText.setVisibility(View.GONE);
+            ImageButton imageButton = findViewById(R.id.ib_center_place);
+            imageButton.setVisibility(View.GONE);
+
+            if (nMapView != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(imm != null) imm.hideSoftInputFromWindow(nMapView.getWindowToken(), 0);
             }
-        };
-
-
-        private NMapView.OnMapStateChangeListener changeListener = new NMapView.OnMapStateChangeListener() {
-            @Override
-            public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
-                Log.e(TAG, "OnMapStateChangeListener onMapInitHandler : ");
-            }
-
-            @Override
-            public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
-                Log.e(TAG, "OnMapStateChangeListener onMapCenterChange : " + nGeoPoint.getLatitude() + " ㅡ  " + nGeoPoint.getLongitude());
-            }
-
-            @Override
-            public void onMapCenterChangeFine(NMapView nMapView) {
-                Log.e(TAG, "OnMapStateChangeListener onMapCenterChangeFine : ");
-            }
-
-            @Override
-            public void onZoomLevelChange(NMapView nMapView, int i) {
-                Log.e(TAG, "OnMapStateChangeListener onZoomLevelChange : " + i);
-            }
-
-            @Override
-            public void onAnimationStateChange(NMapView nMapView, int i, int i1) {
-                Log.e(TAG, "OnMapStateChangeListener onAnimationStateChange : ");
-            }
-        };
-
-        private NMapView.OnMapViewTouchEventListener mapListener = new NMapView.OnMapViewTouchEventListener() {
-            @Override
-            public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
-                Log.e(TAG, "OnMapViewTouchEventListener onLongPress : ");
-            }
-
-            @Override
-            public void onLongPressCanceled(NMapView nMapView) {
-                Log.e(TAG, "OnMapViewTouchEventListener onLongPressCanceled : ");
-            }
-
-            @Override
-            public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
-                Log.e(TAG, "OnMapViewTouchEventListener onTouchDown : ");
-            }
-
-            @Override
-            public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
-                Log.e(TAG, "OnMapViewTouchEventListener onTouchUp : ");
-            }
-
-            @Override
-            public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent1) {
-                Log.e(TAG, "OnMapViewTouchEventListener onScroll : ");
-            }
-
-            @Override
-            public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
-                Log.e(TAG, "OnMapViewTouchEventListener onSingleTapUp : ");
-                EditText editText = findViewById(R.id.et_center_place);
-                editText.setVisibility(View.GONE);
-                ImageButton imageButton = findViewById(R.id.ib_center_place);
-                imageButton.setVisibility(View.GONE);
-
-                View view = nMapView;
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-            }
-        };
-    }
+        }
+    };
+}
 
 
 

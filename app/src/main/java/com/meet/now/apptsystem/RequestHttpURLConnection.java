@@ -17,7 +17,7 @@ public class RequestHttpURLConnection {
         // HttpURLConnection 참조 변수.
         HttpURLConnection urlConn = null;
         // URL 뒤에 붙여서 보낼 파라미터.
-        StringBuffer sbParams = new StringBuffer();
+        StringBuilder sbParams = new StringBuilder();
 
         /**
          * 1. StringBuffer에 파라미터 연결
@@ -80,17 +80,15 @@ public class RequestHttpURLConnection {
 
             // 출력물의 라인과 그 합에 대한 변수.
             String line;
-            String page = "";
+            StringBuilder page = new StringBuilder();
 
             // 라인을 받아와 합친다.
             while ((line = reader.readLine()) != null){
-                page += line;
+                page.append(line);
             }
 
-            return page;
+            return page.toString();
 
-        } catch (MalformedURLException e) { // for URL.
-            e.printStackTrace();
         } catch (IOException e) { // for openConnection().
             e.printStackTrace();
         } finally {

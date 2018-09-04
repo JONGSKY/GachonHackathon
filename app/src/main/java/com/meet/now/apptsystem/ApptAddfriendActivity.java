@@ -1,28 +1,20 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.PointF;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -35,14 +27,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static android.view.View.GONE;
 import static com.meet.now.apptsystem.MainActivity.userID;
 
 public class ApptAddfriendActivity extends AppCompatActivity {
 
-    static private ListView friendListView;
+    @SuppressLint("StaticFieldLeak")
     static private FriendListAdapter adapter;
     static private List<Friend> friendList;
     static private List<Friend> saveList;
@@ -52,18 +43,18 @@ public class ApptAddfriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
 
-        ImageButton addfriendButton = (ImageButton) findViewById(R.id.addfriendlistButton);
+        ImageButton addfriendButton = findViewById(R.id.addfriendlistButton);
         addfriendButton.setVisibility(GONE);
 
-        friendListView = (ListView) findViewById(R.id.friendListView);
-        friendList = new ArrayList<Friend>();
-        saveList = new ArrayList<Friend>();
+        ListView friendListView = findViewById(R.id.friendListView);
+        friendList = new ArrayList<>();
+        saveList = new ArrayList<>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
         new ApptAddfriendActivity.BackgroundTask().execute();
 
-        EditText search = (EditText) findViewById(R.id.searchFriend);
+        EditText search = findViewById(R.id.searchFriend);
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -86,18 +77,19 @@ public class ApptAddfriendActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent apptFriendIntent = new Intent();
-                    String nickname = null;
-                    if (friendList.get(position).getFriendNickname().equals("null")) {
-                        nickname = friendList.get(position).getUserNickname();
-                    } else {
-                        nickname = friendList.get(position).getFriendNickname();
-                    }
-                    apptFriendIntent.putExtra("nickname", nickname);
-                    apptFriendIntent.putExtra("friendID", friendList.get(position).getUserID());
-                    apptFriendIntent.putExtra("userPhoto", friendList.get(position).getUserPhoto());
-                    setResult(1, apptFriendIntent);
-                    finish();
+                String nickname;
+                if (friendList.get(position).getFriendNickname().equals("null")) {
+                    nickname = friendList.get(position).getUserNickname();
+                } else {
+                    nickname = friendList.get(position).getFriendNickname();
                 }
+                apptFriendIntent.putExtra("nickname", nickname);
+                apptFriendIntent.putExtra("friendID", friendList.get(position).getUserID());
+                apptFriendIntent.putExtra("userPhoto", friendList.get(position).getUserPhoto());
+                setResult(1, apptFriendIntent);
+                finish();
+
+            }
         });
 
     }

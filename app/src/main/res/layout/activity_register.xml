@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,8 +25,9 @@
                 android:layout_marginTop="10dp"
                 android:text="회원 가입"
                 android:textColor="#ffffff"
-                android:textSize="30dp"
-                android:textStyle="bold" />
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -46,7 +49,7 @@
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@color/colorPrimary"
                     android:singleLine="true"
                     android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
@@ -54,7 +57,8 @@
                     android:hint="아이디(이메일)"
                     android:padding="10dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColorHint="#ffffff"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
 
                 <Button
                     android:id="@+id/validateButton"
@@ -64,8 +68,9 @@
                     android:background="@color/colorWarning"
                     android:text="중복체크"
                     android:textColor="#FFFFFF"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -82,7 +87,8 @@
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
+                android:textColorHint="#ffffff"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
             <EditText
                 android:id="@+id/nicknameText"
@@ -97,7 +103,10 @@
                 android:hint="별칭"
                 android:padding="10dp"
                 android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
+                android:textColorHint="#ffffff"
+                tools:targetApi="m"
+                tools:ignore="HardcodedText,RtlHardcoded"
+                android:inputType="text" />
 
             <LinearLayout
                 android:layout_width="320dp"
@@ -114,12 +123,13 @@
                     android:background="@color/colorPrimary"
                     android:drawableLeft="@drawable/ic_home_black_24dp"
                     android:drawableStart="@drawable/ic_home_black_24dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:singleLine="true"
                     android:hint="주소"
                     android:padding="10dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColorHint="#ffffff"
+                    tools:ignore="HardcodedText,RtlHardcoded,TextFields" />
 
                 <Button
                     android:id="@+id/addressButton"
@@ -129,8 +139,9 @@
                     android:background="@color/colorPrimaryMoreDark"
                     android:text="주소검색"
                     android:textColor="#FFFFFF"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -150,13 +161,14 @@
                     android:padding="10dp"
                     android:text="연령대"
                     android:textColor="#ffffff"
-                    android:textSize="17dp" />
+                    android:textSize="17sp"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
 
                 <Spinner
                     android:id="@+id/ageSpinner"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"></Spinner>
+                    android:layout_gravity="center" />
 
             </LinearLayout>
 
@@ -174,14 +186,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
-                    android:text="여성" />
+                    android:text="여성"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/genderMan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="남성" />
+                    android:text="남성"
+                    tools:ignore="HardcodedText" />
 
             </RadioGroup>
 
@@ -194,8 +208,9 @@
                 android:background="@color/colorPrimaryDark"
                 android:text="가입하기"
                 android:textColor="#ffffff"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

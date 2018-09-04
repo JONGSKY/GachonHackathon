@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<menu
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
 	<item android:id="@+id/action_revert"
 		android:icon="@android:drawable/ic_menu_revert"
 		android:title="초기화"
 		android:alphabeticShortcut="c"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom" />
+
 	<item android:id="@+id/action_map"
 		android:icon="@android:drawable/ic_menu_mapmode"
 		android:title="지도보기"
-		android:showAsAction="ifRoom"
-		android:checkableBehavior="all">
+		android:checkableBehavior="all"
+		app:showAsAction="ifRoom">
+
 		<menu>
 			<group>
 				<item android:id="@+id/action_vector"
@@ -40,20 +46,24 @@
 			</group>
 		</menu>
 	</item>
+
 	<item android:id="@+id/action_zoom"
 		android:icon="@android:drawable/ic_menu_zoom"
 		android:title="Zoom Controls"
 		android:alphabeticShortcut="z"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom" />
+
 	<item android:id="@+id/action_my_location"
 		android:icon="@android:drawable/ic_menu_zoom"
 		android:title="내 위치"
 		android:alphabeticShortcut="l"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom" />
+
 	<item android:id="@+id/action_test"
 		android:icon="@android:drawable/ic_menu_more"
 		android:title="지도보기"
-		android:showAsAction="ifRoom">
+		app:showAsAction="ifRoom">
+
 		<menu>
 			<group>
 				<item android:id="@+id/action_new_activity"
@@ -80,8 +90,9 @@
 			</group>
 		</menu>
 	</item>
+
 	<item android:id="@+id/action_navermap"
 		android:title="네이버 지도앱 실행"
 		android:alphabeticShortcut="m"
-		android:showAsAction="ifRoom"/>
+		app:showAsAction="ifRoom" />
 </menu>

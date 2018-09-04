@@ -1,9 +1,8 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,7 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static com.meet.now.apptsystem.MainActivity.userID;
 
@@ -50,7 +47,7 @@ public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
 
-    static private ListView friendListView;
+    @SuppressLint("StaticFieldLeak")
     static private FriendListAdapter adapter;
     static private List<Friend> friendList;
     static private List<Friend> saveList;
@@ -61,9 +58,9 @@ public class FriendlistActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friendlist);
         Intent intent = getIntent();
 
-        friendListView = (ListView) findViewById(R.id.friendListView);
-        friendList = new ArrayList<Friend>();
-        saveList = new ArrayList<Friend>();
+        ListView friendListView = findViewById(R.id.friendListView);
+        friendList = new ArrayList<>();
+        saveList = new ArrayList<>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
@@ -72,7 +69,6 @@ public class FriendlistActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent mapAddMember = getIntent();
                 if (mapAddMember !=null) {
-                    Log.e("mapAddMember", "성공");
                     // 아이템 클릭시 돌아가기
                     String friendID = friendList.get(position).getUserID();
                     String apptNo = mapAddMember.getStringExtra("apptNo");
@@ -82,7 +78,7 @@ public class FriendlistActivity extends AppCompatActivity {
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            JSONObject jsonResponse = null;
+                            JSONObject jsonResponse;
                             try {
                                 jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
@@ -101,10 +97,9 @@ public class FriendlistActivity extends AppCompatActivity {
                     queue.add(addMemberRequest);
 
                 }
-                Log.e("mapAddMember", "실패");
             }
         });
-        ImageButton addfriendButton = (ImageButton) findViewById(R.id.addfriendlistButton);
+        ImageButton addfriendButton = findViewById(R.id.addfriendlistButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +111,8 @@ public class FriendlistActivity extends AppCompatActivity {
         }
         new BackgroundTask().execute();
 
-        EditText search = (EditText) findViewById(R.id.searchFriend);
+        EditText search = findViewById(R.id.searchFriend);
+
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -151,17 +147,18 @@ public class FriendlistActivity extends AppCompatActivity {
         addfriendDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         addfriendDialog.setContentView(R.layout.dialog_addfriend);
 
-        final Button searchfriendButton = (Button) addfriendDialog.findViewById(R.id.searchfriendButton);
-        final Button closefriendButton = (Button) addfriendDialog.findViewById(R.id.closefriendButton);
-        final TextView dialogmessage = (TextView) addfriendDialog.findViewById(R.id.dialogmessage);
-        final EditText findfriendID = (EditText) addfriendDialog.findViewById(R.id.findfriendID);
-        final LinearLayout dialogsearch = (LinearLayout) addfriendDialog.findViewById(R.id.dialogsearch);
+        final Button searchfriendButton = addfriendDialog.findViewById(R.id.searchfriendButton);
+        final Button closefriendButton = addfriendDialog.findViewById(R.id.closefriendButton);
+        final TextView dialogmessage = addfriendDialog.findViewById(R.id.dialogmessage);
+        final EditText findfriendID = addfriendDialog.findViewById(R.id.findfriendID);
+        final LinearLayout dialogsearch = addfriendDialog.findViewById(R.id.dialogsearch);
 
         searchfriendButton.setEnabled(true);
         closefriendButton.setEnabled(true);
 
         searchfriendButton.setOnClickListener(new View.OnClickListener() {
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
                 final String friendID = findfriendID.getText().toString().replaceAll("\\p{Z}", "");  // 공백제거

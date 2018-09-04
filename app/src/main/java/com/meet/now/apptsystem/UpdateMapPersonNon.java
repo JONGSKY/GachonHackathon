@@ -31,7 +31,6 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_map_person_nonmember);
 
-
         friendName = findViewById(R.id.et_non_nick);
         friendAddr = findViewById(R.id.et_non_addr);
         ImageButton loc = findViewById(R.id.ib_non_loc);

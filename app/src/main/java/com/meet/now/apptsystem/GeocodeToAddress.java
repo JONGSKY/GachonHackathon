@@ -24,6 +24,7 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
         this.listener = listener;
     }
 
+
     @Override
     protected void onPostExecute(HashMap<String, String> hashMap) {
         super.onPostExecute(hashMap);
@@ -36,6 +37,7 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
     protected HashMap<String, String> doInBackground(String... strings) {
         HashMap<String, String> addressData = new HashMap<>();
         String geocode = strings[0];
+
 
         try {
             String geo = URLEncoder.encode(geocode, "UTF-8");

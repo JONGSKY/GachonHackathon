@@ -33,8 +33,8 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:layout_alignParentBottom="true"
             android:layout_margin="4dp"
-            android:text="500m"
-            android:textSize="12dp"
+            android:text="@string/_500m"
+            android:textSize="12sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>
 
@@ -46,9 +46,9 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:layout_alignParentBottom="true"
             android:layout_margin="4dp"
-            android:layout_toRightOf="@+id/btn_dis1"
-            android:text="750m"
-            android:textSize="12dp"
+            android:layout_toEndOf="@+id/btn_dis1"
+            android:text="@string/_750m"
+            android:textSize="12sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>
 
@@ -60,9 +60,9 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:layout_alignParentBottom="true"
             android:layout_margin="4dp"
-            android:layout_toRightOf="@+id/btn_dis2"
-            android:text="1km"
-            android:textSize="12dp"
+            android:layout_toEndOf="@+id/btn_dis2"
+            android:text="@string/_1km"
+            android:textSize="12sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>
 
@@ -73,10 +73,10 @@
             android:background="@color/colorAccent"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/btn_dis3"
+            android:layout_toEndOf="@+id/btn_dis3"
             android:layout_margin="4dp"
-            android:text="1.25km"
-            android:textSize="12dp"
+            android:text="@string/_1_25km"
+            android:textSize="12sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>
 

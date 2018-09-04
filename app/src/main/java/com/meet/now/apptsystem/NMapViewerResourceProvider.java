@@ -15,6 +15,7 @@
  */
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,7 +50,6 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 	private static final int POI_FONT_COLOR_ALPHABET = 0xFFFFFFFF;
 	private static final float POI_FONT_OFFSET_ALPHABET = 6.0F;
-	private static final Typeface POI_FONT_TYPEFACE = null;//Typeface.DEFAULT_BOLD;
 
 	private static final int CALLOUT_TEXT_COLOR_NORMAL = 0xFFFFFFFF;
 	private static final int CALLOUT_TEXT_COLOR_PRESSED = 0xFF9CA1AA;
@@ -59,7 +59,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	private final Rect mTempRect = new Rect();
 	private final Paint mTextPaint = new Paint();
 
-	public NMapViewerResourceProvider(Context context) {
+	NMapViewerResourceProvider(Context context) {
 		super(context);
 
 		mTextPaint.setAntiAlias(true);
@@ -72,7 +72,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * @param focused true for focused state, false otherwise.
 	 * @return
 	 */
-	public Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
+	private Drawable getDrawable(int markerId, boolean focused, NMapOverlayItem item) {
 		Drawable marker = null;
 
 		int resourceId = findResourceIdForMarker(markerId, focused);
@@ -194,6 +194,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 	 * 
 	 * @see NMapPOIflagType
 	 */
+	@SuppressLint("LongLogTag")
 	@Override
 	protected int findResourceIdForMarker(int markerId, boolean focused) {
 		int resourceId = 0;
@@ -253,11 +254,11 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		drawable[0] = mContext.getResources().getDrawable(R.drawable.pubtrans_ic_mylocation_off);
 		drawable[1] = mContext.getResources().getDrawable(R.drawable.pubtrans_ic_mylocation_on);
 
-		for (int i = 0; i < drawable.length; i++) {
-			int w = drawable[i].getIntrinsicWidth() / 2;
-			int h = drawable[i].getIntrinsicHeight() / 2;
+		for (Drawable aDrawable : drawable) {
+			int w = aDrawable.getIntrinsicWidth() / 2;
+			int h = aDrawable.getIntrinsicHeight() / 2;
 
-			drawable[i].setBounds(-w, -h, w, h);
+			aDrawable.setBounds(-w, -h, w, h);
 		}
 
 		return drawable;
@@ -278,7 +279,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		return drawable;
 	}
 
-	public Drawable getDrawableWithNumber(int resourceId, String strNumber, float offsetY, int fontColor, float fontSize) {
+	private Drawable getDrawableWithNumber(int resourceId, String strNumber, float offsetY, int fontColor, float fontSize) {
 
 		Bitmap textBitmap = getBitmapWithText(resourceId, strNumber, fontColor, fontSize, offsetY);
 
@@ -286,9 +287,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 		// set bounds
 		Drawable marker = new BitmapDrawable(mContext.getResources(), textBitmap);
-		if (marker != null) {
-			NMapOverlayItem.boundCenter(marker);
-		}
+		NMapOverlayItem.boundCenter(marker);
 
 		//Log.i(LOG_TAG, "getDrawableWithNumber: width=" + marker.getIntrinsicWidth() + ", height=" + marker.getIntrinsicHeight());
 
@@ -301,9 +300,7 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
 		// set bounds
 		Drawable marker = new BitmapDrawable(mContext.getResources(), textBitmap);
-		if (marker != null) {
-			NMapOverlayItem.boundCenterBottom(marker);
-		}
+		NMapOverlayItem.boundCenterBottom(marker);
 
 		return marker;
 	}
@@ -344,9 +341,6 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 		// set font size
 		mTextPaint.setTextSize(fontSize * mScaleFactor);
 		// set font type
-		if (POI_FONT_TYPEFACE != null) {
-			mTextPaint.setTypeface(POI_FONT_TYPEFACE);
-		}
 
 		// get text offset		
 		mTextPaint.getTextBounds(strNumber, 0, strNumber.length(), mTempRect);
@@ -373,14 +367,11 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 			NMapPOIitem poiItem = (NMapPOIitem)item;
 
 			if (poiItem.showRightButton()) {
-				Drawable drawable = mContext.getResources().getDrawable(R.drawable.bg_speech);
-				return drawable;
+				return mContext.getResources().getDrawable(R.drawable.bg_speech);
 			}
 		}
 
-		Drawable drawable = mContext.getResources().getDrawable(R.drawable.pin_ballon_bg);
-
-		return drawable;
+		return mContext.getResources().getDrawable(R.drawable.pin_ballon_bg);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -41,7 +42,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,13 +51,11 @@ public class appt_calendar_view_activity extends AppCompatActivity{
     private static String TAG = "phptest_MainActivity";
 
     private static final String TAG_JSON = "response";
-    private static final String TAG_Appt_Name = "ApptName";
     private static final String TAG_Date = "Date";
 
     MaterialCalendarView calendarView;
 
 
-    ArrayList<HashMap<String, ArrayList<String>>> mArrayList;
     String mJsonString;
     private String userID;
 
@@ -106,6 +104,7 @@ public class appt_calendar_view_activity extends AppCompatActivity{
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class GetData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
         String errorString = null;
@@ -261,7 +260,7 @@ public class appt_calendar_view_activity extends AppCompatActivity{
 
         private final Calendar calendar = Calendar.getInstance();
 
-        public SundayDecorator() {
+        SundayDecorator() {
         }
 
         @Override
@@ -282,7 +281,7 @@ public class appt_calendar_view_activity extends AppCompatActivity{
 
         private final Calendar calendar = Calendar.getInstance();
 
-        public SaturdayDecorator() {
+        SaturdayDecorator() {
         }
 
         @Override
@@ -303,7 +302,7 @@ public class appt_calendar_view_activity extends AppCompatActivity{
 
         private CalendarDay date;
 
-        public oneDayDecorator() {
+        oneDayDecorator() {
             date = CalendarDay.today();
         }
 
@@ -332,7 +331,7 @@ public class appt_calendar_view_activity extends AppCompatActivity{
         private int color;
         private HashSet<CalendarDay> dates;
 
-        public EventDecorator(int color, Collection<CalendarDay> dates) {
+        EventDecorator(int color, Collection<CalendarDay> dates) {
             this.color = color;
             this.dates = new HashSet<>(dates);
         }

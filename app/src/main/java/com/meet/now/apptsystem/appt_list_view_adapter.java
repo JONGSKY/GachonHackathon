@@ -3,7 +3,6 @@ package com.meet.now.apptsystem;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class appt_list_view_adapter extends BaseAdapter {
     private int layout;
     private Context context;
 
-    public appt_list_view_adapter(Context context,  int layout, ArrayList<HashMap<String, ArrayList<String>>> arrayList) {
+    appt_list_view_adapter(Context context, int layout, ArrayList<HashMap<String, ArrayList<String>>> arrayList) {
         this.context = context;
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.arrayList = arrayList;
@@ -48,7 +47,7 @@ public class appt_list_view_adapter extends BaseAdapter {
         return i;
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -96,11 +95,11 @@ public class appt_list_view_adapter extends BaseAdapter {
         return view;
     }
 
-    public String week_result(String date) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    private String week_result(String date) throws ParseException {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         Date date1 = formatter.parse(date);  // 날짜 입력하는곳 .
-        date1 = new Date(date1.getTime() + (1000*60*60*24*+1));  // 날짜에 하루를 더한 값
+        date1 = new Date(date1.getTime() + (1000 * 60 * 60 * 24));  // 날짜에 하루를 더한 값
 
         Calendar cal = Calendar.getInstance() ;
         cal.setTime(date1);              // 하루더한 날자 값을 Calendar  넣는다.

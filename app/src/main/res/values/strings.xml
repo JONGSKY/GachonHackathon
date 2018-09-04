@@ -17,5 +17,11 @@
     <string name="cancel">Cancel</string>
     <string name="add_addr">주소입력</string>
     <string name="friend_name">친구 이름</string>
+    <string name="_500m">500m</string>
+    <string name="_750m">750m</string>
+    <string name="_1km">1km</string>
+    <string name="_1_25km">1.25km</string>
+    <string name="notice_select_addr">지도를 움직여 위치를 지정하세요.</string>
+    <string name="todo">TODO</string>
 
 </resources>

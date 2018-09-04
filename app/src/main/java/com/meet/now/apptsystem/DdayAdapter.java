@@ -1,12 +1,11 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class DdayAdapter extends BaseAdapter {
     private Context context;
     private List<Dday> ddayList;
 
-    public DdayAdapter(Context context, List<Dday> ddayList) {
+    DdayAdapter(Context context, List<Dday> ddayList) {
         this.context = context;
         this.ddayList = ddayList;
     }
@@ -37,10 +36,10 @@ public class DdayAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = View.inflate(context, R.layout.dday, null);
-        TextView apptnameText = (TextView) v.findViewById(R.id.ddayApptname);
-        TextView dateText = (TextView) v.findViewById(R.id.ddayDate);
-        TextView ddayText = (TextView) v.findViewById(R.id.ddayText);
+        @SuppressLint("ViewHolder") View v = View.inflate(context, R.layout.dday, null);
+        TextView apptnameText = v.findViewById(R.id.ddayApptname);
+        TextView dateText = v.findViewById(R.id.ddayDate);
+        TextView ddayText = v.findViewById(R.id.ddayText);
 
         apptnameText.setText(ddayList.get(i).getApptName());
         dateText.setText(ddayList.get(i).getApptDate());
