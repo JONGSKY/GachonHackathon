@@ -1,17 +1,29 @@
 package com.meet.now.apptsystem;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +31,8 @@ public class appt_detail_date_adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private JSONArray jsonArray;
     private int layout;
+
+    private String ApptNo = "hello";
 
     public appt_detail_date_adapter(Context context, int layout, JSONArray jsonArray) {
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,6 +82,13 @@ public class appt_detail_date_adapter extends BaseAdapter {
         }
 
         try {
+            ApptNo = jsonObject.getString("ApptNo");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.w("minyong", ApptNo);
+
+        try {
             ApptnameValue = jsonObject.getString("ApptName");
             ApptplaceValue = jsonObject.getString("ApptPlace");
             if(ApptplaceValue.equals("null")){
@@ -94,7 +115,59 @@ public class appt_detail_date_adapter extends BaseAdapter {
         textView4.setText(ApptPlace);
         textView5.setText(ApptnameValue);
 
+        ImageButton imageButton = view.findViewById(R.id.appt_delete_button);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApptDelete apptDelete = new ApptDelete();
+                Log.w("Test", ApptNo);
+                apptDelete.execute(ApptNo);
+                notifyDataSetChanged();
+            }
+        });
+
         return view;
     }
 
+    class ApptDelete extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+            HttpURLConnection httpURLConnection = null;
+
+            String ApptNo = strings[0];
+            String URL = "https://brad903.cafe24.com/ApptDelete.php";
+
+            try {
+                String data = URLEncoder.encode("ApptNo", "UTF-8") + "=" + URLEncoder.encode(ApptNo, "UTF-8");
+
+                java.net.URL url = new URL(URL);
+
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);
+
+                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader
+                        (httpURLConnection.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);//
+
+                }
+
+                httpURLConnection.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 }

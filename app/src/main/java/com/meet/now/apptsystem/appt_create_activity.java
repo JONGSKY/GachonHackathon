@@ -241,7 +241,7 @@ public class appt_create_activity extends AppCompatActivity {
                 jsonMain.put("FriendList", jsonArray);
                 Log.w("minyong", String.valueOf(jsonMain));
 
-                String data = URLEncoder.encode("appt_name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");// UTF-8로  설정 실제로 string 상으로 봤을땐, tmsg="String" 요런식으로 설정 된다.
+                String data = URLEncoder.encode("appt_name", "UTF-8") + "=" + URLEncoder.encode(appt_name, "UTF-8");
                 data += "&" + URLEncoder.encode("Date_String", "UTF-8") + "=" + URLEncoder.encode(Date_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Age_String", "UTF-8") + "=" + URLEncoder.encode(Age_String, "UTF-8");
                 data += "&" + URLEncoder.encode("Time_String", "UTF-8") + "=" + URLEncoder.encode(Time_String, "UTF-8");
@@ -250,40 +250,40 @@ public class appt_create_activity extends AppCompatActivity {
                 data += "&" + URLEncoder.encode("FriendList", "UTF-8") + "=" + URLEncoder.encode(jsonMain.toString(), "UTF-8");
                 Log.w("minyong", String.valueOf(jsonMain));
 
-                //String data2 = "tmsg="+testMsg+"&tmsg2="+testMsg2;
 
-                String link = "http://brad903.cafe24.com/AppointmentDetailsCreate.php";// 요청하는 url 설정 ex)192.168.0.1/httpOnlineTest.php
+
+                String link = "http://brad903.cafe24.com/AppointmentDetailsCreate.php";
 
                 URL url = new URL(link);
 
-                httpURLConnection = (HttpURLConnection) url.openConnection();//httpURLConnection은 url.openconnection을 통해서 만 생성 가능 직접생성은 불가능하다.
-                httpURLConnection.setRequestMethod("POST");//post방식으로 설정
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
 
-                httpURLConnection.setDoInput(true);// server와의 통신에서 입력 가능한 상태로 만든다.
-                httpURLConnection.setDoOutput(true);//server와의 통신에서 출력 가능한 상태로 만든다.
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);
 
-                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로 뿅 쏴줄라구용
-                wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
-                wr.flush();//flush!
+                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                wr.write(data);
+                wr.flush();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader
-                        (httpURLConnection.getInputStream(), "UTF-8"));//자 이제 받아옵시다.
-                StringBuilder sb = new StringBuilder();// String 값을 이제 스슥스슥 넣을 껍니다.
+                        (httpURLConnection.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
                 String line;
 
                 while ((line = reader.readLine()) != null) {
-                    sb.append(line);//
+                    sb.append(line);
 
                 }
 
-                httpURLConnection.disconnect();//이거 꼭해주세요. 보통은 별일 없는데, 특정상황에서 문제가 생기는 경우가 있다고 합니다.
-                return sb.toString();//자 이렇게 리턴이되면 이제 post로 가겠습니다.
+                httpURLConnection.disconnect();
+                return sb.toString();
             } catch (Exception e) {
 
                 httpURLConnection.disconnect();
                 return new String("Exception Occure" + e.getMessage());
-            }//try catch end
-        }//doInbackground end
-    }//asynctask  end
+            }
+        }
+    }
 
 }
