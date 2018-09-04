@@ -1,9 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.content.Intent;
-import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nhn.android.maps.NMapActivity;
-import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
@@ -25,27 +22,45 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 import java.util.HashMap;
 import java.util.List;
 
-public class UpdateMapPersonAddAddr extends NMapActivity {
+public class UpdateMapPersonAddAddr extends NMapActivity implements View.OnClickListener {
     private final String TAG = "UpdateMapPersonAddAddr";
 
     private int async_count = 2;
-    private NMapView mMapView;
 
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
 
-    LoadNonaddress loadNonaddress;
     LoadFriendaddress loadFriendaddress;
+    LoadNonaddress loadNonaddress;
     TextView nowAddr;
 
     double longitude;
     double latitude;
 
+    String apptNo;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_map_add_addr);
         Intent intent = getIntent();
-        String apptNo = intent.getStringExtra("apptNo");
+        apptNo = intent.getStringExtra("apptNo");
+
+        loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
+            @Override
+            public void taskComplete() {
+                async_count--;
+                if (async_count == 0) setMarker();
+            }
+        });
+        loadFriendaddress.execute(apptNo);
+        loadNonaddress = new LoadNonaddress(new AsyncNullListener() {
+            @Override
+            public void taskComplete() {
+                async_count--;
+                if (async_count == 0) setMarker();
+            }
+        });
+        loadNonaddress.execute(apptNo);
 
         init();
 
@@ -54,31 +69,18 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         ImageView placeImg2 = findViewById(R.id.iv_center_place);
         nowAddr = findViewById(R.id.tv_add_addr_now);
         Button ok = findViewById(R.id.btn_map_ok);
+        ok.setOnClickListener(this);
         tv.bringToFront();
         placeImg1.bringToFront();
         placeImg2.bringToFront();
         nowAddr.bringToFront();
 
-        // 중심 경위도와 주소 전달.
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = getIntent();
-                String address = nowAddr.getText().toString();
-                intent.putExtra("longitude", longitude);
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("friendAddr", address);
-
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
 
     }
 
     private void init() {
 
-        mMapView = findViewById(R.id.map_view_non);
+        NMapView mMapView = findViewById(R.id.map_view_non);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
         mMapView.setClickable(true);
         mMapView.setEnabled(true);
@@ -90,9 +92,6 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         mMapView.setOnMapStateChangeListener(changeListener);
         mMapView.setOnMapViewTouchEventListener(mapListener);
 
-        NMapController mMapController = mMapView.getMapController();
-        mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
-
         nMapResourceProvider = new NMapViewerResourceProvider(this);
         mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
 
@@ -100,7 +99,7 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
     }
 
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList =ApptCenterplaceActivity.mapApptfriendList;
+        List<MapApptfriend> mapApptfriendList = ApptCenterplaceActivity.mapApptfriendList;
         List<MapApptfriend> mapApptNonList = ApptCenterplaceActivity.mapApptNonList;
         int markerId = NMapPOIflagType.PIN;
 
@@ -132,7 +131,6 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             }
         }
         poiData.endPOIdata();
-
         // create POI data overlay
         NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
         poiDataOverlay.showAllPOIdata(0);
@@ -179,7 +177,6 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             });
             geocodeToAddress.execute(longitude + "," + latitude);
         }
-
 
         @Override
         public void onMapCenterChangeFine(NMapView nMapView) {
@@ -232,4 +229,22 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
 
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.btn_map_ok:
+                // 중심 경위도와 주소 전달.
+                Intent intent = getIntent();
+                String address = nowAddr.getText().toString();
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("friendAddr", address);
+
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+        }
+    }
 }

@@ -16,11 +16,10 @@ import java.util.Map;
 
 class LoadHotplace extends AsyncTask<Void, Void, Void> {
 
-    AsyncNullListener asyncNullListener;
+    private AsyncNullListener asyncNullListener;
     public static JSONArray hotplaceList;
     private String target;
 
-    LoadHotplace(){}
     LoadHotplace(AsyncNullListener asyncNullListener){
         this.asyncNullListener = asyncNullListener;
     }

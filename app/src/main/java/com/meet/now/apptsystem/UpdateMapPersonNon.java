@@ -78,8 +78,7 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
                             try {
                                 JSONObject jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
-                                if (success) {
-                                } else {
+                                if (!success) {
                                     Toast.makeText(getApplicationContext(), "추가 실패했습니다.다시 시도해주세요!", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {

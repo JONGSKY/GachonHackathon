@@ -17,11 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 class LoadNonaddress extends AsyncTask<String, Void, Void> {
-    AsyncNullListener asyncNullListener;
+    private AsyncNullListener asyncNullListener;
     public static List<MapApptfriend> mapApptNonList;
     private String target;
 
-    LoadNonaddress(){}
     LoadNonaddress(AsyncNullListener asyncNullListener){
         this.asyncNullListener = asyncNullListener;
     }

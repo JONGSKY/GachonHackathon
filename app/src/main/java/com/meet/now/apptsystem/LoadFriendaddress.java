@@ -20,11 +20,10 @@ import java.util.Map;
 
 class LoadFriendaddress extends AsyncTask<String, Void, Void> {
 
-    AsyncNullListener asyncNullListener;
+    private AsyncNullListener asyncNullListener;
     public static List<MapApptfriend> mapApptfriendList;
     private String target;
 
-    LoadFriendaddress(){}
     LoadFriendaddress(AsyncNullListener asyncNullListener){
         this.asyncNullListener = asyncNullListener;
     }
