@@ -2,10 +2,13 @@ package com.meet.now.apptsystem;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,6 +29,7 @@ import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ApptCenterplaceActivity extends NMapActivity implements View.OnClickListener {
@@ -56,7 +60,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appt_centerplace);
-        EditText editText = findViewById(R.id.et_center_place);
+        final EditText editText = findViewById(R.id.et_center_place);
         editText.setVisibility(View.GONE);
         ImageButton imageButton = findViewById(R.id.ib_center_place);
         imageButton.setVisibility(View.GONE);
@@ -104,13 +108,73 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 if(v != null){
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+
+                    String address = editText.getText().toString().trim();
+                    Log.e("address",address);
+                    if(address.equals("") || address == null){
+                        Toast.makeText(getApplicationContext(),"검색어를 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Async_geo async_geo = new Async_geo(new AsyncListener() {
+                            @Override
+                            public void taskComplete(PointF point) {
+                                Log.e("point", point.x +" "+ point.y);
+
+                                if(point.x == 200.0 && point.y == 200.0){
+                                    Toast.makeText(getApplicationContext(),"검색결과가 없습니다.", Toast.LENGTH_SHORT).show();
+                                }else if(point.x > 126.375924 && point.x < 127.859605 && point.y > 36.889164 && point.y < 38.313650){
+                                    mMapController.setMapCenter(point.x, point.y, 11);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"검색 가능한 지역을 벗어났습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void taskComplete(HashMap<String, String> hashMap) {
+
+                            }
+                        });
+                        async_geo.execute(address);
+
+
+
+                    }
+
                 }
 
             }
         });
 
-    }
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == event.KEYCODE_ENTER){
+                    return true;
+                }
+                return false;
+            }
+        });
 
+    } // onCreate end
+
+    class Async_geo extends AsyncTask<String, Void, PointF> {
+        AsyncListener asyncListener;
+
+        Async_geo(AsyncListener asyncListener){
+            this.asyncListener = asyncListener;
+        }
+        @Override
+        protected void onPostExecute(PointF pointF) {
+            super.onPostExecute(pointF);
+            if(this.asyncListener != null)
+                this.asyncListener.taskComplete(pointF);
+        }
+
+        @Override
+        protected PointF doInBackground(String... address) {
+           PointF point = AddressToGeocode.getGeocode(address[0]);
+            return point;
+        }
+    }
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
@@ -153,7 +217,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         Log.e("result", requestCode +" " + resultCode);
         if(resultCode == RESULT_OK){
             if(requestCode == SEARCH_MAP){
-                Toast.makeText(getApplicationContext(), "성공", Toast.LENGTH_SHORT).show();
             }}
             else if(requestCode == UPDATE_DISTANCE && data != null) {
                 int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
@@ -162,9 +225,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                     NGeoPoint nGeoPoint = mMapController.getMapCenter();
                     mMapController.setMapCenter(nGeoPoint, result);
                     // 추천 위치 추가 필요 및 단위 변경
-
-
-
                 }
             }
 
