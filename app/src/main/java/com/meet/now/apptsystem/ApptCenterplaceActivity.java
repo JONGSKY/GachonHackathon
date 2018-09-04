@@ -37,6 +37,7 @@ import java.util.List;
 
 public class ApptCenterplaceActivity extends NMapActivity implements View.OnClickListener {
     private final String TAG = "ApptCenterplaceActivity";
+    private static int async_count;
 
     private NMapView mMapView;
     private NMapController mMapController;

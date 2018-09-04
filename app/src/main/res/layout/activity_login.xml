@@ -18,23 +18,19 @@
             android:background="@color/colorPrimary">
 
             <ImageView
-                android:layout_width="125dp"
+                android:layout_width="wrap_content"
                 android:layout_height="125dp"
                 android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:background="@drawable/ic_person"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/main_logo2"
                 tools:ignore="ContentDescription" />
-            
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:text="한날, 한시"
-                android:textColor="#ffffff"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
+                android:src="@drawable/main_font"
                 tools:ignore="HardcodedText" />
+
 
         </LinearLayout>
 
