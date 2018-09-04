@@ -151,6 +151,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
                             if(hotPoint.longitude-middleSpot.longitude>-manify && hotPoint.longitude-middleSpot.longitude<manify && hotPoint.latitude-middleSpot.latitude<manify && hotPoint.latitude-middleSpot.latitude>-manify){
                                 NMapPOIitem item = hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                                item.setTitle(hotplace.getString("placeName"));
                                 item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
                             }
                         }catch(Exception e){
@@ -266,6 +267,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 double manify = 0.008*1;
                 if(hotPoint.longitude-middleSpot.longitude>-manify && hotPoint.longitude-middleSpot.longitude<manify && hotPoint.latitude-middleSpot.latitude<manify && hotPoint.latitude-middleSpot.latitude>-manify){
                     NMapPOIitem item = hotplacePoiData.addPOIitem(hotPoint, hotplace.getString("placeName"), hotspotId, 1);
+                    item.setTitle(hotplace.getString("placeName"));
                     item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
                 }
             }catch(Exception e){
