@@ -37,7 +37,7 @@ import java.util.List;
 
 public class ApptCenterplaceActivity extends NMapActivity implements View.OnClickListener {
     private final String TAG = "ApptCenterplaceActivity";
-    private static int async_count;
+    private int async_count = 3;
 
     private NMapView mMapView;
     private NMapController mMapController;
@@ -48,6 +48,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     LoadNonaddress loadNonaddress;
     LoadHotplace loadHotplace;
     NGeoPoint middleSpot;
+    NMapPOIdata poiData;
     NMapPOIdata hotplacePoiData;
 
 
@@ -70,17 +71,41 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         ImageButton imageButton = findViewById(R.id.ib_center_place);
         imageButton.setVisibility(View.GONE);
         Button button = findViewById(R.id.btn_refresh);
+        button.setOnClickListener(this);
         button.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         apptNo = intent.getStringExtra("apptNo");
 
-        loadFriendaddress = new LoadFriendaddress();
-        loadFriendaddress.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,apptNo);
-        loadNonaddress = new LoadNonaddress();
-        loadNonaddress.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, apptNo);
-        loadHotplace = new LoadHotplace();
-        loadHotplace.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
+            @Override
+            public void taskComplete() {
+                async_count--;
+                Log.e("LoadFriendaddress",async_count+"");
+                if(async_count == 0) setMarker();
+            }
+        });
+        loadFriendaddress.execute(apptNo);
+        loadNonaddress = new LoadNonaddress(new AsyncNullListener() {
+            @Override
+            public void taskComplete() {
+                async_count--;
+                Log.e("LoadFriendaddress",async_count+"");
+                if(async_count == 0) setMarker();
+            }
+        });
+        loadNonaddress.execute(apptNo);
+        loadHotplace = new LoadHotplace(new AsyncNullListener() {
+            @Override
+            public void taskComplete() {
+                async_count--;
+                Log.e("LoadFriendaddress",async_count+"");
+                if(async_count == 0) setMarker();
+            }
+        });
+        loadHotplace.execute();
+
+        init();
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -96,12 +121,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         fab1.setOnClickListener(this);
         fab2.setOnClickListener(this);
         fab3.setOnClickListener(this);
-
-        init();
-
-        nMapResourceProvider = new NMapViewerResourceProvider(this);
-        mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
-
 
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -176,13 +195,48 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 Intent addPerson = new Intent(ApptCenterplaceActivity.this, UpdateMapPerson.class);
                 addPerson.putExtra("apptNo", apptNo);
                 startActivityForResult(addPerson, ADD_MEMBER);
-
                 break;
             case R.id.fab3:
                 anim();
                 Toast.makeText(this, "지도축척변경", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ApptCenterplaceActivity.this, UpdateMapDistance.class);
                 startActivityForResult(intent, UPDATE_DISTANCE); // 다시 돌아올 액티비티 콜
+                break;
+            case R.id.btn_refresh:
+                async_count = 3;
+                poiData.removeAllPOIdata();
+                hotplacePoiData.removeAllPOIdata();  //  기존 띄워져있는 핀 지우기
+                loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
+                    @Override
+                    public void taskComplete() {
+                        async_count--;
+                        Log.e("LoadFriendaddress",async_count+"");
+                        if(async_count == 0) setMarker();
+                    }
+                });
+                loadFriendaddress.execute(apptNo);
+                loadNonaddress = new LoadNonaddress(new AsyncNullListener() {
+                    @Override
+                    public void taskComplete() {
+                        async_count--;
+                        Log.e("LoadFriendaddress",async_count+"");
+                        if(async_count == 0) setMarker();
+                    }
+                });
+                loadNonaddress.execute(apptNo);
+                loadHotplace = new LoadHotplace(new AsyncNullListener() {
+                    @Override
+                    public void taskComplete() {
+                        async_count--;
+                        Log.e("LoadFriendaddress",async_count+"");
+                        if(async_count == 0) setMarker();
+                    }
+                });
+                loadHotplace.execute();
+
+                Button button = findViewById(R.id.btn_refresh);
+                button.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -246,13 +300,29 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             }
             else if(requestCode == ADD_MEMBER){
                 Log.e("addmember","성공");
-                double longitude = data.getDoubleExtra("longitude", 0);
-                double latitude = data.getDoubleExtra("latitude", 0);
-                String userNickname = data.getStringExtra("userNickname");
+                String userAddress = data.getStringExtra("userAddress");
+                final double longitude = data.getDoubleExtra("longitude", 0);
+                final double latitude = data.getDoubleExtra("latitude", 0);
+                final String userNickname = data.getStringExtra("userNickname");
                 Log.e("longitude",longitude+"성공");
-                if(longitude != 200.0 && latitude != 200.0){
-                    newMarker(longitude, latitude, userNickname);
+                if(!userAddress.equals("")){
+                    // 좌표 반환
+                    Async_geo async_geo = new Async_geo(new AsyncListener() {
+                        @Override
+                        public void taskComplete(PointF point) {
+                            if(longitude != 200.0 && latitude != 200.0) {
+                                newMarker(point.x, point.y, userNickname);
+                            }
+                        }
+                    });
+                    async_geo.execute(userAddress);
                 }
+                else {
+                    if(longitude != 200.0 && latitude != 200.0){
+                        newMarker(longitude, latitude, userNickname);
+                    }
+                }
+
 
             }
         }// result_ok end
@@ -281,7 +351,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         }
     }
 
-    private void init() {
+    void init() {
         mMapView = findViewById(R.id.map_view);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
         mMapView.setClickable(true);
@@ -294,12 +364,10 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         mMapView.setOnMapViewTouchEventListener(mapListener);
         mMapController = mMapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setMarker();
-            }
-        }, 3000);
+
+        nMapResourceProvider = new NMapViewerResourceProvider(this);
+        mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
+
     }
 
     private void newMarker(double longitude, double latitude, String userNickname) {
@@ -318,13 +386,18 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         newPoiData.endPOIdata();
 
         // create POI data overlay
-        NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(newPoiData, null);
-        poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
+        NMapPOIdataOverlay newPoiDataOverlay = mapOverlayManager.createPOIdataOverlay(newPoiData, null);
+        NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
+        poiDataOverlay.showAllPOIdata(4);
+        newPoiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
     }
 
+    static List<MapApptfriend> mapApptfriendList;
+    static List<MapApptfriend> mapApptNonList;
+
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
-        List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
+        mapApptfriendList = LoadFriendaddress.mapApptfriendList;
+        mapApptNonList = LoadNonaddress.mapApptNonList;
         JSONArray hotplaceList = LoadHotplace.hotplaceList;
 
         int markerId = NMapPOIflagType.PIN;
@@ -338,7 +411,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         }
 
         // set POI data
-        NMapPOIdata poiData = new NMapPOIdata(size, nMapResourceProvider);
+        poiData = new NMapPOIdata(size, nMapResourceProvider);
         poiData.beginPOIdata(size);
         hotplacePoiData = new NMapPOIdata(hotplaceList.length(), nMapResourceProvider);
         hotplacePoiData.beginPOIdata(hotplaceList.length());

@@ -65,31 +65,13 @@ public class FriendlistActivity extends AppCompatActivity {
         friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent mapAddMember = getIntent();
-                if (mapAddMember !=null) {
+                if (intent !=null && !intent.getStringExtra("apptNo").equals("")) {
                     // 아이템 클릭시 돌아가기
                     String friendID = friendList.get(position).getUserID();
                     final String friendAddress = friendList.get(position).getUserAddress();
-                    String apptNo = mapAddMember.getStringExtra("apptNo");
+                    String apptNo = intent.getStringExtra("apptNo");
                     final String friendNickname = friendList.get(position).getFriendNickname();
                     final String userNickname = friendList.get(position).getUserNickname();
-
-                    Async_geo async_geo = new Async_geo(new AsyncListener() {
-                        @Override
-                        public void taskComplete(PointF point) {
-                            Intent intent = getIntent();
-                            if(friendNickname == null){
-                                intent.putExtra("userNickname", userNickname);
-                            }else{
-                                intent.putExtra("userNickname", friendAddress);
-                            }
-                            intent.putExtra("longitude", point.x);
-                            intent.putExtra("latitude", point.y);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    });
-                    async_geo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, friendAddress);
 
                     // 받아온 변수로 서버저장 및 돌려주기
                     // 약속에 추가하기, 초기화
@@ -112,7 +94,14 @@ public class FriendlistActivity extends AppCompatActivity {
                     RequestQueue queue = Volley.newRequestQueue(FriendlistActivity.this);
                     queue.add(addMemberRequest);
 
-
+                    if(friendNickname == null){
+                        intent.putExtra("userNickname", userNickname);
+                    }else{
+                        intent.putExtra("userNickname", friendAddress);
+                    }
+                    intent.putExtra("userAddress", friendAddress);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         });

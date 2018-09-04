@@ -28,6 +28,7 @@ import java.util.List;
 public class UpdateMapPersonAddAddr extends NMapActivity {
     private final String TAG = "UpdateMapPersonAddAddr";
 
+    private int async_count = 2;
     private NMapView mMapView;
 
     private NMapResourceProvider nMapResourceProvider;
@@ -45,6 +46,8 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         setContentView(R.layout.dialog_map_add_addr);
         Intent intent = getIntent();
         String apptNo = intent.getStringExtra("apptNo");
+
+        init();
 
         TextView tv = findViewById(R.id.tv_add_addr);
         ImageView placeImg1 = findViewById(R.id.iv_center_place_above);
@@ -71,22 +74,11 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
             }
         });
 
-        loadNonaddress = new LoadNonaddress();
-        loadNonaddress.execute(apptNo);
-        loadFriendaddress = new LoadFriendaddress();
-        loadFriendaddress.execute(apptNo);
-
-        init();
-
-        nMapResourceProvider = new NMapViewerResourceProvider(this);
-        mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
     }
-
 
     private void init() {
 
         mMapView = findViewById(R.id.map_view_non);
-        mMapView.setVisibility(View.INVISIBLE);
         mMapView.setClientId(getResources().getString(R.string.n_key)); // 클라이언트 아이디 값 설정
         mMapView.setClickable(true);
         mMapView.setEnabled(true);
@@ -101,19 +93,15 @@ public class UpdateMapPersonAddAddr extends NMapActivity {
         NMapController mMapController = mMapView.getMapController();
         mMapController.setMapCenter(new NGeoPoint(126.978371, 37.5666091), 11);     //Default Data
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setMarker();
-                mMapView.setVisibility(View.VISIBLE);
-            }
-        }, 3000);
+        nMapResourceProvider = new NMapViewerResourceProvider(this);
+        mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
 
+        setMarker();
     }
 
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
-        List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
+        List<MapApptfriend> mapApptfriendList =ApptCenterplaceActivity.mapApptfriendList;
+        List<MapApptfriend> mapApptNonList = ApptCenterplaceActivity.mapApptNonList;
         int markerId = NMapPOIflagType.PIN;
 
         int size = mapApptfriendList.size() + 1;

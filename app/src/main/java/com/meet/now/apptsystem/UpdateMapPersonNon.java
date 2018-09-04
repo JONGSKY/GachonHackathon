@@ -91,6 +91,7 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
                     RequestQueue queue = Volley.newRequestQueue(UpdateMapPersonNon.this);
                     queue.add(addNonMemberRequest);
 
+                    intent.putExtra("userAddress", "");
                     intent.putExtra("longitude", longitude );
                     intent.putExtra("latitude", latitude);
                     intent.putExtra("userNickname", nonNickName);

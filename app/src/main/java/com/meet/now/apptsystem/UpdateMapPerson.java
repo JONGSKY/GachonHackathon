@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static android.content.Intent.FLAG_ACTIVITY_FORWARD_RESULT;
+
 public class UpdateMapPerson extends AppCompatActivity implements View.OnClickListener {
     private static final int ADD_MEMBER = 2;
 
@@ -39,13 +41,6 @@ public class UpdateMapPerson extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    void startMap() {
-        Intent intent = new Intent(UpdateMapPerson.this, ApptCenterplaceActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        finish();
-        startActivity(intent);
-    }
-
     @Override
     public void onClick(View v) {
         Intent sendIntent;
@@ -54,32 +49,17 @@ public class UpdateMapPerson extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_map_member:
                 sendIntent = new Intent(UpdateMapPerson.this, FriendlistActivity.class);
                 sendIntent.putExtra("apptNo", apptNo);
-                startActivityForResult(sendIntent, ADD_MEMBER);
+                sendIntent.setFlags(FLAG_ACTIVITY_FORWARD_RESULT);
+                startActivity(sendIntent);
+                finish();
                 break;
             case R.id.btn_map_nonmember:
                 sendIntent = new Intent(UpdateMapPerson.this, UpdateMapPersonNon.class);
                 sendIntent.putExtra("apptNo", apptNo);
-                startActivityForResult(sendIntent, ADD_MEMBER);
+                sendIntent.setFlags(FLAG_ACTIVITY_FORWARD_RESULT);
+                startActivity(sendIntent);
+                finish();
                 break;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-
-            double longitude = data.getDoubleExtra("longitude", 0);
-            double latitude = data.getDoubleExtra("latitude", 0);
-            String userNickname = data.getStringExtra("userNickname");
-            Intent intent = getIntent();
-            intent.putExtra("longitude", longitude);
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("userNickname", userNickname);
-            Log.e("userNickname", userNickname);
-            setResult(RESULT_OK, intent);
-            finish();
-
         }
     }
 }

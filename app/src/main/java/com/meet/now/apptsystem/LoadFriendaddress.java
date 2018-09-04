@@ -20,13 +20,19 @@ import java.util.Map;
 
 class LoadFriendaddress extends AsyncTask<String, Void, Void> {
 
+    AsyncNullListener asyncNullListener;
     public static List<MapApptfriend> mapApptfriendList;
     private String target;
 
+    LoadFriendaddress(){}
+    LoadFriendaddress(AsyncNullListener asyncNullListener){
+        this.asyncNullListener = asyncNullListener;
+    }
     @Override
     protected void onPreExecute() {
         target = "http://brad903.cafe24.com/LoadFriendaddress.php";
         mapApptfriendList = new ArrayList<>();
+        if(asyncNullListener != null) asyncNullListener.taskComplete();
     }
 
     @Override
