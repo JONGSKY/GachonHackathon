@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ public class StoreListActivity extends AppCompatActivity {
     private String dong;
     private String title;
     GetRestInfo getRestInfo = new GetRestInfo();
+
+    StoreListAdapter storeListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,11 +45,19 @@ public class StoreListActivity extends AppCompatActivity {
             public void run() {
                 Log.w("Test", String.valueOf(getRestInfo.jsonArray));
 
-                StoreListAdapter storeListAdapter = new StoreListAdapter(StoreListActivity.this, getRestInfo.jsonArray, R.layout.store_item);
+                storeListAdapter = new StoreListAdapter(StoreListActivity.this, getRestInfo.jsonArray, R.layout.store_item);
                 listView.setAdapter(storeListAdapter);
             }
         }, 10000);
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent storeInfo = new Intent(StoreListActivity.this, StoreDetail.class);
+                storeInfo.putExtra("placeName", title);
+                storeInfo.putExtra("storeInfo", storeListAdapter.getItem(position).toString());
+                startActivity(storeInfo);
+            }
+        });
     }
 }
