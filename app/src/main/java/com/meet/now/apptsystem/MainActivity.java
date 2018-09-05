@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent addfreindintent = new Intent(MainActivity.this, FriendlistActivity.class);
+                addfreindintent.putExtra("apptNo","false");
                 addfreindintent.putExtra("userID", userID);
                 MainActivity.this.startActivity(addfreindintent);
             }
