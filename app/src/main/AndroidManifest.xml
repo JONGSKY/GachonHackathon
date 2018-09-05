@@ -65,6 +65,7 @@
             android:theme="@style/DialogTheme" />
         <activity android:name=".StoreListActivity" />
         <activity android:name=".StoreDetail"></activity>
+        <activity android:name=".UpdateMapPersonAddAddr"></activity>
     </application>
 
 </manifest>
