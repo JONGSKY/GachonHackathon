@@ -1,12 +1,13 @@
 package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -29,7 +30,7 @@ public class StoreListActivity extends AppCompatActivity {
     String title;
     static public JSONArray jsonArray;
     Intent intent;
-    int storecount;
+    ProgressDialog pDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +43,11 @@ public class StoreListActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.hot_place_name);
         textView.setText(title);
 
+        pDialog = new ProgressDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        pDialog.setCancelable(true);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("잠시만 기다리세요...");
+        pDialog.show();
         GetRestInfo getRestInfo = new GetRestInfo();
         getRestInfo.execute(title);
 
@@ -61,6 +67,7 @@ public class StoreListActivity extends AppCompatActivity {
         String gu = intent.getStringExtra("gu");
         String dong = intent.getStringExtra("dong");
         LinearLayout storelistLayout = findViewById(R.id.layout_storelist);
+        int storecount;
 
         public Void dataClear() {
             jsonArray = new JSONArray();
@@ -87,6 +94,7 @@ public class StoreListActivity extends AppCompatActivity {
                                 if(storecount == 0){
                                     storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item);
                                     listView.setAdapter(storeListAdapter);
+                                    pDialog.cancel();
                                 }
                             }
                         });
