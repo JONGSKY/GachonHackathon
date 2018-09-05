@@ -1,6 +1,5 @@
 package com.meet.now.apptsystem;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,34 +16,20 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.Toast;
-import com.meet.now.apptsystem.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.security.AccessController.getContext;
 
 public class appt_create_activity extends AppCompatActivity {
 
@@ -98,7 +83,17 @@ public class appt_create_activity extends AppCompatActivity {
             }
         });
 
-        Time = String.valueOf(appt_time.getHour()) + ":" + String.valueOf(appt_time.getMinute());
+        // TimePicker 버전호환
+        int hour, min;
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion > android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+            hour = appt_time.getHour();
+            min = appt_time.getMinute();
+        } else {
+            hour = appt_time.getCurrentHour();
+            min = appt_time.getCurrentMinute();
+        }
+        Time = String.valueOf(hour) + ":" + String.valueOf(min);
         appt_time.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int hour, int minute) {
@@ -149,20 +144,20 @@ public class appt_create_activity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(resultCode){
+        switch (resultCode) {
             case 1:
                 String nickname = data.getStringExtra("nickname");
                 String friendID = data.getStringExtra("friendID");
                 String userPhoto = data.getStringExtra("userPhoto");
 
                 boolean flag = false;
-                for(int i=0; i<friendList.size(); i++){
-                    if(friendList.get(i).equals(friendID)){
+                for (int i = 0; i < friendList.size(); i++) {
+                    if (friendList.get(i).equals(friendID)) {
                         flag = true;
                         break;
                     }
                 }
-                if(flag) break;
+                if (flag) break;
 
                 friendList.add(friendID);
                 ApptFriend n_layout = new ApptFriend(getApplicationContext(), nickname, userPhoto);
@@ -205,26 +200,6 @@ public class appt_create_activity extends AppCompatActivity {
     }
 
     class AppointmentDetailPut extends AsyncTask<String, Void, String> {
-
-        int cnt = 0;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //textView.setText("I got Msg from Server! : " + s);// TextView에 보여줍니다.
-            Toast.makeText(getApplicationContext(), "i got a msg from server :" + s, Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            Log.d("onProgress update", "" + cnt++);
-        }
 
         @Override
         protected String doInBackground(String... params) {

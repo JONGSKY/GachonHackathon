@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,21 +17,18 @@
             android:background="@color/colorPrimary">
 
             <ImageView
-                android:layout_width="125dp"
+                android:layout_width="wrap_content"
                 android:layout_height="125dp"
                 android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:background="@drawable/ic_person" />
-            
-            <TextView
+                android:layout_marginTop="32dp"
+                android:src="@drawable/main_logo2"
+                tools:ignore="ContentDescription" />
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:text="우리 지금 만나"
-                android:textColor="#ffffff"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"/>
+                android:src="@drawable/main_font"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 

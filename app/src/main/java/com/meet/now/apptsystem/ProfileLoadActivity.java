@@ -1,5 +1,7 @@
 package com.meet.now.apptsystem;
 
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -22,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -113,6 +113,14 @@ public class ProfileLoadActivity extends AppCompatActivity {
         queue.add(profileLoadRequest);
 
         // 이벤트
+        ImageButton logout = findViewById(R.id.ib_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              showLogout();
+            }
+        });
+
         // 뒤로가기 버튼
         ImageButton backBtn = (ImageButton) findViewById(R.id.ib_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -314,7 +322,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
     }
 
     private void SaveBitmapToFileCache(Bitmap bitmap) {
-        file.delete();
         String fileName = "tmp_"+String.valueOf(System.currentTimeMillis())+".JPEG";
         file = new File(getApplicationContext().getCacheDir(), fileName);
         OutputStream out = null;
@@ -357,6 +364,26 @@ public class ProfileLoadActivity extends AppCompatActivity {
         bitmap = BitmapFactory.decodeFile(imgPath);
 
         return bitmap;
+    }
+
+    void showLogout(){
+        new AlertDialog.Builder(this)
+                .setMessage("로그아웃 하시겠습니까?")
+                .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        MyApplication.userID="";
+                        MyApplication.password="";
+                        MyApplication.Address="";
+                        finishAffinity();
+                        Intent logoutIntent = new Intent(ProfileLoadActivity.this , LoginActivity.class);
+                        startActivity(logoutIntent);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
     }
 
 

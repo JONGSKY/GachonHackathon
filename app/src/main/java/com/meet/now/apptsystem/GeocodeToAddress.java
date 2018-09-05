@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +25,7 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
     static final String YOUR_CLIENT_SECRET = "sVbMyitQbO";
     HashMap<String, String> addressData;
 
-    @Override
+        @Override
     protected HashMap<String, String> doInBackground(String... geocodeInfo) {
 
         String geocode = geocodeInfo[0];
@@ -68,15 +69,15 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
             addressData.put("gu", gu);
             addressData.put("dong", dong);
 
+            Log.e("address", address);
             return addressData;
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             return null;  // 잘못된 좌표로 오류가 발생할 경우
         }
 
     }
-
     @Override
     protected void onPostExecute(HashMap<String, String> stringStringHashMap) {
         super.onPostExecute(stringStringHashMap);

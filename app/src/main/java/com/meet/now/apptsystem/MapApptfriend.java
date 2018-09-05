@@ -1,6 +1,10 @@
 package com.meet.now.apptsystem;
 
 import android.graphics.PointF;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 
 public class MapApptfriend {
 
@@ -54,4 +58,5 @@ public class MapApptfriend {
     public void setPoint(PointF point) {
         this.point = point;
     }
+
 }

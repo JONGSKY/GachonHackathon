@@ -10,6 +10,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:textSize="16sp"
+        android:text="@string/add_person"
         android:textAlignment="center"
         />
 
@@ -30,6 +31,7 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:layout_alignParentBottom="true"
             android:layout_margin="8dp"
+            android:text="@string/member"
             android:textSize="12sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>
@@ -43,6 +45,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="8dp"
             android:layout_toEndOf="@+id/btn_map_member"
+            android:text="@string/nonmember"
             android:textSize="12sp"
             android:textColor="#ffffff"
             android:textStyle="bold"/>

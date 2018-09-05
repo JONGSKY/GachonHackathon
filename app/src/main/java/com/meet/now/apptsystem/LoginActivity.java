@@ -1,6 +1,8 @@
 package com.meet.now.apptsystem;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,16 +54,17 @@ public class LoginActivity extends AppCompatActivity {
                              JSONObject jsonResponse = new JSONObject(response);
                              boolean success = jsonResponse.getBoolean("success");
                              if(success){
+                                 String address = jsonResponse.getString("userAddress");
+                                 AsyncLogin asyncLogin = new AsyncLogin();
+                                 asyncLogin.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, userID, userPassword, address );
+
                                  AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                  dialog = builder.setMessage("로그인에 성공하셨습니다.")
                                          .setPositiveButton("확인", null)
                                          .create();
                                  dialog.show();
-
                                  // 화면 전환
                                  Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                 loginIntent.putExtra("userID", userID);
-                                 loginIntent.putExtra("userAddress", jsonResponse.getString("userAddress"));
                                  LoginActivity.this.startActivity(loginIntent);
                                  finish();
                              }else{
@@ -94,4 +97,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    class AsyncLogin extends AsyncTask<String,Void,Void>{
+        @Override
+        protected Void doInBackground(String... params) {
+            // 로그인 정보 어플리케이션에 저장
+            MyApplication.userID = params[0];
+            MyApplication.password = params[1];
+            MyApplication.Address = params[2];
+            return null;
+        }
+    }
 }
