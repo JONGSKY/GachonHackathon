@@ -1,7 +1,10 @@
 package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,11 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @SuppressLint("Registered")
@@ -29,7 +35,7 @@ public class StoreListActivity extends AppCompatActivity {
     String title;
     static public JSONArray jsonArray;
     Intent intent;
-    int storecount;
+    ProgressDialog pDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +48,11 @@ public class StoreListActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.hot_place_name);
         textView.setText(title);
 
+        pDialog = new ProgressDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        pDialog.setCancelable(true);
+        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pDialog.setMessage("잠시만 기다리세요...");
+        pDialog.show();
         GetRestInfo getRestInfo = new GetRestInfo();
         getRestInfo.execute(title);
 
@@ -49,8 +60,18 @@ public class StoreListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent storeInfo = new Intent(StoreListActivity.this, StoreDetail.class);
+                JSONObject newObject = new JSONObject();
+                ByteArrayOutputStream _bs = new ByteArrayOutputStream();
+                try {
+                    newObject = new JSONObject(storeListAdapter.getItem(position).toString());
+                    newObject.remove("pic");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                storeInfo.putExtra("position", position);
                 storeInfo.putExtra("placeName", title);
-                storeInfo.putExtra("storeInfo", storeListAdapter.getItem(position).toString());
+                storeInfo.putExtra("storeInfo", newObject.toString());
                 startActivity(storeInfo);
             }
         });
@@ -61,6 +82,7 @@ public class StoreListActivity extends AppCompatActivity {
         String gu = intent.getStringExtra("gu");
         String dong = intent.getStringExtra("dong");
         LinearLayout storelistLayout = findViewById(R.id.layout_storelist);
+        int storecount;
 
         public Void dataClear() {
             jsonArray = new JSONArray();
@@ -87,6 +109,7 @@ public class StoreListActivity extends AppCompatActivity {
                                 if(storecount == 0){
                                     storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item);
                                     listView.setAdapter(storeListAdapter);
+                                    pDialog.cancel();
                                 }
                             }
                         });
@@ -116,6 +139,8 @@ public class StoreListActivity extends AppCompatActivity {
                 storelistTextview.setTextSize(18);
                 storelistTextview.setTextColor(0xff000000);
                 storelistTextview.setPadding(20,20,0,0);
+
+                pDialog.cancel();
             }
         }
     }
