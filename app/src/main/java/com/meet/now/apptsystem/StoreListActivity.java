@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -15,11 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @SuppressLint("Registered")
@@ -55,8 +60,18 @@ public class StoreListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent storeInfo = new Intent(StoreListActivity.this, StoreDetail.class);
+                JSONObject newObject = new JSONObject();
+                ByteArrayOutputStream _bs = new ByteArrayOutputStream();
+                try {
+                    newObject = new JSONObject(storeListAdapter.getItem(position).toString());
+                    newObject.remove("pic");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                storeInfo.putExtra("position", position);
                 storeInfo.putExtra("placeName", title);
-                storeInfo.putExtra("storeInfo", storeListAdapter.getItem(position).toString());
+                storeInfo.putExtra("storeInfo", newObject.toString());
                 startActivity(storeInfo);
             }
         });
@@ -124,6 +139,8 @@ public class StoreListActivity extends AppCompatActivity {
                 storelistTextview.setTextSize(18);
                 storelistTextview.setTextColor(0xff000000);
                 storelistTextview.setPadding(20,20,0,0);
+
+                pDialog.cancel();
             }
         }
     }
