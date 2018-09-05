@@ -94,13 +94,11 @@ public class UpdateMapPersonAddAddr extends NMapActivity implements View.OnClick
 
         nMapResourceProvider = new NMapViewerResourceProvider(this);
         mapOverlayManager = new NMapOverlayManager(this, mMapView, nMapResourceProvider);
-
-        setMarker();
     }
 
     private void setMarker() {
-        List<MapApptfriend> mapApptfriendList = ApptCenterplaceActivity.mapApptfriendList;
-        List<MapApptfriend> mapApptNonList = ApptCenterplaceActivity.mapApptNonList;
+        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
+        List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
         int markerId = NMapPOIflagType.PIN;
 
         int size = mapApptfriendList.size() + 1;

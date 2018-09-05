@@ -149,7 +149,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/store_addr"
+        android:src="@drawable/profile_location"
         android:scaleType="fitXY"
         android:tint="@color/colorAccent"/>
 

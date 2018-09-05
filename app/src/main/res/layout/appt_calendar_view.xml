@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -19,17 +19,20 @@
             android:layout_centerVertical="true"
             android:text="약속 목록"
             android:textColor="#ffffff"
-            android:textSize="25dp"
+            android:textSize="24dp"
             android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/list_change_button"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_list"/>
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_list"
+            android:tint="@color/colorAccent"
+            android:background="#00000000"/>
 
     </RelativeLayout>
 

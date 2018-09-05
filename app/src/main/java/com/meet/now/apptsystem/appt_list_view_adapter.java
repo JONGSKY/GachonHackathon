@@ -86,8 +86,9 @@ public class appt_list_view_adapter extends BaseAdapter {
 
                 TextView textView = new TextView(context);
                 textView.setText(" - "+Appt_Name);
-                textView.setTextSize(20);
+                textView.setTextSize(16);
                 textView.setTextColor(Color.BLACK);
+                textView.setPadding(4,4,4,4);
 
                 linearLayout.addView(textView);
             }
