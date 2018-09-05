@@ -12,7 +12,7 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:orientation="vertical">
@@ -20,19 +20,19 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="125dp"
-                android:layout_gravity="center"
+                android:layout_above="@+id/logo_text"
                 android:layout_marginTop="128dp"
                 android:src="@drawable/main_logo2"
                 tools:ignore="ContentDescription" />
             <ImageView
+                android:id="@+id/logo_text"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                android:layout_gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/main_font"
                 tools:ignore="HardcodedText" />
-
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:background="#2a039be5">
+        android:background="@color/colorPrimaryTransparent">
 
         <TextView
             android:id="@+id/Week_textView"

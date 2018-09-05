@@ -35,10 +35,9 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
-
         <activity android:name=".FriendlistActivity" />
         <activity android:name=".DaumWebViewActivity" />
-        <activity android:name=".ProfileLoadActivity"/>
+        <activity android:name=".ProfileLoadActivity" />
         <activity android:name=".ApptAddfriendActivity" />
         <activity
             android:name=".appt_create_activity"
@@ -54,7 +53,6 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ApptCenterplaceActivity"
             android:configChanges="orientation|keyboard"/>
-
         <activity android:name=".UpdateMapDistance"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"/>
@@ -64,7 +62,10 @@
         <activity android:name=".UpdateMapPerson"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"/>
-        <activity android:name=".UpdateMapPersonAddAddr"/>
+        <activity android:name=".UpdateMapPersonAddAddr"
+            android:theme="@style/DialogTheme" />
+        <activity android:name=".StoreListActivity" />
+        <activity android:name=".StoreDetail"/>
     </application>
 
 </manifest>
