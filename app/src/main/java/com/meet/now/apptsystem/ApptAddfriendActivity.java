@@ -1,20 +1,18 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,11 +29,10 @@ import java.util.List;
 import java.util.Map;
 
 import static android.view.View.GONE;
-import static com.meet.now.apptsystem.MainActivity.userID;
 
-public class ApptAddfriendActivity extends AppCompatActivity{
+public class ApptAddfriendActivity extends AppCompatActivity {
 
-    static private ListView friendListView;
+    @SuppressLint("StaticFieldLeak")
     static private FriendListAdapter adapter;
     static private List<Friend> friendList;
     static private List<Friend> saveList;
@@ -45,18 +42,18 @@ public class ApptAddfriendActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
 
-        ImageButton addfriendButton = (ImageButton) findViewById(R.id.addfriendlistButton);
+        ImageButton addfriendButton = findViewById(R.id.addfriendlistButton);
         addfriendButton.setVisibility(GONE);
 
-        friendListView = (ListView) findViewById(R.id.friendListView);
-        friendList = new ArrayList<Friend>();
-        saveList = new ArrayList<Friend>();
+        ListView friendListView = findViewById(R.id.friendListView);
+        friendList = new ArrayList<>();
+        saveList = new ArrayList<>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
         friendListView.setAdapter(adapter);  // 뷰에 해당 어뎁터가 매칭
 
         new ApptAddfriendActivity.BackgroundTask().execute();
 
-        EditText search = (EditText)findViewById(R.id.searchFriend);
+        EditText search = findViewById(R.id.searchFriend);
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,10 +76,10 @@ public class ApptAddfriendActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent apptFriendIntent = new Intent();
-                String nickname = null;
-                if(friendList.get(position).getFriendNickname().equals("null")){
+                String nickname;
+                if (friendList.get(position).getFriendNickname().equals("null")) {
                     nickname = friendList.get(position).getUserNickname();
-                }else{
+                } else {
                     nickname = friendList.get(position).getFriendNickname();
                 }
                 apptFriendIntent.putExtra("nickname", nickname);
@@ -90,15 +87,16 @@ public class ApptAddfriendActivity extends AppCompatActivity{
                 apptFriendIntent.putExtra("userPhoto", friendList.get(position).getUserPhoto());
                 setResult(1, apptFriendIntent);
                 finish();
+
             }
         });
 
     }
 
-    public void searchFriend(String search){
+    public void searchFriend(String search) {
         friendList.clear();
-        for(int i=0; i<saveList.size(); i++){
-            if(saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)){
+        for (int i = 0; i < saveList.size(); i++) {
+            if (saveList.get(i).getUserNickname().contains(search) || saveList.get(i).getFriendNickname().contains(search)) {
                 friendList.add(saveList.get(i));
             }
         }
@@ -116,13 +114,13 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
         @Override
         protected String doInBackground(Void... voids) {
-            try{
+            try {
                 URL url = new URL(target);
-                Map<String,Object> params = new LinkedHashMap<>();
-                params.put("userID", userID);
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("userID", MyApplication.userID);
 
                 StringBuilder postData = new StringBuilder();
-                for (Map.Entry<String,Object> param : params.entrySet()) {
+                for (Map.Entry<String, Object> param : params.entrySet()) {
                     if (postData.length() != 0) postData.append('&');
                     postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
                     postData.append('=');
@@ -130,7 +128,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
                 }
                 byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
@@ -140,15 +138,15 @@ public class ApptAddfriendActivity extends AppCompatActivity{
                 Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
                 StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
+                for (int c; (c = in.read()) >= 0; )
+                    sb.append((char) c);
                 String response = sb.toString().trim();
 
                 in.close();
                 conn.disconnect();
                 return response;
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -161,7 +159,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String result) {   // 결과 처리부분
-            try{
+            try {
                 friendList.clear();
                 saveList.clear();
 
@@ -170,7 +168,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
                 int count = 0;
                 String userID, userPhoto, friendNickname, userNickname, userStatusmsg;
-                while(count < jsonArray.length()) {
+                while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     userID = object.getString("friendID");
                     userPhoto = object.getString("userPhoto");
@@ -185,7 +183,7 @@ public class ApptAddfriendActivity extends AppCompatActivity{
 
                 adapter.notifyDataSetChanged();
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

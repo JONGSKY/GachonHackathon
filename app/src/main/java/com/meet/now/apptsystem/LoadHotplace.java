@@ -1,8 +1,6 @@
 package com.meet.now.apptsystem;
 
-import android.graphics.PointF;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,15 +11,23 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 class LoadHotplace extends AsyncTask<Void, Void, Void> {
 
-    static public JSONArray hotplaceList;
-    String target;
+    private AsyncNullListener asyncNullListener;
+    public static JSONArray hotplaceList;
+    private String target;
+
+    LoadHotplace(AsyncNullListener asyncNullListener){
+        this.asyncNullListener = asyncNullListener;
+    }
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        asyncNullListener.taskComplete();
+    }
 
     @Override
     protected void onPreExecute() {

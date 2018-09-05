@@ -41,18 +41,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSION_STORAGE = 1111;
 
-    public static String userID;
-    public static String userAddress;
     private DdayAdapter adapter;
     private List<Dday> ddayList;
-
+    String userID;
+    String userAddress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
-        userID = intent.getStringExtra("userID");
-        userAddress = intent.getStringExtra("userAddress");
+        userID = MyApplication.userID;
+        userAddress = MyApplication.Address;
 
         ListView ddayListView = findViewById(R.id.ddayListView);
         ddayList = new ArrayList<Dday>();
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), ApptCenterplaceActivity.class);
-                intent.putExtra("userID", userID);
                 intent.putExtra("apptNo", ddayList.get(position).getApptNo());
                 startActivity(intent);
             }

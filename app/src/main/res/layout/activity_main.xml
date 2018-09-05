@@ -2,30 +2,22 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@color/colorPrimary">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="104dp"
-            android:layout_marginTop="8dp"
-            android:text="우리지금만나"
-            android:textColor="#ffffff"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.727" />
+            android:layout_height="80dp"
+            android:layout_marginTop="32dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/main_font"/>
 
         <Switch
             android:id="@+id/switch1"
@@ -33,9 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_margin="16dp" />
 
         <ImageButton
             android:id="@+id/ib_profile_load"
@@ -46,10 +36,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/ic_person"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            tools:ignore="ContentDescription" />
 
-    </android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/ddayListView"
@@ -76,13 +65,14 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
-            android:textSize="18dp"
-            android:paddingLeft="8dp"
+            android:textSize="18sp"
+            android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_people_black_24dp"
             android:drawableStart="@drawable/ic_people_black_24dp"
             android:text="약속보기"
             android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <Button
             android:layout_width="match_parent"
@@ -92,13 +82,14 @@
             android:text="친구추가"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:textSize="18dp"
-            android:paddingLeft="8dp"
+            android:textSize="18sp"
+            android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_person_add_black_24dp"
             android:drawableStart="@drawable/ic_person_add_black_24dp"
             android:background="@color/colorPrimary"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <Button
             android:layout_width="match_parent"
@@ -108,14 +99,15 @@
             android:text="약속생성"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:textSize="18dp"
-            android:paddingLeft="8dp"
+            android:textSize="18sp"
+            android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_event_black_24dp"
             android:drawableStart="@drawable/ic_event_black_24dp"
             android:background="@color/colorPrimary"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry,SpUsage" />
 
     </LinearLayout>
 
