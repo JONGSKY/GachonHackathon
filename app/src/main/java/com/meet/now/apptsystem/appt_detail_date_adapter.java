@@ -1,7 +1,9 @@
 package com.meet.now.apptsystem;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,13 +34,15 @@ public class appt_detail_date_adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private JSONArray jsonArray;
     private int layout;
-
+    private JSONObject jsonObject;
     private String ApptNo = "hello";
+    private Context context;
 
     public appt_detail_date_adapter(Context context, int layout, JSONArray jsonArray) {
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.jsonArray = jsonArray;
         this.layout = layout;
+        this.context = context;
     }
 
     @Override
@@ -66,7 +71,7 @@ public class appt_detail_date_adapter extends BaseAdapter {
             view = inflater.inflate(layout, viewGroup, false);
         }
 
-        JSONObject jsonObject = new JSONObject();
+        jsonObject = new JSONObject();
         String Time = "약속시간 : ";
         String RelationGroup = "모임 유형 : ";
         String MemberNo = "멤버 수 : ";
@@ -81,11 +86,7 @@ public class appt_detail_date_adapter extends BaseAdapter {
             e.printStackTrace();
         }
 
-        try {
-            ApptNo = jsonObject.getString("ApptNo");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
         Log.w("minyong", ApptNo);
 
         try {
@@ -115,14 +116,37 @@ public class appt_detail_date_adapter extends BaseAdapter {
         textView4.setText(ApptPlace);
         textView5.setText(ApptnameValue);
 
+
         ImageButton imageButton = view.findViewById(R.id.appt_delete_button);
+        imageButton.setFocusable(false);
+        imageButton.setTag(i);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ApptDelete apptDelete = new ApptDelete();
-                Log.w("Test", ApptNo);
-                apptDelete.execute(ApptNo);
-                notifyDataSetChanged();
+            public void onClick(final View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("AlertDialog Title");
+                builder.setMessage("AlertDialog Content");
+                builder.setPositiveButton("예",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    jsonObject = jsonArray.getJSONObject((Integer) v.getTag());
+                                    ApptNo = jsonObject.getString("ApptNo");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                ApptDelete apptDelete = new ApptDelete();
+                                Log.w("Test", ApptNo);
+                                apptDelete.execute(ApptNo);
+                            }
+                        });
+                builder.setNegativeButton("아니오",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                builder.show();
+
             }
         });
 
