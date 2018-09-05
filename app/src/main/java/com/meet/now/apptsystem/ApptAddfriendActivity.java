@@ -78,6 +78,7 @@ public class ApptAddfriendActivity extends AppCompatActivity {
                 Intent apptFriendIntent = new Intent();
                 String nickname;
                 if (friendList.get(position).getFriendNickname().equals("null")) {
+
                     nickname = friendList.get(position).getUserNickname();
                 } else {
                     nickname = friendList.get(position).getFriendNickname();
@@ -167,7 +168,7 @@ public class ApptAddfriendActivity extends AppCompatActivity {
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
 
                 int count = 0;
-                String userID, userPhoto, friendNickname, userNickname, userStatusmsg;
+                String userID, userPhoto, friendNickname, userNickname, userStatusmsg, userAddress;
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
                     userID = object.getString("friendID");
@@ -175,7 +176,8 @@ public class ApptAddfriendActivity extends AppCompatActivity {
                     friendNickname = object.getString("friendNickname");
                     userNickname = object.getString("userNickname");
                     userStatusmsg = object.getString("userStatusmsg");
-                    Friend friend = new Friend(userID, userPhoto, friendNickname, userNickname, userStatusmsg);
+                    userAddress = object.getString("userAddress");
+                    Friend friend = new Friend(userID, userPhoto, friendNickname, userNickname, userStatusmsg, userAddress);
                     friendList.add(friend);
                     saveList.add(friend);
                     count++;

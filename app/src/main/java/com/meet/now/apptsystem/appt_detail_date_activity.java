@@ -72,6 +72,7 @@ public class appt_detail_date_activity extends AppCompatActivity{
             }
         }
 
+
         //어댑터 설정
         appt_detail_date_adapter adapter = new appt_detail_date_adapter(appt_detail_date_activity.this, R.layout.appt_item, TodayApptArray);
         adapter.notifyDataSetChanged();
@@ -89,7 +90,10 @@ public class appt_detail_date_activity extends AppCompatActivity{
                 startActivity(mapIntent);
             }
         });
+
     }
+
+
 
     public String method(String str) {
         if (str.length() > 0 && str.charAt(str.length()-1)=='x') {

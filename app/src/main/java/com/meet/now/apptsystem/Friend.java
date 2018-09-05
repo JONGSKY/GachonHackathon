@@ -57,15 +57,8 @@ public class Friend {
         this.userAddress = userAddress;
     }
 
-    Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg) {
-        this.userID = userID;
-        this.userPhoto = userPhoto;
-        this.friendNickname = friendNickname;
-        this.userNickname = userNickname;
-        this.userStatusmsg = userStatusmsg;
-    }
 
-    Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg, String userAddress) {
+    public Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg, String userAddress) {
         this.userID = userID;
         this.userPhoto = userPhoto;
         this.friendNickname = friendNickname;

@@ -24,7 +24,6 @@
             android:id="@+id/userPhoto"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:text="삭제"
             android:src="@drawable/ic_profile_picture"
             android:scaleType="centerCrop"
             android:layout_marginRight="5dp">
