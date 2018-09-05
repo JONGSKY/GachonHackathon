@@ -15,6 +15,12 @@ import java.util.ArrayList;
 
 public class Async_GetPlaceInfo extends AsyncTask<String, Void, Void>{
 
+    public AsyncStorelist delegate = null;
+
+    public Async_GetPlaceInfo(AsyncStorelist delegate){
+        this.delegate = delegate;
+    }
+
     private ArrayList<String> PlaceInfo;
     static public JSONArray jsonArray;
 
@@ -22,7 +28,7 @@ public class Async_GetPlaceInfo extends AsyncTask<String, Void, Void>{
     protected Void doInBackground(String... urlInfo) {
 
         String url = urlInfo[0];
-        jsonArray = GetRestInfo.jsonArray;
+        jsonArray = StoreListActivity.jsonArray;
 
         try {
             PlaceInfo = new ArrayList<>();
@@ -52,4 +58,11 @@ public class Async_GetPlaceInfo extends AsyncTask<String, Void, Void>{
 
         return null;
     }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        delegate.LoadStorefinish();
+    }
+
 }
