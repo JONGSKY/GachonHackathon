@@ -56,17 +56,7 @@ public class StoreListActivity extends AppCompatActivity {
         pDialog.show();
         GetRestInfo getRestInfo = new GetRestInfo();
         getRestInfo.execute(title);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                jsonArray = Async_GetPlaceInfo.jsonArray;
-                storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item);
-                listView.setAdapter(storeListAdapter);
-            }
-        }, 3000);
-
-
+        
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
