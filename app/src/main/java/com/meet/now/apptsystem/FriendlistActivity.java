@@ -208,7 +208,7 @@ public class FriendlistActivity extends AppCompatActivity {
                                         }
                                     });
                                 } else {
-                                    dialogmessage.setText(friendID + " 님이 검색되었습니다. 친구로 추가하시겠습니까?");
+                                    dialogmessage.setText(friendID + " 님이 검색되었습니다.\n친구로 추가하시겠습니까?");
                                     searchfriendButton.setText("추가");
                                     searchfriendButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
