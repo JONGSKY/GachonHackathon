@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:padding="8dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
         android:background="@color/colorPrimaryTransparent">

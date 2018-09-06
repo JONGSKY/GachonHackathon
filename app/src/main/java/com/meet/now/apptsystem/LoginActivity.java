@@ -1,5 +1,7 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.AsyncTask;
@@ -8,8 +10,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +25,11 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
+    InputMethodManager imm;
     private AlertDialog dialog;
-
+    EditText idText;
+    EditText passwordText;
+    @SuppressLint("ServiceCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +44,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        final EditText idText = (EditText) findViewById(R.id.idText);
-        final EditText passwordText = (EditText) findViewById(R.id.passwordText);
+        idText = (EditText) findViewById(R.id.idText);
+        passwordText = (EditText) findViewById(R.id.passwordText);
         final Button loginButton = (Button) findViewById(R.id.loginButton);
+        RelativeLayout rl = findViewById(R.id.rl_login);
+
+        rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(idText.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(passwordText.getWindowToken(),0);
+            }
+        });
+
+
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

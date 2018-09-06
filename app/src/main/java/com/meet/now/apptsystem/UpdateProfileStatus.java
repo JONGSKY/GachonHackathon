@@ -1,47 +1,36 @@
 package com.meet.now.apptsystem;
 
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 
 public class UpdateProfileStatus extends DialogFragment {
     String userID = null;
     String userStatusmsg = null;
-
+    MyDialogResult myDialogResult;
     public UpdateProfileStatus(){}
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.dialog_profile_status_edit, null);
 
-        return view;
+        return inflater.inflate(R.layout.dialog_profile_status_edit, null);
     }
 
     @Override
@@ -64,6 +53,7 @@ public class UpdateProfileStatus extends DialogFragment {
             public void onClick(View v) {
                 userStatusmsg = ((EditText) getView().findViewById(R.id.tv_status)).getText().toString();
                 Async_Prepare();
+                myDialogResult.finish(userStatusmsg);
                 dismiss();
             }
         });
@@ -131,10 +121,10 @@ public class UpdateProfileStatus extends DialogFragment {
         }//doInbackground end
     }//asynctask  end
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        getActivity().recreate();
-
+    public void setDialogResult(UpdateProfileStatus.MyDialogResult myDialogResult){
+        this.myDialogResult = myDialogResult;
+    }
+    public interface MyDialogResult{
+        void finish(String result);
     }
 }
