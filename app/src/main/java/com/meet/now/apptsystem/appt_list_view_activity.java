@@ -1,6 +1,5 @@
 package com.meet.now.apptsystem;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -78,22 +77,17 @@ public class appt_list_view_activity extends AppCompatActivity{
     }
 
     private class GetData extends AsyncTask<String, Void, String>{
-        ProgressDialog progressDialog;
         String errorString = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(appt_list_view_activity.this,
-                    "Please Wait", null, true, true);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            progressDialog.dismiss();
             Log.d(TAG, "response  - " + result);
 
             mJsonString = result;

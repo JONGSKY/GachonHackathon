@@ -1,7 +1,6 @@
 package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -100,15 +99,12 @@ public class appt_calendar_view_activity extends AppCompatActivity{
     }
 
     private class GetData extends AsyncTask<String, Void, String> {
-        ProgressDialog progressDialog;
         String errorString = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressDialog = ProgressDialog.show(appt_calendar_view_activity.this,
-                    "Please Wait", null, true, true);
         }
 
 
@@ -116,7 +112,6 @@ public class appt_calendar_view_activity extends AppCompatActivity{
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            progressDialog.dismiss();
             Log.d(TAG, "response  - " + result);
 
             mJsonString = result;
