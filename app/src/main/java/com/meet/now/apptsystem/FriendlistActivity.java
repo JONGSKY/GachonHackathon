@@ -365,5 +365,15 @@ public class FriendlistActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent backIntent = new Intent(getApplicationContext(), MainActivity.class);
+        backIntent.putExtra("userID", MyApplication.userID);
+        startActivity(backIntent);
+        finish();
+    }
 }
 
