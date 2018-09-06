@@ -125,9 +125,6 @@ public class FriendlistActivity extends AppCompatActivity {
                 customAddfriendDialog();
             }
         });
-        if(!intent.getStringExtra("apptNo").equals("false")){
-            addfriendButton.setVisibility(View.GONE);
-        }
         new BackgroundTask().execute();
 
         EditText search = findViewById(R.id.searchFriend);
@@ -357,7 +354,7 @@ public class FriendlistActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode ==FRIEND_PROFILE){
+        if(resultCode == RESULT_OK && requestCode ==FRIEND_PROFILE && data != null){
             String userNickname = data.getStringExtra("userNickname");
             int position = data.getIntExtra("position", -1);
 
