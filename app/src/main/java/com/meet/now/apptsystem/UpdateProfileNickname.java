@@ -61,7 +61,7 @@ public class UpdateProfileNickname extends DialogFragment {
                 } else {
                     if (userID.equals(MyApplication.userID)) {
                         Async_Prepare();
-                        myDialogResult.finish(userNickname);
+                        getActivity().recreate();
                         dismiss();
                     } else {
                         // 친구닉네임

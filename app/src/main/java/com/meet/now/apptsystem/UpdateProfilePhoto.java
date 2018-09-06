@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,6 +46,8 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.dialog_profile_photo_edit, null);
+
+
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -63,6 +66,8 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
         photoAlbum.setOnClickListener(this);
         Button back = (Button) getView().findViewById(R.id.btn_back_photo);
         back.setOnClickListener(this);
+        RelativeLayout rl = getView().findViewById(R.id.rl_profile_photo);
+        rl.setOnClickListener(this);
     }
 
     @Override
@@ -84,6 +89,9 @@ public class UpdateProfilePhoto extends DialogFragment implements View.OnClickLi
 
         } else if (v.getId() == R.id.btn_back_photo) {
             Log.d("onClick", "취소");
+            dismiss();
+
+        } else if(v.getId() == R.id.rl_profile_photo){
             dismiss();
         }
 
