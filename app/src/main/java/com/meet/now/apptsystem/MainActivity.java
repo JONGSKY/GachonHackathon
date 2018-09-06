@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ApptCenterplaceActivity.class);
                 intent.putExtra("apptNo", ddayList.get(position).getApptNo());
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 addfreindintent.putExtra("apptNo","false");
                 addfreindintent.putExtra("userID", userID);
                 MainActivity.this.startActivity(addfreindintent);
+                finish();
             }
         });
 
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent profileLoadIntent = new Intent(MainActivity.this, ProfileLoadActivity.class);
                 profileLoadIntent.putExtra("userID", userID);
                 MainActivity.this.startActivity(profileLoadIntent);
+                finish();
             }
         });
 
