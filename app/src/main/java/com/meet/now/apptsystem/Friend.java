@@ -4,7 +4,7 @@ public class Friend {
 
     String userID;
     String userPhoto;
-    String friendNickname;
+    private String friendNickname;
     String userNickname;
     private String userStatusmsg;
     String userAddress;
@@ -56,6 +56,7 @@ public class Friend {
     public void setUserAddress(String userAddress) {
         this.userAddress = userAddress;
     }
+
 
     public Friend(String userID, String userPhoto, String friendNickname, String userNickname, String userStatusmsg, String userAddress) {
         this.userID = userID;

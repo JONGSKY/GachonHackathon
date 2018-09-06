@@ -4,4 +4,5 @@ import android.graphics.Bitmap;
 
 public interface AsyncWeather {
     void processFinish(Bitmap output);
+
 }

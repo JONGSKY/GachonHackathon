@@ -1,17 +1,33 @@
 package com.meet.now.apptsystem;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,11 +35,15 @@ public class appt_detail_date_adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private JSONArray jsonArray;
     private int layout;
+    private JSONObject jsonObject;
+    private String ApptNo = "hello";
+    private Context context;
 
     public appt_detail_date_adapter(Context context, int layout, JSONArray jsonArray) {
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.jsonArray = jsonArray;
         this.layout = layout;
+        this.context = context;
     }
 
     @Override
@@ -52,7 +72,7 @@ public class appt_detail_date_adapter extends BaseAdapter {
             view = inflater.inflate(layout, viewGroup, false);
         }
 
-        JSONObject jsonObject = new JSONObject();
+        jsonObject = new JSONObject();
         String Time = "약속시간 : ";
         String RelationGroup = "모임 유형 : ";
         String MemberNo = "멤버 수 : ";
@@ -93,6 +113,24 @@ public class appt_detail_date_adapter extends BaseAdapter {
         textView3.setText(MemberNo);
         textView4.setText(ApptPlace);
         textView5.setText(ApptnameValue);
+
+
+        ImageButton imageButton = view.findViewById(R.id.appt_delete_button);
+        imageButton.setFocusable(false);
+        imageButton.setTag(i);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                try {
+                    jsonObject = jsonArray.getJSONObject((Integer) v.getTag());
+                    ApptNo = jsonObject.getString("ApptNo");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                DialogApptDelete dialogApptDelete = new DialogApptDelete(context, ApptNo);
+                dialogApptDelete.show();
+            }
+        });
 
         return view;
     }

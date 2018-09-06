@@ -1,6 +1,7 @@
 package com.meet.now.apptsystem;
 
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,7 +29,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +61,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
         cacheDir = getApplicationContext().getCacheDir();
 
-        JSONArray todayApptArray = new JSONArray();
         JSONObject jo = new JSONObject();
         try {
             jo.put("이름", 1);
@@ -83,8 +82,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
                         userPhoto = jsonResponse.getString("userPhoto");
                         userAddress = jsonResponse.getString("userAddress");
 
-                        TextView nicknameText = (TextView) findViewById(R.id.tv_user);
-                        TextView statusmsgText = (TextView) findViewById(R.id.tv_introduce);
+                        TextView nicknameText = findViewById(R.id.tv_user);
+                        TextView statusmsgText = findViewById(R.id.tv_introduce);
                         ImageView iv = findViewById(R.id.iv_user);
 
                         nicknameText.setText(userNickname);
@@ -122,7 +121,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 뒤로가기 버튼
-        ImageButton backBtn = (ImageButton) findViewById(R.id.ib_back);
+        ImageButton backBtn = findViewById(R.id.ib_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +129,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             }
         });
         // 닉네임 수정
-        ImageButton ibNickname = (ImageButton) findViewById(R.id.ib_edit_nickname);
+        ImageButton ibNickname = findViewById(R.id.ib_edit_nickname);
         ibNickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +146,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 상태메시지 수정
-        ImageButton ibEditStatus = (ImageButton) findViewById(R.id.ib_edit_status);
+        ImageButton ibEditStatus = findViewById(R.id.ib_edit_status);
         ibEditStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +165,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 위치변경
-        ImageButton mapBtn = (ImageButton) findViewById(R.id.ib_map);
+        ImageButton mapBtn = findViewById(R.id.ib_map);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +174,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 이미지 변경
-        ImageButton ibEditImg = (ImageButton) findViewById(R.id.ib_edit_userImg);
+        ImageButton ibEditImg = findViewById(R.id.ib_edit_userImg);
         ibEditImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,13 +195,13 @@ public class ProfileLoadActivity extends AppCompatActivity {
     void showLoc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_profile_loc, null);
+        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_profile_loc, null);
         builder.setView(view);
 
-        TextView tvLoc = (TextView) view.findViewById(R.id.tv_loc);
-        ImageButton ibBack = (ImageButton) view.findViewById(R.id.ib_back_loc);
+        TextView tvLoc = view.findViewById(R.id.tv_loc);
+        ImageButton ibBack = view.findViewById(R.id.ib_back_loc);
 
-        if (!userAddress.equals(null)) tvLoc.setText(userAddress);
+        tvLoc.setText(userAddress);
 
         final AlertDialog dialog = builder.create();
 
@@ -220,7 +219,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Bitmap bitmap = null;
+            Bitmap bitmap;
 
             String imagePath = null;
             if (requestCode == REQUEST_PICTURE) {
@@ -233,13 +232,15 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
             ExifInterface exif = null;
             try {
+                assert imagePath != null;
                 exif = new ExifInterface(imagePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            assert exif != null;
             int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             int exifDegree = exifOrientationToDegrees(exifOrientation);
-            bitmap = loadPictureWithResize(200);
+            bitmap = loadPictureWithResize();
             bitmap = rotate(bitmap, exifDegree);
 
             SaveBitmapToFileCache(bitmap); // 비트맵 변환하여 캐시, 서버, db 저장
@@ -264,7 +265,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
     private String getRealPathFromURI(Uri contentUri) {
         int column_index = 0;
         String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        @SuppressLint("Recycle") Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        assert cursor != null;
         if (cursor.moveToFirst()) {
             column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         }
@@ -273,8 +275,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
     }
 
     // 이미지 리사이징
-    private Bitmap loadPictureWithResize(int resize) {
-        Bitmap resizeBitmap = null;
+    private Bitmap loadPictureWithResize() {
+        Bitmap resizeBitmap;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         BitmapFactory.decodeFile(file.getAbsolutePath(), options); // 1번
@@ -284,7 +286,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         int samplesize = 1;
 
         while (true) {//2번
-            if (width / 2 < resize || height / 2 < resize)
+            if (width / 2 < 200 || height / 2 < 200)
                 break;
             width /= 2;
             height /= 2;
@@ -292,8 +294,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
 
         options.inSampleSize = samplesize;
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options); //3번
-        resizeBitmap = bitmap;
+        resizeBitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
         return resizeBitmap;
 
@@ -337,6 +338,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             e.printStackTrace();
         } finally {
             try {
+                assert out != null;
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -345,15 +347,15 @@ public class ProfileLoadActivity extends AppCompatActivity {
     }
 
     Bitmap bitmapImgDownload(String userPhoto){
-        Bitmap bitmap = null;
-        String imgPath=null;
+        Bitmap bitmap;
+        String imgPath;
 
         imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
         File file = new File(imgPath);
 
-        if(file.exists() == false) {
+        if(!file.exists()) {
             file = new File(Environment.getExternalStorageDirectory(), userPhoto);
-            if(file.exists() == false){
+            if(!file.exists()){
                 Async_ftp_Prepare("download", userPhoto);
                 file = new File(Environment.getExternalStorageDirectory(), userPhoto);
             }

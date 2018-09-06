@@ -39,8 +39,8 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("X-Naver-Client-Id", clientId);
-            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            con.setRequestProperty("X-Naver-Client-Id", YOUR_CLIENT_ID);
+            con.setRequestProperty("X-Naver-Client-Secret", YOUR_CLIENT_SECRET);
             int responseCode = con.getResponseCode();  // 멈추는 시점
             BufferedReader br;
             if (responseCode == 200) { // 정상 호출
@@ -49,7 +49,7 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
                 br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             }
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -61,7 +61,7 @@ public class GeocodeToAddress extends AsyncTask<String, Void, HashMap<String, St
 
             JSONObject object = new JSONObject(jsonArray.getJSONObject(0).get("addrdetail").toString());
 
-            String address = jsonArray.getJSONObject(0).getString("address").toString();
+            String address = jsonArray.getJSONObject(0).getString("address");
             String gu = object.getString("sigugun");
             String dong = object.getString("dongmyun");
 

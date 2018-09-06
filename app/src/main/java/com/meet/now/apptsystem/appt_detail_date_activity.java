@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,10 +31,14 @@ public class appt_detail_date_activity extends AppCompatActivity{
     private String Date;
     private String Date1;
 
+    public static Context CONTEXT;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appt_detail_date);
+
+        CONTEXT = this;
 
         Intent intent = getIntent();
         TextView textView = findViewById(R.id.Date);
@@ -70,6 +75,7 @@ public class appt_detail_date_activity extends AppCompatActivity{
 
         //어댑터 설정
         appt_detail_date_adapter adapter = new appt_detail_date_adapter(appt_detail_date_activity.this, R.layout.appt_item, TodayApptArray);
+        adapter.notifyDataSetChanged();
         appt_detail_listView.setAdapter(adapter);
         appt_detail_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
