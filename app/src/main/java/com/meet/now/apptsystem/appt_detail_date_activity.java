@@ -88,6 +88,7 @@ public class appt_detail_date_activity extends AppCompatActivity{
                     e.printStackTrace();
                 }
                 startActivity(mapIntent);
+                finish();
             }
         });
 
