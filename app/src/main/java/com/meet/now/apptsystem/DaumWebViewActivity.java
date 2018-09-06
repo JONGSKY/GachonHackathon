@@ -1,19 +1,15 @@
 package com.meet.now.apptsystem;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 public class DaumWebViewActivity extends AppCompatActivity {
-    private WebView daum_webView;
     private Handler handler;
 
     @Override
@@ -29,9 +25,10 @@ public class DaumWebViewActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     public void init_webView() {
         // WebView 설정
-        daum_webView = (WebView) findViewById(R.id.daum_webview);
+        WebView daum_webView = findViewById(R.id.daum_webview);
 
         // JavaScript 허용
         daum_webView.getSettings().setJavaScriptEnabled(true);
@@ -39,18 +36,14 @@ public class DaumWebViewActivity extends AppCompatActivity {
         // JavaScript의 window.open 허용
         daum_webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
-
         // JavaScript이벤트에 대응할 함수를 정의 한 클래스를 붙여줌
         daum_webView.addJavascriptInterface(new AndroidBridge(), "GachonHackathon");
-
 
         // web client 를 chrome 으로 설정
         daum_webView.setWebChromeClient(new WebChromeClient());
 
-
         // webview url load. php 파일 주소
         daum_webView.loadUrl("http://brad903.cafe24.com/Daum_address.php");
-
     }
 
 

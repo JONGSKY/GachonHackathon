@@ -15,6 +15,7 @@
  */
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -58,7 +59,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 	private static final float CALLOUT_TITLE_OFFSET_Y = -2.0F;
 
 	private final TextPaint mTextPaint = new TextPaint();
-	private float mOffsetX, mOffsetY;
+	private float mOffsetY;
 
 	private final float mMarginX;
 	private final float mPaddingX, mPaddingY, mPaddingOffset;
@@ -221,7 +222,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		float left, top;
 
 		// draw title
-		mOffsetX = mTempPoint.x - mTempRect.width() / 2;
+		float mOffsetX = mTempPoint.x - mTempRect.width() / 2;
 		mOffsetX -= mPaddingOffset;
 		mOffsetY = mTempRectF.top + mPaddingY + mTextPaint.getTextSize() + mTitleOffsetY;
 		canvas.drawText(mTitleTruncated, mOffsetX, mOffsetY, mTextPaint);
@@ -281,6 +282,7 @@ public class NMapCalloutCustomOldOverlay extends NMapCalloutOverlay {
 		mBackgroundDrawable.draw(canvas);
 	}
 
+	@SuppressLint("LongLogTag")
 	private void adjustTextBounds(NMapView mapView) {
 
 		//  First determine the screen coordinates of the selected MapLocation

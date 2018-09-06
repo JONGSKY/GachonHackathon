@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,7 +14,8 @@
         android:paddingBottom="15dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <RelativeLayout
             android:layout_width="300dp"
@@ -29,7 +31,8 @@
                 android:gravity="center_vertical"
                 android:text="약속이름"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
 
             <ImageButton
                 android:id="@+id/appt_delete_button"
@@ -38,7 +41,8 @@
                 app:srcCompat="@drawable/ic_delete"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:background="#00ff0000"/>
+                android:background="#00ff0000"
+                tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
@@ -48,7 +52,8 @@
             android:layout_below="@id/appt_name_textview"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:background="@drawable/appt_list_item_edge">
+            android:background="@drawable/appt_list_item_edge"
+            tools:ignore="ObsoleteLayoutParam">
 
             <TextView
                 android:id="@+id/appt_place_textview"
@@ -57,8 +62,9 @@
                 android:layout_marginTop="10dp"
                 android:text="약속 장소 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_marginLeft="20dp"/>
+                android:textSize="15sp"
+                android:layout_marginStart="20dp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/appt_time_textview"
@@ -66,10 +72,11 @@
                 android:layout_height="wrap_content"
                 android:text="약속 시간 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_below="@id/appt_place_textview"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/appt_group_textview"
@@ -77,10 +84,11 @@
                 android:layout_height="wrap_content"
                 android:text="그룹 유형 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_below="@id/appt_time_textview"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/appt_member_number_textview"
@@ -88,14 +96,13 @@
                 android:layout_height="wrap_content"
                 android:text="참여 인원 :"
                 android:textColor="#000000"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_below="@id/appt_group_textview"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"/>
-
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

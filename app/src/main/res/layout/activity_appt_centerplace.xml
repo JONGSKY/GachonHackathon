@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
@@ -12,18 +13,21 @@
         android:layout_alignParentStart="true"
         android:background="@drawable/border_white"
         android:hint="ex)강동구 암사동"
-        android:textSize="14dp"
-        android:paddingLeft="8dp"
-        android:imeOptions="actionDone"/>
+        android:textSize="14sp"
+        android:paddingStart="8dp"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        tools:ignore="HardcodedText" />
 
     <ImageButton
         android:id="@+id/ib_center_place"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_search_black_24dp"
-        android:tint="@color/colorPrimaryMoreDark"/>
+        android:tint="@color/colorPrimaryMoreDark"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/btn_refresh"
@@ -32,14 +36,14 @@
         android:drawableStart="@drawable/ic_refresh_black_24dp"
         android:drawableLeft="@drawable/ic_refresh_black_24dp"
         android:text="중간위치 다시찾기"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="64dp"
         android:layout_marginRight="8dp"
         android:padding="4dp"
         android:background="@drawable/border_white"
         android:textColor="@color/colorAccent"
-        />
+        tools:ignore="HardcodedText,RtlHardcoded" />
 
 
     <com.nhn.android.maps.NMapView
@@ -48,7 +52,6 @@
         android:layout_height="match_parent" />
 
     <FrameLayout
-        android:id="@+id/fabFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -58,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="230dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:src="@drawable/baseline_map_black_18dp"
             android:visibility="invisible"
             app:backgroundTint="#ffffff"
@@ -71,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="160dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:src="@drawable/baseline_add_location_black_18dp"
             android:visibility="invisible"
             app:backgroundTint="#ffffff"
@@ -84,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="90dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:src="@android:drawable/ic_search_category_default"
             android:tint="@android:color/black"
             android:visibility="invisible"
@@ -99,10 +102,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="20dp"
-            android:layout_marginRight="15sp"
+            android:layout_marginEnd="15sp"
             android:clickable="true"
             android:src="@drawable/ic_add"
-            app:backgroundTint="@color/colorAccent" />
+            app:backgroundTint="@color/colorAccent"
+            android:focusable="true" />
 
     </FrameLayout>
+
 </RelativeLayout>

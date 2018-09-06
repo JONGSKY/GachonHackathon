@@ -5,6 +5,5 @@
     <color name="colorPrimaryDark">#f4a8ff</color>
     <color name="colorPrimaryMoreDark">#34495D</color>
     <color name="colorAccent">#546e7a</color>
-    <color name="colorWarning">#C70039</color>
     <color name="colorGray">#bebebe</color>
 </resources>

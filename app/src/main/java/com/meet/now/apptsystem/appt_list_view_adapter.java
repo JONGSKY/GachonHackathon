@@ -28,7 +28,7 @@ public class appt_list_view_adapter extends BaseAdapter {
     private int layout;
     private Context context;
 
-    public appt_list_view_adapter(Context context, int layout, ArrayList<HashMap<String, ArrayList<String>>> arrayList) {
+    appt_list_view_adapter(Context context, int layout, ArrayList<HashMap<String, ArrayList<String>>> arrayList) {
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.arrayList = arrayList;
@@ -50,7 +50,7 @@ public class appt_list_view_adapter extends BaseAdapter {
         return i;
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -66,14 +66,13 @@ public class appt_list_view_adapter extends BaseAdapter {
         Iterator iterator = key.iterator();
         String Date = (String) iterator.next();
         String[] Date_Array = Date.split("-");
-        String ApptDate = Date;
 
         //날짜 설정
         TextView Day_TextView = view.findViewById(R.id.Day_textView);
         Day_TextView.setText(Date_Array[2]);
 
         //요일 설정
-        String week = null;
+        String week;
         long diffDays = 0;
         try {
             week = week_result(Date_Array[0] + Date_Array[1] + Date_Array[2]);
@@ -82,8 +81,8 @@ public class appt_list_view_adapter extends BaseAdapter {
             Week_TextView.setText(week);
 
             Date now = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date certainDay = sdf.parse(ApptDate);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date certainDay = sdf.parse(Date);
             Date today = sdf.parse(sdf.format(now));
 
             long diff = certainDay.getTime() - today.getTime();
@@ -126,8 +125,8 @@ public class appt_list_view_adapter extends BaseAdapter {
         return view;
     }
 
-    public String week_result(String date) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    private String week_result(String date) throws ParseException {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         Date date1 = formatter.parse(date);  // 날짜 입력하는곳 .
 

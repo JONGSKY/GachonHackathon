@@ -16,7 +16,8 @@
             android:layout_height="80dp"
             android:layout_marginTop="32dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/main_font"/>
+            android:src="@drawable/main_font"
+            tools:ignore="ContentDescription" />
 
         <ImageButton
             android:id="@+id/ib_profile_load"

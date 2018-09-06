@@ -1,22 +1,15 @@
 <resources>
-    <string name="app_name">ApptSystem</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="title_activity_appt_detail">ApptDetailActivity</string>
+    <string name="app_name">한날, 한시</string>
     <string name="n_key">L5FRpfj4Qo90C0P53Sgo</string>
-    <string name="n_pwd">sVbMyitQbO</string>
     <string name="str_done">완료</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="distance">중심위치를 기준으로\n추천지역을 얼마나 보여드릴까요?</string>
     <string name="add_person">추가할 친구가\n회원/비회원인지 선택해주세요</string>
     <string name="member">회원</string>
     <string name="nonmember">비회원</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="add_addr">주소입력</string>
-    <string name="friend_name">친구 이름</string>
     <string name="_500m">좁게</string>
     <string name="_750m">기본</string>
     <string name="_1km">넓게</string>

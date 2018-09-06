@@ -13,10 +13,4 @@
         <item>직장동료</item>
     </string-array>
 
-    <string-array name="color_array">
-        <item>초록</item>
-        <item>파랑</item>
-        <item>빨강</item>
-    </string-array>
-    
 </resources>

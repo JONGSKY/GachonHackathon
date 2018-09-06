@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
@@ -11,12 +12,11 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <!--프로필 배경 화면-->
         <RelativeLayout
-            android:id="@+id/rl_profile"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.7"
@@ -26,14 +26,13 @@
                 android:id="@+id/iv_user"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="32dp"
+                android:layout_marginEnd="32dp"
                 android:layout_marginBottom="32dp"
-
                 android:src="@drawable/ic_profile_picture"
                 android:scaleType="centerCrop"
-                />
+                tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/ib_edit_userImg"
@@ -43,9 +42,8 @@
                 android:layout_alignEnd="@+id/iv_user"
                 android:layout_marginBottom="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_photo_camera_black_24dp" />
-
-
+                android:src="@drawable/ic_photo_camera_black_24dp"
+                tools:ignore="ContentDescription" />
 
             <!--뒤로 가기 버튼-->
             <ImageButton
@@ -55,7 +53,8 @@
                 android:layout_margin="10dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_arrow_left"
-                android:tint="@color/colorAccent" />
+                android:tint="@color/colorAccent"
+                tools:ignore="ContentDescription" />
 
             <ImageButton
                 android:id="@+id/ib_logout"
@@ -63,14 +62,12 @@
                 android:layout_height="24dp"
                 android:layout_margin="16dp"
                 android:src="@drawable/ic_exit_to_app_black_24dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:backgroundTint="@android:color/transparent"
                 android:tint="@color/colorAccent"
-                />
+                tools:ignore="ContentDescription" />
 
         </RelativeLayout>
-
-
 
         <!--아래의 흰색 화면-->
         <RelativeLayout
@@ -84,12 +81,12 @@
                 android:id="@+id/tv_introduce"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="8dp"
                 android:layout_below="@+id/tv_user"
-                android:layout_marginRight="65dp"
+                android:layout_marginEnd="65dp"
                 android:text=""
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorAccent"/>
 
@@ -97,37 +94,37 @@
                 android:id="@+id/ib_edit_status"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="8dp"
                 android:layout_below="@+id/tv_user"
-                android:layout_marginRight="32dp"
+                android:layout_marginEnd="32dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_rate_review_black_18dp"
-             />
+                tools:ignore="ContentDescription" />
 
             <!--닉네임-->
             <TextView
                 android:id="@+id/tv_user"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="65dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="65dp"
                 android:layout_marginTop="16dp"
                 android:text=""
-                android:textSize="18dp"
-                android:textAlignment="textEnd"
-                />
+                android:textSize="18sp"
+                android:textAlignment="textEnd" />
 
             <ImageButton
                 android:id="@+id/ib_edit_nickname"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_edit_black_24dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="32dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="TODO" />
+                android:contentDescription="TODO"
+                tools:ignore="ContentDescription,HardcodedText" />
 
 
             <!--주소변경-->
@@ -135,20 +132,16 @@
                 android:id="@+id/ib_map"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/profile_location"
                 android:scaleType="fitXY"
-                android:tint="#92299c"/>
+                android:tint="#92299c"
+                tools:ignore="ContentDescription" />
+
         </RelativeLayout>
 
-
-
     </LinearLayout>
-
-
-
-
 
 </RelativeLayout>

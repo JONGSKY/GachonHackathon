@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/resister_background"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,7 +19,8 @@
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                />
+                android:contentDescription="TODO" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -41,7 +42,7 @@
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/login_rounding"
                     android:singleLine="true"
                     android:drawableLeft="@drawable/ic_mail_outline_black_24dp"
@@ -50,7 +51,8 @@
                     android:hint="아이디(이메일)"
                     android:padding="10dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColorHint="#ffffff"
+                    tools:ignore="HardcodedText,RtlHardcoded" />
 
                 <Button
                     android:id="@+id/validateButton"
@@ -61,7 +63,8 @@
                     android:textSize="14sp"
                     android:text="중복체크"
                     android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 
@@ -79,7 +82,8 @@
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
+                android:textColorHint="#ffffff"
+                tools:ignore="HardcodedText,RtlHardcoded" />
 
             <EditText
                 android:id="@+id/nicknameText"
@@ -94,7 +98,8 @@
                 android:hint="별칭"
                 android:padding="10dp"
                 android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
+                android:textColorHint="#ffffff"
+                tools:ignore="HardcodedText,RtlHardcoded,TextFields" />
 
             <LinearLayout
                 android:layout_width="320dp"
@@ -117,7 +122,8 @@
                     android:hint="주소"
                     android:padding="10dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColorHint="#ffffff"
+                    tools:ignore="HardcodedText,RtlHardcoded,TextFields" />
 
                 <Button
                     android:id="@+id/addressButton"
@@ -167,7 +173,6 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/genderWoman"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -175,7 +180,6 @@
                     android:text="여성" />
 
                 <RadioButton
-                    android:id="@+id/genderMan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
