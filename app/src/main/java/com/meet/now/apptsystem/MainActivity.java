@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 프로필로 이동
         ImageButton profileLoadBtn = findViewById(R.id.ib_profile_load);
         profileLoadBtn.setOnClickListener(new View.OnClickListener() {
             @Override

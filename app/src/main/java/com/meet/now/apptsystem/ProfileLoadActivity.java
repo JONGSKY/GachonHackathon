@@ -52,13 +52,14 @@ public class ProfileLoadActivity extends AppCompatActivity {
     private UpdateProfilePhoto updateProfilePhoto;
     public static File file = null;
     public static File cacheDir;
-
+    TextView nicknameText;
+    TextView statusmsgText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_load);
-        final TextView nicknameText = findViewById(R.id.tv_user);
-        TextView statusmsgText = findViewById(R.id.tv_introduce);
+        nicknameText = findViewById(R.id.tv_user);
+        statusmsgText = findViewById(R.id.tv_introduce);
         ImageView iv = findViewById(R.id.iv_user);
 
 
@@ -85,7 +86,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             userPhoto = intent.getStringExtra("getUserPhoto");
             userAddress = intent.getStringExtra("getUserAddress");
             userStatusmsg = intent.getStringExtra("getUserStatusmsg");
-            position = intent.getIntExtra("position", -1 );
+            position = intent.getIntExtra("position", -1);
             nicknameText.setText(userNickname);
             if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
             if (!userPhoto.equals("null")) {
@@ -175,23 +176,24 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("userID", userID);
-                bundle.putString("userNickname", userNickname);
+                bundle.putString("userNickname", nicknameText.getText().toString());
                 dialogFragment.setArguments(bundle);
 
                 dialogFragment.show(fm, "fragment_dialog_nickname");
-                if(!userID.equals(MyApplication.userID)){
-                    dialogFragment.setDialogResult(new UpdateProfileNickname.MyDialogResult() {
-                        @Override
-                        public void finish(String result) {
-                            nicknameText.setText(result);
+
+                dialogFragment.setDialogResult(new UpdateProfileNickname.MyDialogResult() {
+                    @Override
+                    public void finish(String result) {
+                        nicknameText.setText(result);
+                        if (!userID.equals(MyApplication.userID)) {
                             userNickname = result;
                             Intent intent = getIntent();
                             intent.putExtra("position", position);
                             intent.putExtra("userNickname", userNickname);
                             setResult(RESULT_OK, intent);
                         }
-                    });
-                }
+                    }
+                });
 
             }
         });
@@ -205,10 +207,16 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("userID", userID);
-                bundle.putString("userStatusmsg", userStatusmsg);
+                bundle.putString("userStatusmsg", statusmsgText.getText().toString());
                 dialogFragment.setArguments(bundle);
 
                 dialogFragment.show(fm, "fragment_dialog_status");
+                dialogFragment.setDialogResult(new UpdateProfileStatus.MyDialogResult() {
+                    @Override
+                    public void finish(String result) {
+                        statusmsgText.setText(result);
+                    }
+                });
             }
 
         });

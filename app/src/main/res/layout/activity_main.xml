@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_main_actionbar"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@drawable/actionbar_gradation">
@@ -31,6 +32,7 @@
     </RelativeLayout>
 
     <ListView
+        android:layout_below="@+id/rl_main_actionbar"
         android:id="@+id/ddayListView"
         android:layout_width="match_parent"
         android:layout_height="375dp"
@@ -40,68 +42,66 @@
         android:divider="#ffffff"
         android:dividerHeight="10dp" />
 
-    <LinearLayout
+    <GridLayout
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        android:layout_marginBottom="5dp">
+        android:columnCount="3"
+        android:layout_marginBottom="8dp"
+        >
 
         <Button
+            android:layout_columnWeight="0.3"
             android:id="@+id/viewapptButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
+            android:layout_marginRight="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/main_rounding_btn"
             android:textSize="16sp"
-            android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_people_black_24dp"
             android:drawableStart="@drawable/ic_people_black_24dp"
             android:text="약속보기"
+            android:paddingLeft="4dp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_columnWeight="0.3"
+            android:layout_marginRight="8dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/addfriendButton"
             android:text="친구추가"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:paddingStart="8dp"
+            android:paddingLeft="4dp"
             android:drawableLeft="@drawable/ic_person_add_black_24dp"
             android:drawableStart="@drawable/ic_person_add_black_24dp"
             android:background="@drawable/main_rounding_btn"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_columnWeight="0.3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginRight="8dp"
             android:id="@+id/makeapptButton"
             android:text="약속생성"
             android:textStyle="bold"
             android:textColor="#ffffff"
             android:textSize="16sp"
-            android:paddingStart="8dp"
+            android:paddingLeft="4dp"
             android:drawableLeft="@drawable/ic_event_black_24dp"
             android:drawableStart="@drawable/ic_event_black_24dp"
             android:background="@drawable/main_rounding_btn"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
             tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry,SpUsage" />
 
-    </LinearLayout>
+    </GridLayout>
 
 
 
 
-</LinearLayout>
+</RelativeLayout>
