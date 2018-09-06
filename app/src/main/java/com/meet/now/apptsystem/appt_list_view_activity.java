@@ -96,7 +96,6 @@ public class appt_list_view_activity extends AppCompatActivity{
                     "Please Wait", null, true, true);
         }
 
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);

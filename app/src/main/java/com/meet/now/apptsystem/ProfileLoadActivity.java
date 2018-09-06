@@ -128,7 +128,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
                             if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
 
 
-                            if (userPhoto != null) {
+                            if (!userPhoto.equals("null")) {
                                 Bitmap bitmap = bitmapImgDownload(userPhoto);
                                 iv.setImageBitmap(bitmap);
                                 iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩

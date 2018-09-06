@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@color/colorPrimary">
+        android:background="@drawable/actionbar_gradation">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:background="@drawable/rounding_btn"
+            android:background="@drawable/main_rounding_btn"
             android:textSize="16sp"
             android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_people_black_24dp"
@@ -76,7 +76,7 @@
             android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_person_add_black_24dp"
             android:drawableStart="@drawable/ic_person_add_black_24dp"
-            android:background="@drawable/rounding_btn"
+            android:background="@drawable/main_rounding_btn"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded,RtlSymmetry" />
@@ -88,12 +88,12 @@
             android:id="@+id/makeapptButton"
             android:text="약속생성"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="#ffffff"
             android:textSize="16sp"
             android:paddingStart="8dp"
             android:drawableLeft="@drawable/ic_event_black_24dp"
             android:drawableStart="@drawable/ic_event_black_24dp"
-            android:background="@drawable/rounding_btn"
+            android:background="@drawable/main_rounding_btn"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
