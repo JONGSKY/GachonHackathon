@@ -7,17 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import com.meet.now.apptsystem.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,14 +20,12 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -82,6 +74,7 @@ public class appt_list_view_activity extends AppCompatActivity{
                 finish();
             }
         });
+
     }
 
     private class GetData extends AsyncTask<String, Void, String>{
@@ -209,6 +202,7 @@ public class appt_list_view_activity extends AppCompatActivity{
 
             appt_list_view_adapter adapter = new appt_list_view_adapter(appt_list_view_activity.this, R.layout.appt_list_item, mArrayList);
             mlistView.setAdapter(adapter);
+
             mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -241,4 +235,5 @@ public class appt_list_view_activity extends AppCompatActivity{
         backIntent.putExtra("userID", userID);
         startActivity(backIntent);
     }
+
 }

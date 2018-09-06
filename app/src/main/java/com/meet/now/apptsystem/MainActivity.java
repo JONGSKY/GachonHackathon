@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
                 intent.putExtra("userID", userID);
                 startActivity(intent);
+                finish();
             }
         });
 

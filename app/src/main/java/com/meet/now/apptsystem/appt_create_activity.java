@@ -1,6 +1,8 @@
 package com.meet.now.apptsystem;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,10 +113,6 @@ public class appt_create_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AppointmentDetailPutPrepare();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("userID", USERID);
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -136,6 +135,16 @@ public class appt_create_activity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent backIntent = new Intent(getApplicationContext(), MainActivity.class);
+        backIntent.putExtra("userID", USERID);
+        startActivity(backIntent);
+        finish();
     }
 
     @Override
@@ -177,8 +186,12 @@ public class appt_create_activity extends AppCompatActivity {
 
     }
 
-    public void Appt_Name_Set_String(EditText editText) {
+    public boolean Appt_Name_Set_String(EditText editText) {
         Name = editText.getText().toString();
+        if(Name.equals("")){
+            return true;
+        }
+        return false;
     }
 
     public void Appt_Age_Set_String(Spinner spinner) {
@@ -191,11 +204,20 @@ public class appt_create_activity extends AppCompatActivity {
 
     public void AppointmentDetailPutPrepare() {
         AppointmentDetailPut async_test = new AppointmentDetailPut();
-        Appt_Name_Set_String(appt_name);
+        boolean nameValidate = Appt_Name_Set_String(appt_name);
         Appt_Age_Set_String(appt_age);
         Appt_Meeting_Type_Set_String(appt_meeting_type);
 
-        async_test.execute(Name, Date, Age, Time, Meeting, USERID);
+        if(nameValidate){
+            Toast.makeText(this, "약속 이름을 입력해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }else {
+            async_test.execute(Name, Date, Age, Time, Meeting, USERID);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("userID", USERID);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void createCancelBtnClicked(View view) {

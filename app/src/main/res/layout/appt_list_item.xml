@@ -49,7 +49,7 @@
 
         <LinearLayout
             android:id="@+id/today_appt"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"

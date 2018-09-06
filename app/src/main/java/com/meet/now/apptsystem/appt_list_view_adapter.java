@@ -101,9 +101,11 @@ public class appt_list_view_adapter extends BaseAdapter {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         Date date1 = formatter.parse(date);  // 날짜 입력하는곳 .
-        date1 = new Date(date1.getTime() + (1000*60*60*24)-1);  // 날짜에 하루를 더한 값
 
-        Calendar cal = Calendar.getInstance() ;
+        date1 = new Date(date1.getTime() + (1000 * 60 * 60 * 24)-1);  // 날짜에 하루를 더한 값
+
+        Calendar cal = Calendar.getInstance();
+
         cal.setTime(date1);              // 하루더한 날자 값을 Calendar  넣는다.
 
         int dayNum = cal.get(Calendar.DAY_OF_WEEK);   // 요일을 구해온다.
