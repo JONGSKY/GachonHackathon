@@ -187,7 +187,7 @@ public class appt_create_activity extends AppCompatActivity {
     }
 
     public boolean Appt_Name_Set_String(EditText editText) {
-        Name = editText.getText().toString();
+        Name = editText.getText().toString().trim();
         if(Name.equals("")){
             return true;
         }
