@@ -17,9 +17,9 @@
             android:text="추가하실 친구의 ID를 입력해주세요"
             android:id="@+id/dialogmessage"
             android:textColor="#ffffff"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:layout_gravity="center_vertical"
-            android:textSize="17dp"
+            android:textSize="14dp"
             android:gravity="center"/>
 
         <LinearLayout
@@ -43,6 +43,7 @@
                 android:background="@drawable/edittext_login"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:textSize="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
@@ -67,7 +68,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_cancel"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:text="취소"
             android:textColor="#FFFFFF" />
 
@@ -79,7 +80,7 @@
             android:id="@+id/searchfriendButton"
             android:text="검색"
             android:textColor="#FFFFFF"
-            android:textSize="15dp"
+            android:textSize="14dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp" />
 

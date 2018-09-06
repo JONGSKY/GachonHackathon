@@ -9,52 +9,52 @@
     android:paddingBottom="5dp"
     android:background="#ffffff"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+   >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
-
-        <ImageView
-            android:id="@+id/userPhoto"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:src="@drawable/ic_profile_picture"
-            android:scaleType="centerCrop"
-            android:layout_marginRight="5dp">
-        </ImageView>
-
-        <TextView
-            android:id="@+id/userNickname"
-            android:layout_width="50dp"
+        <GridLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="아이디"
-            android:textSize="17dp"
-            android:layout_marginRight="5dp"
-            android:textColor="#000000"/>
+            android:rowCount="2"
+            android:orientation="vertical"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp">
 
-        <Button
-            android:id="@+id/statusMsg"
-            android:layout_width="220dp"
-            android:clickable="false"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/button_statusmsg"
-            android:text="상태 메시지"
-            android:textSize="17dp"
-            android:textColor="#000000"/>
+            <ImageView
+                android:layout_rowSpan="2"
+                android:layout_marginRight="16dp"
+                android:id="@+id/userPhoto"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_profile_picture"
+                android:scaleType="centerCrop">
+            </ImageView>
 
+            <TextView
+                android:id="@+id/userNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아이디"
+                android:textSize="14sp"
+                android:layout_marginRight="5dp"
+                android:textColor="#000000"/>
 
-    </LinearLayout>
-
-
+            <TextView
+                android:id="@+id/statusMsg"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/login_rounding"
+                android:paddingLeft="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingRight="16dp"
+                android:maxLength="20"
+                android:text="상태 메시지"
+                android:textSize="16sp"
+                android:textColor="#000000"/>
+        </GridLayout>
 
 </LinearLayout>

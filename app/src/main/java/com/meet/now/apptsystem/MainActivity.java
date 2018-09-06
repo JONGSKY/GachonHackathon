@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,7 +33,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,16 +49,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
         userID = MyApplication.userID;
         userAddress = MyApplication.Address;
 
         ListView ddayListView = findViewById(R.id.ddayListView);
-        ddayList = new ArrayList<Dday>();
+        ddayList = new ArrayList<>();
         adapter = new DdayAdapter(getApplicationContext(), ddayList);
         ddayListView.setAdapter(adapter);
 
-        // item clicked
+        // 약속 상세보기 지도로 이동
         ddayListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -68,16 +67,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button addfriendButton = (Button) findViewById(R.id.addfriendButton);
+        // 친구추가로 이동
+        Button addfriendButton = findViewById(R.id.addfriendButton);
         addfriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addfreindintent = new Intent(MainActivity.this, FriendlistActivity.class);
+                addfreindintent.putExtra("apptNo","false");
                 addfreindintent.putExtra("userID", userID);
                 MainActivity.this.startActivity(addfreindintent);
             }
         });
 
+        // 약속생성으로 이동
         Button makeapptButton = findViewById(R.id.makeapptButton);
         makeapptButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 약속목록으로 이동
         Button button = findViewById(R.id.viewapptButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         lastTimeBackPressed = System.currentTimeMillis();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class BackgroundTask extends AsyncTask<Void, Void, String> {
         String target;
 

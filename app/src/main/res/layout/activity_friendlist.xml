@@ -15,13 +15,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:id="@+id/searchFriend"
+        android:textSize="16dp"
         android:hint="검색" />
-
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </GridView>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,9 +35,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="친구"
-                android:textColor="#000000"
+                android:textColor="@color/colorAccent"
                 android:layout_weight="0.95"
-                android:textSize="22dp"
+                android:textSize="20dp"
                 android:padding="10dp"/>
 
             <ImageButton
@@ -51,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.05"
-                android:padding="5dp"
+                android:layout_marginRight="16dp"
                 android:background="#ffffff"
                 app:srcCompat="@drawable/ic_add_circle_outline_black_24dp" />
 
@@ -62,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#ffffff"
-            android:dividerHeight="5dp"></ListView>
+            android:dividerHeight="5dp"/>
 
     </LinearLayout>
 

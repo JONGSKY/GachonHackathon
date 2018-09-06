@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="80dp"
             android:background="@color/colorPrimary">
 
             <TextView
@@ -23,7 +23,7 @@
                 android:gravity="center"
                 android:text="약속 생성"
                 android:textColor="#ffffff"
-                android:textSize="25dp"
+                android:textSize="24dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="약속 이름"
-                    android:textSize="20dp" />
+                    android:textSize="16dp" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                android:background="@color/colorGray"
+                android:background="@drawable/appt_create_item_top"
                 android:orientation="horizontal">
 
                 <TextView
@@ -62,7 +62,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="9dp"
                     android:text="참여자 목록"
-                    android:textSize="18sp"
+                    android:textSize="16dp"
                     android:textStyle="bold"/>
 
                 <ImageButton
@@ -82,7 +82,7 @@
                 android:layout_width="320dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/appt_create_item">
+                android:background="@drawable/appt_create_item_bottom">
 
                 <LinearLayout
                     android:id="@+id/con"
@@ -108,50 +108,52 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:background="@android:color/darker_gray"
+                android:background="@drawable/appt_create_item_top"
                 android:padding="7dp"
                 android:text="연령대"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
             <Spinner
                 android:id="@+id/age_spinner"
                 android:layout_width="320dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/appt_create_item" />
+                android:background="@drawable/appt_create_item_bottom" />
 
             <TextView
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:background="@android:color/darker_gray"
+                android:background="@drawable/appt_create_item_top"
                 android:padding="7dp"
                 android:text="시간대"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
             <TimePicker
                 android:id="@+id/appt_time_spinner"
-                android:layout_width="match_parent"
+                android:layout_width="320dp"
+                android:layout_gravity="center"
                 android:layout_height="100dp"
-                android:timePickerMode="spinner" />
+                android:timePickerMode="spinner"
+                android:background="@drawable/appt_create_item_bottom"/>
 
             <TextView
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:background="@color/colorGray"
+                android:background="@drawable/appt_create_item_top"
                 android:padding="7dp"
                 android:text="모임유형"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textStyle="bold" />
             <Spinner
                 android:id="@+id/appt_meeting_type_spinner"
                 android:layout_width="320dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/appt_create_item" />
+                android:background="@drawable/appt_create_item_bottom" />
 
 
         </LinearLayout>
@@ -175,7 +177,7 @@
                 android:onClick="createCancelBtnClicked"
                 android:text="취소"
                 android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
             <Button
                 android:id="@+id/appt_create_button"
@@ -188,7 +190,7 @@
                 android:onClick="createApptBtnClicked"
                 android:text="생성하기"
                 android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 

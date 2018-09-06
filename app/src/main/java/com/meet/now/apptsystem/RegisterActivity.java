@@ -98,8 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
                                      dialog.show();
                                      idText.setEnabled(false);  // 더이상 못 바꾸게
                                      validate = true;
-                                     idText.setBackgroundColor(getResources().getColor(R.color.colorGray));
-                                     validateButton.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                                     idText.setBackground(getResources().getDrawable(R.drawable.login_rounding_btn));
                                  }
                                  else {  // 중복체크 실패했다면
                                      AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);

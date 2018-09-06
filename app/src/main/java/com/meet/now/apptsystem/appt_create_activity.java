@@ -99,10 +99,10 @@ public class appt_create_activity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter appt_age_adapter = ArrayAdapter.createFromResource(this, R.array.age_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter appt_age_adapter = ArrayAdapter.createFromResource(this, R.array.age_array, R.layout.simple_spinner_custom);
         appt_age.setAdapter(appt_age_adapter);
 
-        ArrayAdapter appt_meeting_type_adapter = ArrayAdapter.createFromResource(this, R.array.meeting_type_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter appt_meeting_type_adapter = ArrayAdapter.createFromResource(this, R.array.meeting_type_array, R.layout.simple_spinner_custom);
         appt_meeting_type.setAdapter(appt_meeting_type_adapter);
 
         Button button = findViewById(R.id.appt_create_button);

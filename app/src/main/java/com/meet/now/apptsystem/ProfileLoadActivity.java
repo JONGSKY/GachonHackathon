@@ -47,6 +47,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
     String userPhoto = null;
     String userAddress = null;
     String userID = null;
+    int position = -1;
 
     private UpdateProfilePhoto updateProfilePhoto;
     public static File file = null;
@@ -56,72 +57,107 @@ public class ProfileLoadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_load);
+        final TextView nicknameText = findViewById(R.id.tv_user);
+        TextView statusmsgText = findViewById(R.id.tv_introduce);
+        ImageView iv = findViewById(R.id.iv_user);
+
+
+        ImageButton logout = findViewById(R.id.ib_logout);
+        ImageButton backBtn = findViewById(R.id.ib_back);
+        ImageButton ibEditStatus = findViewById(R.id.ib_edit_status);
+        ImageButton ibEditImg = findViewById(R.id.ib_edit_userImg);
+
         Intent intent = getIntent();
         userID = intent.getStringExtra("userID");
+        // 친구프로필
+        if (!userID.equals(MyApplication.userID)) {
+            logout.setVisibility(View.GONE);
+            backBtn.setVisibility(View.GONE);
+            ibEditStatus.setVisibility(View.GONE);
+            ibEditImg.setVisibility(View.GONE);
 
-        cacheDir = getApplicationContext().getCacheDir();
-
-        JSONObject jo = new JSONObject();
-        try {
-            jo.put("이름", 1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // DB 프로필 정보 로드
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");
-                    if (success) {
-
-                        userNickname = jsonResponse.getString("userNickname");
-                        userStatusmsg = jsonResponse.getString("userStatusmsg");
-                        userPhoto = jsonResponse.getString("userPhoto");
-                        userAddress = jsonResponse.getString("userAddress");
-
-                        TextView nicknameText = findViewById(R.id.tv_user);
-                        TextView statusmsgText = findViewById(R.id.tv_introduce);
-                        ImageView iv = findViewById(R.id.iv_user);
-
-                        nicknameText.setText(userNickname);
-                        if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
-
-
-                        if(userPhoto!=null) {
-                            Bitmap bitmap = bitmapImgDownload(userPhoto);
-                            iv.setImageBitmap(bitmap);
-                            iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
-                            iv.setClipToOutline(true);
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "정보를 가져오지 못했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
+            String friendNickname = intent.getStringExtra("getFriendNickname");
+            if (friendNickname.equals("null")) {
+                userNickname = intent.getStringExtra("getUserNickname");
+            } else {
+                userNickname = friendNickname;
             }
-        };
+            userPhoto = intent.getStringExtra("getUserPhoto");
+            userAddress = intent.getStringExtra("getUserAddress");
+            userStatusmsg = intent.getStringExtra("getUserStatusmsg");
+            position = intent.getIntExtra("position", -1 );
+            nicknameText.setText(userNickname);
+            if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
+            if (userPhoto != null) {
+                Bitmap bitmap = bitmapImgDownload(userPhoto);
+                iv.setImageBitmap(bitmap);
+                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                iv.setClipToOutline(true);
+            }
 
-        ProfileLoadRequest profileLoadRequest = new ProfileLoadRequest(userID, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(ProfileLoadActivity.this);
-        queue.add(profileLoadRequest);
+            //내프로필
+        } else {
+            cacheDir = getApplicationContext().getCacheDir();
 
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("이름", 1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            // DB 프로필 정보 로드
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean success = jsonResponse.getBoolean("success");
+                        if (success) {
+
+                            userNickname = jsonResponse.getString("userNickname");
+                            userStatusmsg = jsonResponse.getString("userStatusmsg");
+                            userPhoto = jsonResponse.getString("userPhoto");
+                            userAddress = jsonResponse.getString("userAddress");
+
+                            TextView nicknameText = findViewById(R.id.tv_user);
+                            TextView statusmsgText = findViewById(R.id.tv_introduce);
+                            ImageView iv = findViewById(R.id.iv_user);
+
+                            nicknameText.setText(userNickname);
+                            if (!userStatusmsg.equals("null")) statusmsgText.setText(userStatusmsg);
+
+
+                            if (userPhoto != null) {
+                                Bitmap bitmap = bitmapImgDownload(userPhoto);
+                                iv.setImageBitmap(bitmap);
+                                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                                iv.setClipToOutline(true);
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "정보를 가져오지 못했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            ProfileLoadRequest profileLoadRequest = new ProfileLoadRequest(userID, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(ProfileLoadActivity.this);
+            queue.add(profileLoadRequest);
+        }
         // 이벤트
-        ImageButton logout = findViewById(R.id.ib_logout);
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              showLogout();
+                showLogout();
             }
         });
 
         // 뒤로가기 버튼
-        ImageButton backBtn = findViewById(R.id.ib_back);
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +165,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             }
         });
         // 닉네임 수정
+
         ImageButton ibNickname = findViewById(R.id.ib_edit_nickname);
         ibNickname.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,15 +179,27 @@ public class ProfileLoadActivity extends AppCompatActivity {
                 dialogFragment.setArguments(bundle);
 
                 dialogFragment.show(fm, "fragment_dialog_nickname");
+                if(!userID.equals(MyApplication.userID)){
+                    dialogFragment.setDialogResult(new UpdateProfileNickname.MyDialogResult() {
+                        @Override
+                        public void finish(String result) {
+                            nicknameText.setText(result);
+                            userNickname = result;
+                            Intent intent = getIntent();
+                            intent.putExtra("position", position);
+                            intent.putExtra("userNickname", userNickname);
+                            setResult(RESULT_OK, intent);
+                        }
+                    });
+                }
+
             }
         });
 
         // 상태메시지 수정
-        ImageButton ibEditStatus = findViewById(R.id.ib_edit_status);
         ibEditStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentManager fm = getSupportFragmentManager();
                 UpdateProfileStatus dialogFragment = new UpdateProfileStatus();
 
@@ -174,7 +223,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 이미지 변경
-        ImageButton ibEditImg = findViewById(R.id.ib_edit_userImg);
         ibEditImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,8 +272,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
             String imagePath = null;
             if (requestCode == REQUEST_PICTURE) {
                 imagePath = file.getAbsolutePath();
-            }
-            else if (requestCode == REQUEST_PHOTO_ALBUM) {
+            } else if (requestCode == REQUEST_PHOTO_ALBUM) {
                 imagePath = getRealPathFromURI(data.getData());
                 file = new File(imagePath);
             }
@@ -323,7 +370,7 @@ public class ProfileLoadActivity extends AppCompatActivity {
     }
 
     private void SaveBitmapToFileCache(Bitmap bitmap) {
-        String fileName = "tmp_"+String.valueOf(System.currentTimeMillis())+".JPEG";
+        String fileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".JPEG";
         file = new File(getApplicationContext().getCacheDir(), fileName);
         OutputStream out = null;
 
@@ -346,16 +393,16 @@ public class ProfileLoadActivity extends AppCompatActivity {
         }
     }
 
-    Bitmap bitmapImgDownload(String userPhoto){
+    Bitmap bitmapImgDownload(String userPhoto) {
         Bitmap bitmap;
         String imgPath;
 
         imgPath = "data/data/com.meet.now.apptsystem/cache/" + userPhoto;
         File file = new File(imgPath);
 
-        if(!file.exists()) {
+        if (!file.exists()) {
             file = new File(Environment.getExternalStorageDirectory(), userPhoto);
-            if(!file.exists()){
+            if (!file.exists()) {
                 Async_ftp_Prepare("download", userPhoto);
                 file = new File(Environment.getExternalStorageDirectory(), userPhoto);
             }
@@ -368,16 +415,16 @@ public class ProfileLoadActivity extends AppCompatActivity {
         return bitmap;
     }
 
-    void showLogout(){
+    void showLogout() {
         new AlertDialog.Builder(this)
                 .setMessage("로그아웃 하시겠습니까?")
                 .setPositiveButton("로그아웃", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        MyApplication.userID="";
-                        MyApplication.password="";
-                        MyApplication.Address="";
+                        MyApplication.userID = "";
+                        MyApplication.password = "";
+                        MyApplication.Address = "";
                         finishAffinity();
-                        Intent logoutIntent = new Intent(ProfileLoadActivity.this , LoginActivity.class);
+                        Intent logoutIntent = new Intent(ProfileLoadActivity.this, LoginActivity.class);
                         startActivity(logoutIntent);
                     }
                 })
@@ -389,4 +436,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

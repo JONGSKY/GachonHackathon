@@ -43,6 +43,8 @@ import java.util.Map;
 public class FriendlistActivity extends AppCompatActivity {
 
     Dialog addfriendDialog;
+    int FRIEND_PROFILE = 121;
+    ListView friendListView;
 
     @SuppressLint("StaticFieldLeak")
     static private FriendListAdapter adapter;
@@ -55,7 +57,7 @@ public class FriendlistActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friendlist);
         final Intent intent = getIntent();
 
-        ListView friendListView = findViewById(R.id.friendListView);
+        friendListView = findViewById(R.id.friendListView);
         friendList = new ArrayList<>();
         saveList = new ArrayList<>();
         adapter = new FriendListAdapter(getApplicationContext(), friendList);  // 해당 리스트의 글들이 매칭
@@ -64,7 +66,19 @@ public class FriendlistActivity extends AppCompatActivity {
         friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (intent !=null && !intent.getStringExtra("apptNo").equals("")) {
+                if(intent.getStringExtra("apptNo").equals("false")){
+                    // 아이템 클릭시 프로필보기
+                    Intent intent = new Intent(FriendlistActivity.this, ProfileLoadActivity.class);
+                    intent.putExtra("userID",friendList.get(position).getUserID());
+                    intent.putExtra("getUserNickname", friendList.get(position).getUserNickname());
+                    intent.putExtra("getFriendNickname", friendList.get(position).getFriendNickname());
+                    intent.putExtra("getUserPhoto", friendList.get(position).getUserPhoto());
+                    intent.putExtra("getUserAddress", friendList.get(position).getUserAddress());
+                    intent.putExtra("getUserStatusmsg", friendList.get(position).getUserStatusmsg());
+                    intent.putExtra("position", position);
+                    startActivityForResult(intent, FRIEND_PROFILE);
+
+                }else{
                     // 아이템 클릭시 돌아가기
                     String friendID = friendList.get(position).getUserID();
                     final String friendAddress = friendList.get(position).getUserAddress();
@@ -111,7 +125,7 @@ public class FriendlistActivity extends AppCompatActivity {
                 customAddfriendDialog();
             }
         });
-        if(intent.getStringExtra("apptNo") != null){
+        if(!intent.getStringExtra("apptNo").equals("false")){
             addfriendButton.setVisibility(View.GONE);
         }
         new BackgroundTask().execute();
@@ -340,4 +354,19 @@ public class FriendlistActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode ==FRIEND_PROFILE){
+            String userNickname = data.getStringExtra("userNickname");
+            int position = data.getIntExtra("position", -1);
+
+            Friend friend = friendList.get(position);
+            friend.setFriendNickname(userNickname);
+            friendList.set(position,friend);
+            adapter.notifyDataSetChanged();
+
+        }
+    }
 }
+
