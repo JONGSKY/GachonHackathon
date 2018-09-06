@@ -67,7 +67,7 @@ public class StoreDetail extends AppCompatActivity {
                         storeDetailLayout.addView(detailTextview, layoutParams);
 
                         detailTextview.setText("  " + textContent);
-                        detailTextview.setTextSize(18);
+                        detailTextview.setTextSize(16);
                         detailTextview.setTextColor(0xff000000);
                         detailTextview.setPadding(3,20,5,20);
                         detailTextview.setCompoundDrawablesWithIntrinsicBounds(drawableList.get(i), 0, 0, 0);
