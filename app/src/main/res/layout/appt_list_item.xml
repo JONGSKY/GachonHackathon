@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/Week_textView"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/Day_textView"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
@@ -38,16 +38,16 @@
             android:textColor="#000000" />
 
         <ImageView
+            android:id="@+id/apptlistWeather"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:background="@drawable/ic_wb_sunny_black_24dp"
             android:layout_marginLeft="5dp"/>
 
         <LinearLayout
             android:id="@+id/today_appt"
-            android:layout_width="160dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
