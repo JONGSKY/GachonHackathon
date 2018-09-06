@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -44,6 +45,16 @@ public class StoreListActivity extends AppCompatActivity {
 
         GetRestInfo getRestInfo = new GetRestInfo();
         getRestInfo.execute(title);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                jsonArray = Async_GetPlaceInfo.jsonArray;
+                storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item);
+                listView.setAdapter(storeListAdapter);
+            }
+        }, 3000);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
