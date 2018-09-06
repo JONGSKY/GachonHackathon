@@ -38,11 +38,11 @@
             android:textColor="#000000" />
 
         <ImageView
+            android:id="@+id/apptlistWeather"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:background="@drawable/ic_wb_sunny_black_24dp"
             android:layout_marginLeft="5dp"/>
 
         <LinearLayout

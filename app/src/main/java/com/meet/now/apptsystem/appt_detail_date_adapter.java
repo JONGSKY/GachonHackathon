@@ -87,9 +87,6 @@ public class appt_detail_date_adapter extends BaseAdapter {
             e.printStackTrace();
         }
 
-
-        Log.w("minyong", ApptNo);
-
         try {
             ApptnameValue = jsonObject.getString("ApptName");
             ApptplaceValue = jsonObject.getString("ApptPlace");

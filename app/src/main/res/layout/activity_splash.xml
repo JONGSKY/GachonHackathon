@@ -4,12 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryTransparent">
+    android:background="@drawable/login_background">
 
     <ImageView
+        android:id="@+id/SplashLogo"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/main_logo"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="147dp"
+        android:background="@drawable/main_logo2" />
+
+    <ImageView
+        android:id="@+id/SplashText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SplashLogo"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/main_font" />
 
 </RelativeLayout>
