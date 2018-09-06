@@ -2,6 +2,7 @@ package com.meet.now.apptsystem;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -86,9 +87,6 @@ public class appt_detail_date_adapter extends BaseAdapter {
             e.printStackTrace();
         }
 
-
-        Log.w("minyong", ApptNo);
-
         try {
             ApptnameValue = jsonObject.getString("ApptName");
             ApptplaceValue = jsonObject.getString("ApptPlace");
@@ -123,75 +121,18 @@ public class appt_detail_date_adapter extends BaseAdapter {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("AlertDialog Title");
-                builder.setMessage("AlertDialog Content");
-                builder.setPositiveButton("예",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    jsonObject = jsonArray.getJSONObject((Integer) v.getTag());
-                                    ApptNo = jsonObject.getString("ApptNo");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                ApptDelete apptDelete = new ApptDelete();
-                                Log.w("Test", ApptNo);
-                                apptDelete.execute(ApptNo);
-                            }
-                        });
-                builder.setNegativeButton("아니오",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                builder.show();
-
+                try {
+                    jsonObject = jsonArray.getJSONObject((Integer) v.getTag());
+                    ApptNo = jsonObject.getString("ApptNo");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                DialogApptDelete dialogApptDelete = new DialogApptDelete(context, ApptNo);
+                dialogApptDelete.show();
             }
         });
 
         return view;
     }
 
-    class ApptDelete extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... strings) {
-            HttpURLConnection httpURLConnection = null;
-
-            String ApptNo = strings[0];
-            String URL = "https://brad903.cafe24.com/ApptDelete.php";
-
-            try {
-                String data = URLEncoder.encode("ApptNo", "UTF-8") + "=" + URLEncoder.encode(ApptNo, "UTF-8");
-
-                java.net.URL url = new URL(URL);
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setDoOutput(true);
-
-                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
-                wr.write(data);
-                wr.flush();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader
-                        (httpURLConnection.getInputStream(), "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);//
-
-                }
-
-                httpURLConnection.disconnect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
 }

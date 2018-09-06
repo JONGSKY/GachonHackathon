@@ -472,7 +472,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         }
 
         @Override
-        public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
+        public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, final NMapPOIitem nMapPOIitem) {
             if (nMapPOIitem != null) {
 
                 GeocodeToAddress geoToadd = new GeocodeToAddress(new AddressAsyncResponse(){
@@ -481,6 +481,11 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                         dong = output.get("dong");
                         gu = output.get("gu");
 
+                        Intent intent = new Intent(ApptCenterplaceActivity.this, StoreListActivity.class);
+                        intent.putExtra("dong", dong);
+                        intent.putExtra("gu", gu);
+                        intent.putExtra("title", nMapPOIitem.getTitle());
+                        startActivity(intent);
                     }
                 });
                 geoToadd.execute(nMapPOIitem.toString());
@@ -560,6 +565,16 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("UserID", MyApplication.userID);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 }
 
 

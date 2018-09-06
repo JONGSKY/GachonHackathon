@@ -23,6 +23,9 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/storeDetailLayout"
         android:layout_width="match_parent"
@@ -35,6 +38,13 @@
         android:background="@drawable/appt_create_item"
         android:layout_margin="20dp">
 
+        <ImageView
+            android:id="@+id/store_pic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"/>
+
         <TextView
             android:id="@+id/storeTitle"
             android:layout_width="match_parent"
@@ -45,6 +55,8 @@
             android:textStyle="bold"
             android:textColor="#000000" />
 
+
     </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

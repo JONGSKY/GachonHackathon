@@ -1,5 +1,6 @@
 package com.meet.now.apptsystem;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -226,6 +227,9 @@ public class appt_calendar_view_activity extends AppCompatActivity{
                     if(Date2[1].length()<2){
                         Date2[1] = "0"+Date2[1];
                     }
+                    if(Date2[2].length()<2){
+                        Date2[2] = "0"+Date2[2];
+                    }
 
                     //최종
                     String Date3 = Date2[0]+"-"+Date2[1]+"-"+Date2[2];
@@ -304,11 +308,12 @@ public class appt_calendar_view_activity extends AppCompatActivity{
             return date != null && day.equals(date);
         }
 
+        @SuppressLint("ResourceAsColor")
         @Override
         public void decorate(DayViewFacade view) {
             view.addSpan(new StyleSpan(Typeface.BOLD));
             view.addSpan(new RelativeSizeSpan(1.4f));
-            view.addSpan(new ForegroundColorSpan(Color.GREEN));
+            view.addSpan(new ForegroundColorSpan(Color.parseColor("#f4a8ff")));
         }
 
         /**

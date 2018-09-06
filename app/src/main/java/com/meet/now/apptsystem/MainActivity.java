@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent addfreindintent = new Intent(MainActivity.this, FriendlistActivity.class);
+                addfreindintent.putExtra("apptNo","false");
                 addfreindintent.putExtra("userID", userID);
                 MainActivity.this.startActivity(addfreindintent);
             }
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), appt_create_activity.class);
                 intent.putExtra("UserID", userID);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), appt_list_view_activity.class);
                 intent.putExtra("userID", userID);
                 startActivity(intent);
+                finish();
             }
         });
 

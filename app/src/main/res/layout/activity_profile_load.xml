@@ -71,28 +71,29 @@
                 android:background="@drawable/ic_car" />-->
 
             <ImageButton
-                android:id="@+id/ib_edit_status"
+                android:id="@+id/ib_edit_nickname"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_rate_review_black_18dp"
+                android:src="@drawable/ic_person_black_24dp"
                 android:tint="@color/colorAccent"
-
+                android:background="@android:color/transparent"
                 android:contentDescription="TODO" />
 
             <ImageButton
-                android:id="@+id/ib_edit_nickname"
+                android:id="@+id/ib_edit_status"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@+id/ib_edit_status"
+                android:layout_toStartOf="@+id/ib_edit_nickname"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_person_black_24dp" />
+                android:src="@drawable/ic_rate_review_black_18dp"
+                android:tint="@color/colorAccent"/>
 
         </RelativeLayout>
 
