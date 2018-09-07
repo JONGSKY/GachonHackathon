@@ -38,29 +38,33 @@ public class UpdateMapPersonAddAddr extends NMapActivity implements View.OnClick
     double latitude;
 
     String apptNo;
+    int requestCode;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_map_add_addr);
         Intent intent = getIntent();
         apptNo = intent.getStringExtra("apptNo");
+        requestCode = intent.getIntExtra("requestCode", 0);
 
-        loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
-            @Override
-            public void taskComplete() {
-                async_count--;
-                if (async_count == 0) setMarker();
-            }
-        });
-        loadFriendaddress.execute(apptNo);
-        loadNonaddress = new LoadNonaddress(new AsyncNullListener() {
-            @Override
-            public void taskComplete() {
-                async_count--;
-                if (async_count == 0) setMarker();
-            }
-        });
-        loadNonaddress.execute(apptNo);
+        if(requestCode == UpdateMapPersonNon.ADD_ADDR){
+            loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
+                @Override
+                public void taskComplete() {
+                    async_count--;
+                    if (async_count == 0) setMarker();
+                }
+            });
+            loadFriendaddress.execute(apptNo);
+            loadNonaddress = new LoadNonaddress(new AsyncNullListener() {
+                @Override
+                public void taskComplete() {
+                    async_count--;
+                    if (async_count == 0) setMarker();
+                }
+            });
+            loadNonaddress.execute(apptNo);
+        }
 
         init();
 
