@@ -58,8 +58,6 @@ public class appt_list_view_adapter extends BaseAdapter {
             view = inflater.inflate(layout, viewGroup, false);
         }
 
-        Log.w("i값", String.valueOf(i));
-
         HashMap<String, ArrayList<String>> hashMap = arrayList.get(i);
 
         Set key = hashMap.keySet();
@@ -94,11 +92,9 @@ public class appt_list_view_adapter extends BaseAdapter {
 
         if(diffDays >= 0 && diffDays <= 4){
             final ImageView apptlistWeather = view.findViewById(R.id.apptlistWeather);
-            Log.w("diffDays : ", String.valueOf(diffDays) + " " + String.valueOf(Date));
             GetWeatherInfo getWeatherInfo = new GetWeatherInfo(new AsyncWeather() {
                 @Override
                 public void processFinish(Bitmap output) {
-                    Log.w("output : ", String.valueOf(output));
                     apptlistWeather.setImageBitmap(output);
                 }
             });

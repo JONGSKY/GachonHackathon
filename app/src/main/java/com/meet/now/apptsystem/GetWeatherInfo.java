@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class GetWeatherInfo extends AsyncTask<String, Void, Void> {
@@ -28,7 +30,10 @@ public class GetWeatherInfo extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... strings) {
+
         Icon = "";
+        String incomingDate = strings[0];
+
         try {
             // build a URL
             String s = "http://api.openweathermap.org/data/2.5/forecast?q=Seoul,kr&mode=json&appid=" + appID;
@@ -46,8 +51,17 @@ public class GetWeatherInfo extends AsyncTask<String, Void, Void> {
             if (!obj.getString("cod").equals("200"))
                 return null;
 
-            if(strings[0].split(" ").length == 1){  // 날짜 데이터만 들어왔을 떄
-                dateStr =  strings[0] + " 09:00:00";
+            Date now = new Date();
+            SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String nowStr = simpleFormatter.format(now);
+            String nowDate = nowStr.split(" ")[0];
+            String nowTime = nowStr.split(" ")[1];
+            if(incomingDate.split(" ").length == 1){  // 날짜 데이터만 들어왔을 떄
+                if(incomingDate.equals(nowDate)){  // 그 날짜가 오늘일 때
+                    dateStr =  incomingDate + " " + getTime(nowTime);
+                }else {
+                    dateStr =  incomingDate + " 09:00:00";  // 오늘이 아닌 5일 이내 날짜일때
+                }
             }
 
             JSONArray array = new JSONArray(obj.getString("list"));
