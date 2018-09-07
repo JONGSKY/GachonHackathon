@@ -479,7 +479,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         // 중심지점
         if(settingMiddle == 2){
             // 멀리사는 친구로 구하기
-            NGeoPoint newMiddlePoint = new NGeoPoint();
             double MaxX = mapApptfriendList.get(0).getPoint().x;
             double MaxY = mapApptfriendList.get(0).getPoint().y;
 
@@ -492,18 +491,18 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 double coordX = mapApptfriend.getPoint().x;
                 double coordY = mapApptfriend.getPoint().y;
 
-                if(MaxX+MaxY*1.3022 < coordX+coordY*1.3022){
+                if(MaxX+MaxY*1.3 < coordX+coordY*1.3){
                     MaxX = coordX; MaxY = coordY;
                 }
 
-                if(MinX+MinY*1.3022 > coordX+coordY*1.3022){
+                if(MinX+MinY*1.3 > coordX+coordY*1.3){
                     MinX = coordX; MinY = coordY;
                 }
             }
 
-            newMiddlePoint.latitude = (MaxX+MinX)/2.0;
-            newMiddlePoint.longitude = (MaxY+MinY)/2.0;
-            poiData.addPOIitem(newMiddlePoint.latitude, newMiddlePoint.longitude, "중간지점", spotId, 0);
+            middleSpot.longitude = (MaxX+MinX)/2.0;
+            middleSpot.latitude = (MaxY+MinY)/2.0;
+            poiData.addPOIitem(middleSpot.longitude, middleSpot.latitude, "중간지점", spotId, 0);
         }else{
             // 평균으로 구하기
             middleSpot.longitude = middleSpot.longitude / spotCount;
