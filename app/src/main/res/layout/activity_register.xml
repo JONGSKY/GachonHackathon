@@ -173,6 +173,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
+                    android:id="@+id/genderWoman"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -180,12 +181,14 @@
                     android:text="여성" />
 
                 <RadioButton
+                    android:id="@+id/genderMan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="남성" />
 
             </RadioGroup>
+
 
             <Button
                 android:id="@+id/registerButton"
