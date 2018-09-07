@@ -7,8 +7,11 @@ import java.util.List;
 class SetCenterPlace {
     private List<MapApptfriend> mapApptfriendList;
 
-    SetCenterPlace(List<MapApptfriend> mapApptfriendList) {
+    SetCenterPlace(List<MapApptfriend> mapApptfriendList, List<MapApptfriend> mapApptNonList) {
         this.mapApptfriendList = mapApptfriendList;
+        for(MapApptfriend friend : mapApptNonList){
+            mapApptfriendList.add(friend);
+        }
     }
 
     public NGeoPoint CenterPlace(){

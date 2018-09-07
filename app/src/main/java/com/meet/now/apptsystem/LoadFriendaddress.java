@@ -76,8 +76,8 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             String friendID, friendNickname, userNickname, friendAddress;
             while (count < jsonArray.length()) {
                 JSONObject object = jsonArray.getJSONObject(count);
-                friendID = object.getString("friendID");
-                friendNickname = object.getString("friendNickname");
+                friendID = null;
+                friendNickname = null;
                 userNickname = object.getString("userNickname");
                 friendAddress = object.getString("userAddress");
 
@@ -89,10 +89,10 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             }
 
             // 해당 로그인 유저 userID, userAddress 리스트에 삽입
-            PointF point = AddressToGeocode.getGeocode(MyApplication.Address);
-            MapApptfriend mapApptfriend = new MapApptfriend(MyApplication.userID, null, "나", MyApplication.Address, point);
-            Log.w("BugTest", String.valueOf(mapApptfriend));
-            mapApptfriendList.add(mapApptfriend);
+//            PointF point = AddressToGeocode.getGeocode(MyApplication.Address);
+//            MapApptfriend mapApptfriend = new MapApptfriend(MyApplication.userID, null, "나", MyApplication.Address, point);
+//            Log.w("BugTest", String.valueOf(mapApptfriend));
+//            mapApptfriendList.add(mapApptfriend);
             Log.w("ApptMemberNumber", String.valueOf(mapApptfriendList));
             Log.w("ApptMember", mapApptfriendList.get(0).friendID +" "+
                     mapApptfriendList.get(0).friendAddress +" "+ mapApptfriendList.get(0).point.x +" "+ mapApptfriendList.get(0).point.y);
