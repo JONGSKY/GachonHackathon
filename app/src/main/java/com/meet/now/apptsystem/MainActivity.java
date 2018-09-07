@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("apptNo", ddayList.get(position).getApptNo());
                 intent.putExtra("apptName", ddayList.get(position).getApptName());
                 startActivity(intent);
-                finish();
             }
         });
 

@@ -431,6 +431,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     static List<MapApptfriend> mapApptfriendList;
     static List<MapApptfriend> mapApptNonList;
+    private int Test = 0;
 
     private void setMarker() {
         mapApptfriendList = LoadFriendaddress.mapApptfriendList;
@@ -441,14 +442,15 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         int spotId = NMapPOIflagType.SPOT;
         int hotspotId = NMapPOIflagType.HOTSPOT;
 
-        if (mapApptNonList != null) {
+        if (mapApptNonList != null && Test == 0) {
             mapApptfriendList.addAll(mapApptNonList);
+            Test++;
         }
 
         int size = mapApptfriendList.size();
         memberCount = size;
         TextView tv = findViewById(R.id.tv_appt_cnt_map);
-        String setCnt = size + " 명";
+        String setCnt = String.valueOf(size) + " 명";
         tv.setText(setCnt);
         size += 1; // 중심위치 추가
 
@@ -501,7 +503,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
             newMiddlePoint.latitude = (MaxX+MinX)/2.0;
             newMiddlePoint.longitude = (MaxY+MinY)/2.0;
-            poiData.addPOIitem(newMiddlePoint.longitude, newMiddlePoint.latitude,"중간지점", spotId, 0);
+            poiData.addPOIitem(newMiddlePoint.latitude,newMiddlePoint.longitude, "중간지점", spotId, 0);
         }else{
             // 평균으로 구하기
             middleSpot.longitude = middleSpot.longitude / spotCount;
