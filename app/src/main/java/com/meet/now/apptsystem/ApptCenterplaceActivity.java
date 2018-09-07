@@ -71,6 +71,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     String apptNo;
     String apptName;
     TextView cnt;
+    int stopCount = 0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,6 +221,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 async_count = 3;
                 poiData.removeAllPOIdata();
                 hotplacePoiData.removeAllPOIdata();  //  기존 띄워져있는 핀 지우기
+                stopCount = 0;
                 loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
                     @Override
                     public void taskComplete() {
@@ -429,22 +431,18 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         newPoiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
     }
 
-    static List<MapApptfriend> mapApptfriendList;
-    static List<MapApptfriend> mapApptNonList;
-    private int Test = 0;
-
     private void setMarker() {
-        mapApptfriendList = LoadFriendaddress.mapApptfriendList;
-        mapApptNonList = LoadNonaddress.mapApptNonList;
+        List<MapApptfriend> mapApptfriendList = LoadFriendaddress.mapApptfriendList;
+        List<MapApptfriend> mapApptNonList = LoadNonaddress.mapApptNonList;
         JSONArray hotplaceList = LoadHotplace.hotplaceList;
 
         int markerId = NMapPOIflagType.PIN;
         int spotId = NMapPOIflagType.SPOT;
         int hotspotId = NMapPOIflagType.HOTSPOT;
 
-        if (mapApptNonList != null && Test == 0) {
+        if (mapApptNonList != null && stopCount == 0) {
             mapApptfriendList.addAll(mapApptNonList);
-            Test++;
+            stopCount++;
         }
 
         int size = mapApptfriendList.size();
