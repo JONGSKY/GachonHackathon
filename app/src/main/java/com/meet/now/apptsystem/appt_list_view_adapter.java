@@ -52,11 +52,8 @@ public class appt_list_view_adapter extends BaseAdapter {
 
     @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-        if (view == null) {
-            view = inflater.inflate(layout, viewGroup, false);
-        }
+    public View getView(int i, View v, ViewGroup viewGroup) {
+        View view = View.inflate(context, R.layout.appt_list_item, null);
 
         HashMap<String, ArrayList<String>> hashMap = arrayList.get(i);
 
