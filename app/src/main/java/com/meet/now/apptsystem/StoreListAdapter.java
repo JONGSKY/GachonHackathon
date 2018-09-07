@@ -39,6 +39,15 @@ public class StoreListAdapter extends BaseAdapter {
     String apptNo;
     String StoreAddr;
     String StoreName;
+    private String finalApptPlace;
+
+    private void SetFinalApptPlace(String string){
+        finalApptPlace = string;
+    }
+
+    public String GetFinalApptPlace(){
+        return finalApptPlace;
+    }
 
     public StoreListAdapter(Context context, JSONArray jsonArray, int layout, String apptNo) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -121,7 +130,6 @@ public class StoreListAdapter extends BaseAdapter {
                 alert_confirm.setPositiveButton("확인", new DialogInterface.OnClickListener() {
 
                     String apptPlace = StoreAddrArray[0] + " " + StoreAddrArray[1] + ", " + apptPlaceName;
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -133,6 +141,8 @@ public class StoreListAdapter extends BaseAdapter {
                                     boolean success = jsonResponse.getBoolean("success");
                                     if (success) {
                                         Toast.makeText(context, "약속장소가 등록되었습니다", Toast.LENGTH_SHORT).show();
+                                        SetFinalApptPlace(apptPlace);
+
                                     } else {
                                         Toast.makeText(context, "약속장소가 등록을 다시 시도해주세요", Toast.LENGTH_SHORT).show();
                                     }

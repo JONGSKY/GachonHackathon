@@ -47,6 +47,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private NMapController mMapController;
     private NMapResourceProvider nMapResourceProvider;
     private NMapOverlayManager mapOverlayManager;
+    private String finalApptPlace = "null";
 
     LoadFriendaddress loadFriendaddress;
     LoadNonaddress loadNonaddress;
@@ -65,6 +66,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private static final int UPDATE_DISTANCE = 3;
     private static final int ADD_MEMBER = 2;
     private static final int UPDATE_MIDDLE = 4;
+    private static final int STORE_LIST = 5;
 
     private int memberCount;
 
@@ -364,8 +366,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                         newMarker(longitude, latitude, userNickname);
                     }
                 }
-
-
+            }else if(requestCode == STORE_LIST){
+                finalApptPlace = data.getStringExtra("finalApptPlace");
             }
         }// result_ok end
     }
@@ -563,7 +565,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                         intent.putExtra("gu", gu);
                         intent.putExtra("title", nMapPOIitem.getTitle());
                         intent.putExtra("apptNo", apptNo);
-                        startActivity(intent);
+                        startActivityForResult(intent, STORE_LIST);
                     }
                 });
                 geoToadd.execute(nMapPOIitem.toString());
@@ -651,6 +653,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         apptDetailIntent.putExtra("UserID", MyApplication.userID);
         apptDetailIntent.putExtra("memberCount", memberCount);
         apptDetailIntent.putExtra("apptPosition", apptPosition);
+        apptDetailIntent.putExtra("finalApptPlace", finalApptPlace);
         setResult(1, apptDetailIntent);
         finish();
         super.onBackPressed();

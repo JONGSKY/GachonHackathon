@@ -97,8 +97,12 @@ public class appt_detail_date_activity extends AppCompatActivity{
         if(resultCode == 1){
             int position = data.getIntExtra("apptPosition", 0);
             int memberCount = data.getIntExtra("memberCount", 0);
+            String finalApptPlace = data.getStringExtra("finalApptPlace");
             try {
                 TodayApptArray.getJSONObject(position).put("MemberNo", memberCount);
+                if(!finalApptPlace.equals("null")){
+                    TodayApptArray.getJSONObject(position).put("ApptPlace", finalApptPlace);
+                }
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -38,6 +38,7 @@ public class StoreListActivity extends AppCompatActivity {
     Intent intent;
     ProgressDialog pDialog;
     String apptNo;
+    String finalApptPlace;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,4 +149,15 @@ public class StoreListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finalApptPlace  = storeListAdapter.GetFinalApptPlace();
+        try {
+            Intent intent = new Intent();
+            intent.putExtra("finalApptPlace", finalApptPlace);
+            setResult(RESULT_OK, intent);
+        }catch (Exception e){
+        }
+        super.onBackPressed();
+    }
 }
