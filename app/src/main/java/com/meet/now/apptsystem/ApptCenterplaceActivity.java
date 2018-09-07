@@ -457,7 +457,6 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         NMapPOIdataOverlay poiDataOverlay = mapOverlayManager.createPOIdataOverlay(poiData, null);
         NMapPOIdataOverlay hotplacePoiDataOverlay = mapOverlayManager.createPOIdataOverlay(hotplacePoiData, null);
         poiDataOverlay.showAllPOIdata(0);
-        poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);  //좌표 클릭시 말풍선 리스
         hotplacePoiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
     }
 
