@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingTop="15dp"
+        android:paddingTop="5dp"
         android:paddingBottom="15dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -26,9 +26,10 @@
                 android:id="@+id/appt_name_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
-                android:gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
                 android:text="약속이름"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -38,10 +39,10 @@
                 android:id="@+id/appt_delete_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                app:srcCompat="@drawable/ic_delete"
+                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
                 android:background="#00ff0000"
+                app:srcCompat="@drawable/ic_delete"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
@@ -55,16 +56,33 @@
             android:background="@drawable/appt_list_item_edge"
             tools:ignore="ObsoleteLayoutParam">
 
-            <TextView
-                android:id="@+id/appt_place_textview"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="약속 장소 :"
-                android:textColor="#000000"
-                android:textSize="15sp"
                 android:layout_marginStart="20dp"
-                tools:ignore="HardcodedText" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/appt_place_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="약속 장소 : "
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/appt_place_value"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/appt_time_textview"

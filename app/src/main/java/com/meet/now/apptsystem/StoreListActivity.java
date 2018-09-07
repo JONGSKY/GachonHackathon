@@ -37,6 +37,7 @@ public class StoreListActivity extends AppCompatActivity {
     static public JSONArray jsonArray;
     Intent intent;
     ProgressDialog pDialog;
+    String apptNo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class StoreListActivity extends AppCompatActivity {
         listView = findViewById(R.id.store_listview);
         intent = getIntent();
 
+        apptNo = intent.getStringExtra("apptNo");
         title = intent.getStringExtra("title");
         TextView textView = findViewById(R.id.hot_place_name);
         textView.setText(title);
@@ -108,7 +110,7 @@ public class StoreListActivity extends AppCompatActivity {
                             public void LoadStorefinish() {
                                 storecount--;
                                 if(storecount == 0){
-                                    storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item);
+                                    storeListAdapter = new StoreListAdapter(StoreListActivity.this, jsonArray, R.layout.store_item, apptNo);
                                     listView.setAdapter(storeListAdapter);
                                     pDialog.cancel();
                                 }

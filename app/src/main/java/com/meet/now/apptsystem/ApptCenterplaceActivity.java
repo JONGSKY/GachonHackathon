@@ -485,6 +485,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                         intent.putExtra("dong", dong);
                         intent.putExtra("gu", gu);
                         intent.putExtra("title", nMapPOIitem.getTitle());
+                        intent.putExtra("apptNo", apptNo);
                         startActivity(intent);
                     }
                 });
