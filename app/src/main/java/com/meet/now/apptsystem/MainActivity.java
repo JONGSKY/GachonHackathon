@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent profileLoadIntent = new Intent(MainActivity.this, ProfileLoadActivity.class);
                 profileLoadIntent.putExtra("userID", userID);
                 MainActivity.this.startActivity(profileLoadIntent);
-                finish();
             }
         });
 
