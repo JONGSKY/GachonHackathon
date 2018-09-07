@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -179,11 +181,9 @@ public class appt_create_activity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 break;
             default:
         }
-
     }
 
     public boolean Appt_Name_Set_String(EditText editText) {
@@ -207,17 +207,31 @@ public class appt_create_activity extends AppCompatActivity {
         boolean nameValidate = Appt_Name_Set_String(appt_name);
         Appt_Age_Set_String(appt_age);
         Appt_Meeting_Type_Set_String(appt_meeting_type);
+        long diffDays = 0;
+        try {
+            Date now = new Date();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date certainDay = sdf.parse(Date);
+            Date today = sdf.parse(sdf.format(now));
+            diffDays = certainDay.getTime() - today.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if(nameValidate){
             Toast.makeText(this, "약속 이름을 입력해주세요", Toast.LENGTH_SHORT).show();
             return;
-        }else {
-            async_test.execute(Name, Date, Age, Time, Meeting, USERID);
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("userID", USERID);
-            startActivity(intent);
-            finish();
         }
+        if(diffDays < 0){
+            Toast.makeText(this, "이전 날짜는 선택할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        async_test.execute(Name, Date, Age, Time, Meeting, USERID);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("userID", USERID);
+        startActivity(intent);
+        finish();
     }
 
     public void createCancelBtnClicked(View view) {
@@ -252,26 +266,23 @@ public class appt_create_activity extends AppCompatActivity {
                 data += "&" + URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(USERID, "UTF-8");
                 data += "&" + URLEncoder.encode("FriendList", "UTF-8") + "=" + URLEncoder.encode(jsonMain.toString(), "UTF-8");
                 Log.w("minyong", String.valueOf(jsonMain));
-
-                //String data2 = "tmsg="+testMsg+"&tmsg2="+testMsg2;
-
-                String link = "http://brad903.cafe24.com/AppointmentDetailsCreate.php";// 요청하는 url 설정 ex)192.168.0.1/httpOnlineTest.php
+                String link = "http://brad903.cafe24.com/AppointmentDetailsCreate.php";
 
                 URL url = new URL(link);
 
-                httpURLConnection = (HttpURLConnection) url.openConnection();//httpURLConnection은 url.openconnection을 통해서 만 생성 가능 직접생성은 불가능하다.
-                httpURLConnection.setRequestMethod("POST");//post방식으로 설정
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
 
-                httpURLConnection.setDoInput(true);// server와의 통신에서 입력 가능한 상태로 만든다.
-                httpURLConnection.setDoOutput(true);//server와의 통신에서 출력 가능한 상태로 만든다.
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);
 
-                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());//서버로 뿅 쏴줄라구용
-                wr.write(data);//아까 String값을 쓱삭쓱삭 넣어서 보내주고!
-                wr.flush();//flush!
+                OutputStreamWriter wr = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                wr.write(data);
+                wr.flush();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader
-                        (httpURLConnection.getInputStream(), "UTF-8"));//자 이제 받아옵시다.
-                StringBuilder sb = new StringBuilder();// String 값을 이제 스슥스슥 넣을 껍니다.
+                        (httpURLConnection.getInputStream(), "UTF-8"));
+                StringBuilder sb = new StringBuilder();
                 String line;
 
                 while ((line = reader.readLine()) != null) {
@@ -279,15 +290,14 @@ public class appt_create_activity extends AppCompatActivity {
 
                 }
 
-                httpURLConnection.disconnect();//이거 꼭해주세요. 보통은 별일 없는데, 특정상황에서 문제가 생기는 경우가 있다고 합니다.
-                return sb.toString();//자 이렇게 리턴이되면 이제 post로 가겠습니다.
+                httpURLConnection.disconnect();
+                return sb.toString();
             } catch (Exception e) {
 
                 assert httpURLConnection != null;
                 httpURLConnection.disconnect();
                 return "Exception Occure" + e.getMessage();
-            }//try catch end
-        }//doInbackground end
-    }//asynctask  end
-
+            }
+        }
+    }
 }
