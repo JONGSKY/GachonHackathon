@@ -123,7 +123,6 @@ public class RegisterActivity extends AppCompatActivity {
         addressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int genderIndex = genderGroup.indexOfChild(genderGroup.findViewById(genderGroup.getCheckedRadioButtonId()));
                 Intent addressIntent = new Intent(RegisterActivity.this, DaumWebViewActivity.class);
                 startActivityForResult(addressIntent, 0);
             }

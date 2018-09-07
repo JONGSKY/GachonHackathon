@@ -53,7 +53,7 @@ public class appt_list_view_activity extends AppCompatActivity{
         setContentView(R.layout.appt_list_view);
 
         Intent intent = getIntent();
-        userID = intent.getStringExtra("userID");
+        userID = MyApplication.userID;
 
         mlistView = findViewById(R.id.appt_listView);
         mArrayList = new ArrayList<>();
@@ -204,6 +204,7 @@ public class appt_list_view_activity extends AppCompatActivity{
                     intent.putExtra("Appt_Info", mJsonString);
                     intent.putExtra("Date", Date_String_Array.get(i));
                     startActivity(intent);
+                    finish();
                 }
             });
         }

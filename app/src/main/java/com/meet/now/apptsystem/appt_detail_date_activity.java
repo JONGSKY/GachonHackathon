@@ -105,4 +105,10 @@ public class appt_detail_date_activity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent backIntent = new Intent(this, appt_list_view_activity.class);
+        startActivity(backIntent);
+        finish();
+    }
 }
