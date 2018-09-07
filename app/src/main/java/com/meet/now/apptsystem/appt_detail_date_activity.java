@@ -17,19 +17,14 @@ import org.json.JSONObject;
 
 public class appt_detail_date_activity extends AppCompatActivity{
     private ListView appt_detail_listView;
-    private String mJsonString;
 
     private static final String TAG_JSON = "response";
-    private static final String TAG_Appt_Name = "ApptName";
     private static final String TAG_Date = "Date";
-    private static final String TAG_RelationGroup = "RelationGroup";
-    private static final String TAG_ApptTime = "ApptTime";
-    private static final String TAG_ApptPlace = "ApptPlace";
     private JSONArray jsonArray_intent;
     private JSONArray TodayApptArray = new JSONArray();
     private JSONObject jsonObject;
     private String Date;
-    private String Date1;
+    appt_detail_date_adapter adapter;
 
     public static Context CONTEXT;
 
@@ -74,32 +69,40 @@ public class appt_detail_date_activity extends AppCompatActivity{
 
 
         //어댑터 설정
-        appt_detail_date_adapter adapter = new appt_detail_date_adapter(appt_detail_date_activity.this, R.layout.appt_item, TodayApptArray);
+        adapter = new appt_detail_date_adapter(appt_detail_date_activity.this, R.layout.appt_item, TodayApptArray);
         adapter.notifyDataSetChanged();
         appt_detail_listView.setAdapter(adapter);
         appt_detail_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent mapIntent = new Intent(getApplicationContext(), ApptCenterplaceActivity.class);
+                Intent mapIntent = new Intent(appt_detail_date_activity.this, ApptCenterplaceActivity.class);
                 try {
                     JSONObject selectedAppt = TodayApptArray.getJSONObject(i);
                     mapIntent.putExtra("apptNo", selectedAppt.getString("ApptNo"));
+                    mapIntent.putExtra("apptPosition", i);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                startActivity(mapIntent);
-                finish();
+                startActivityForResult(mapIntent, 1);
             }
         });
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-
-    public String method(String str) {
-        if (str.length() > 0 && str.charAt(str.length()-1)=='x') {
-            str = str.substring(0, str.length()-1);
+        if(resultCode == 1){
+            int position = data.getIntExtra("apptPosition", 0);
+            int memberCount = data.getIntExtra("memberCount", 0);
+            try {
+                TodayApptArray.getJSONObject(position).put("MemberNo", memberCount);
+                adapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        return str;
     }
+
 }

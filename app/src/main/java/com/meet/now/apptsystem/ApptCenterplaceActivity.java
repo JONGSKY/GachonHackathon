@@ -62,6 +62,8 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private static final int UPDATE_DISTANCE = 3;
     private static final int ADD_MEMBER = 2;
 
+    private int memberCount;
+
     String apptNo;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -392,6 +394,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         if (mapApptNonList != null) {
             size += mapApptNonList.size();
         }
+        memberCount = size - 1;
 
         // set POI data
         poiData = new NMapPOIdata(size, nMapResourceProvider);
@@ -568,12 +571,14 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("UserID", MyApplication.userID);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        Intent apptDetailIntent = new Intent();
+        int apptPosition = getIntent().getIntExtra("apptPosition", 0);
+        apptDetailIntent.putExtra("UserID", MyApplication.userID);
+        apptDetailIntent.putExtra("memberCount", memberCount);
+        apptDetailIntent.putExtra("apptPosition", apptPosition);
+        setResult(1, apptDetailIntent);
         finish();
+        super.onBackPressed();
     }
 }
 
