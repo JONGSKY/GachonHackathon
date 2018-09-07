@@ -20,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClickListener {
-    private static final int ADD_ADDR = 501;
+    public static final int ADD_ADDR = 501;
 
     TextView friendAddr;
     EditText friendName;
@@ -56,6 +56,7 @@ public class UpdateMapPersonNon extends AppCompatActivity implements View.OnClic
                 Intent mapIntent = new Intent(UpdateMapPersonNon.this, UpdateMapPersonAddAddr.class);
                 apptNo = intent.getStringExtra("apptNo");
                 mapIntent.putExtra("apptNo", apptNo);
+                mapIntent.putExtra("requestCode", ADD_ADDR);
                 startActivityForResult(mapIntent, ADD_ADDR);
                 // 좌표값 주소로 반환받아 EDIT TEXT 에 반영.
                 break;

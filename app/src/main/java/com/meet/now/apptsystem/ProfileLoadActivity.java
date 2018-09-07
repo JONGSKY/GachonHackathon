@@ -15,9 +15,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -37,11 +39,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import static android.view.View.GONE;
 import static com.meet.now.apptsystem.UpdateProfilePhoto.REQUEST_PHOTO_ALBUM;
 import static com.meet.now.apptsystem.UpdateProfilePhoto.REQUEST_PICTURE;
 
 public class ProfileLoadActivity extends AppCompatActivity {
 
+    public static final int EDIT_ADDR = 502;
     String userNickname = null;
     String userStatusmsg = null;
     String userPhoto = null;
@@ -54,6 +58,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
     public static File cacheDir;
     TextView nicknameText;
     TextView statusmsgText;
+    TextView tvLoc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +78,10 @@ public class ProfileLoadActivity extends AppCompatActivity {
         userID = intent.getStringExtra("userID");
         // 친구프로필
         if (!userID.equals(MyApplication.userID)) {
-            logout.setVisibility(View.GONE);
-            backBtn.setVisibility(View.GONE);
-            ibEditStatus.setVisibility(View.GONE);
-            ibEditImg.setVisibility(View.GONE);
+            logout.setVisibility(GONE);
+            backBtn.setVisibility(GONE);
+            ibEditStatus.setVisibility(GONE);
+            ibEditImg.setVisibility(GONE);
 
             String friendNickname = intent.getStringExtra("getFriendNickname");
             if (friendNickname.equals("null")) {
@@ -149,7 +155,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
             queue.add(profileLoadRequest);
         }
         // 이벤트
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,7 +163,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
         });
 
         // 뒤로가기 버튼
-
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,6 +201,8 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
             }
         });
+
+
 
         // 상태메시지 수정
         ibEditStatus.setOnClickListener(new View.OnClickListener() {
@@ -251,24 +257,37 @@ public class ProfileLoadActivity extends AppCompatActivity {
     void showLoc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.dialog_profile_loc, null);
+        @SuppressLint("InflateParams")View view = inflater.inflate(R.layout.dialog_profile_loc, null);
         builder.setView(view);
 
-        TextView tvLoc = view.findViewById(R.id.tv_loc);
+        tvLoc = view.findViewById(R.id.tv_loc);
         ImageButton ibBack = view.findViewById(R.id.ib_back_loc);
-
-        tvLoc.setText(userAddress);
-
         final AlertDialog dialog = builder.create();
-
         ibBack.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
+        tvLoc.setText(userAddress);
+
+        ImageButton edit_address = view.findViewById(R.id.edit_address);
+        if(!userID.equals(MyApplication.userID)){  // 로그인 회원이 아닐경우 수정 못하도록
+            edit_address.setVisibility(GONE);
+        }
+
+        edit_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(getApplicationContext(), UpdateMapPersonAddAddr.class);
+                mapIntent.putExtra("requestCode", EDIT_ADDR);
+                startActivityForResult(mapIntent, EDIT_ADDR);
+            }
+        });
+
         dialog.show();
     }
+
 
     // 이미지 카메라, 앨범에서 가져오기
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -276,33 +295,59 @@ public class ProfileLoadActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             Bitmap bitmap;
-
             String imagePath = null;
-            if (requestCode == REQUEST_PICTURE) {
-                imagePath = file.getAbsolutePath();
-            } else if (requestCode == REQUEST_PHOTO_ALBUM) {
-                imagePath = getRealPathFromURI(data.getData());
-                file = new File(imagePath);
-            }
 
-            ExifInterface exif = null;
-            try {
-                assert imagePath != null;
-                exif = new ExifInterface(imagePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            assert exif != null;
-            int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            int exifDegree = exifOrientationToDegrees(exifOrientation);
-            bitmap = loadPictureWithResize();
-            bitmap = rotate(bitmap, exifDegree);
+            if(requestCode == REQUEST_PICTURE || requestCode == REQUEST_PHOTO_ALBUM){
+                if (requestCode == REQUEST_PICTURE) {
+                    imagePath = file.getAbsolutePath();
+                } else if (requestCode == REQUEST_PHOTO_ALBUM) {
+                    imagePath = getRealPathFromURI(data.getData());
+                    file = new File(imagePath);
+                }
 
-            SaveBitmapToFileCache(bitmap); // 비트맵 변환하여 캐시, 서버, db 저장
-            ImageView iv = findViewById(R.id.iv_user);
-            iv.setImageBitmap(bitmap);//이미지 뷰에 비트맵 넣기
-            iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
-            iv.setClipToOutline(true);
+                ExifInterface exif = null;
+                try {
+                    assert imagePath != null;
+                    exif = new ExifInterface(imagePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                assert exif != null;
+                int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                int exifDegree = exifOrientationToDegrees(exifOrientation);
+                bitmap = loadPictureWithResize();
+                bitmap = rotate(bitmap, exifDegree);
+
+                SaveBitmapToFileCache(bitmap); // 비트맵 변환하여 캐시, 서버, db 저장
+                ImageView iv = findViewById(R.id.iv_user);
+                iv.setImageBitmap(bitmap);//이미지 뷰에 비트맵 넣기
+                iv.setBackground(new ShapeDrawable(new OvalShape())); // 프로필 라운딩
+                iv.setClipToOutline(true);
+            } else if(requestCode == EDIT_ADDR){
+                String edittedAddress = data.getStringExtra("friendAddr");
+                userAddress = edittedAddress;
+                tvLoc.setText(edittedAddress);
+                Response.Listener<String> responseListener = new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject jsonResponse = null;
+                        try {
+                            jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+                            if(success){
+                                Toast.makeText(getApplicationContext(), "주소 변경을 성공하였습니다", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getApplicationContext(), "주소 변경을 실패하였습니다", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                EditAddressRequest editAddressRequest = new EditAddressRequest(MyApplication.userID, edittedAddress, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(ProfileLoadActivity.this);
+                queue.add(editAddressRequest);
+            }
         }
     }
 
