@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:textSize="12sp"
+        android:text="@string/middle_edit"
+        android:textAlignment="center"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_nick"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        >
+
+        <Button
+            android:id="@+id/btn_middle1"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@color/colorAccent"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="4dp"
+            android:text="평균(기본)"
+            android:textSize="12sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btn_middle2"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@color/colorAccent"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="4dp"
+            android:layout_toEndOf="@+id/btn_middle1"
+            android:text="먼 친구 기준"
+            android:textSize="12sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,UnknownIdInLayout" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

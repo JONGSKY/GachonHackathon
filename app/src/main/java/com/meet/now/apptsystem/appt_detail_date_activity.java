@@ -80,6 +80,7 @@ public class appt_detail_date_activity extends AppCompatActivity{
                     JSONObject selectedAppt = TodayApptArray.getJSONObject(i);
                     mapIntent.putExtra("apptNo", selectedAppt.getString("ApptNo"));
                     mapIntent.putExtra("apptPosition", i);
+                    mapIntent.putExtra("apptName", selectedAppt.getString("ApptName"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

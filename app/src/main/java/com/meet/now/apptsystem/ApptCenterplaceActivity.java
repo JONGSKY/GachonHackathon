@@ -15,6 +15,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhn.android.maps.NMapActivity;
@@ -40,6 +42,7 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     private final String TAG = "ApptCenterplaceActivity";
     private int async_count = 3;
 
+    private static int settingMiddle = 1;
     private NMapView mMapView;
     private NMapController mMapController;
     private NMapResourceProvider nMapResourceProvider;
@@ -61,10 +64,13 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
 
     private static final int UPDATE_DISTANCE = 3;
     private static final int ADD_MEMBER = 2;
+    private static final int UPDATE_MIDDLE = 4;
 
     private int memberCount;
 
     String apptNo;
+    String apptName;
+    TextView cnt;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,15 +82,25 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         Button button = findViewById(R.id.btn_refresh);
         button.setOnClickListener(this);
         button.setVisibility(GONE);
+        ImageButton setting = findViewById(R.id.settingPlace);
+        setting.setOnClickListener(this);
 
         Intent intent = getIntent();
         apptNo = intent.getStringExtra("apptNo");
+        apptName = intent.getStringExtra("apptName");
+
+        TextView title = findViewById(R.id.tv_appt_name_map);
+        title.setText(apptName);
+        cnt = findViewById(R.id.tv_appt_cnt_map);
+
 
         loadFriendaddress = new LoadFriendaddress(new AsyncNullListener() {
             @Override
             public void taskComplete() {
                 async_count--;
-                if(async_count == 0) setMarker();
+                if(async_count == 0) {
+                    setMarker();
+                }
             }
         });
         loadFriendaddress.execute(apptNo);
@@ -92,7 +108,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             @Override
             public void taskComplete() {
                 async_count--;
-                if(async_count == 0) setMarker();
+                if(async_count == 0) {
+                    setMarker();
+                }
             }
         });
         loadNonaddress.execute(apptNo);
@@ -100,7 +118,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
             @Override
             public void taskComplete() {
                 async_count--;
-                if(async_count == 0) setMarker();
+                if(async_count == 0) {
+                    setMarker();
+                }
             }
         });
         loadHotplace.execute();
@@ -204,7 +224,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                     @Override
                     public void taskComplete() {
                         async_count--;
-                        if(async_count == 0) setMarker();
+                        if(async_count == 0) {
+                            setMarker();
+                        }
                     }
                 });
                 loadFriendaddress.execute(apptNo);
@@ -212,7 +234,9 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                     @Override
                     public void taskComplete() {
                         async_count--;
-                        if(async_count == 0) setMarker();
+                        if(async_count == 0) {
+                            setMarker();
+                        }
                     }
                 });
                 loadNonaddress.execute(apptNo);
@@ -220,13 +244,19 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                     @Override
                     public void taskComplete() {
                         async_count--;
-                        if(async_count == 0) setMarker();
+                        if(async_count == 0) {
+                            setMarker();
+                        }
                     }
                 });
                 loadHotplace.execute();
 
                 Button button = findViewById(R.id.btn_refresh);
                 button.setVisibility(GONE);
+                break;
+            case R.id.settingPlace:
+                Intent updateMiddle = new Intent(ApptCenterplaceActivity.this, UpdateMapMiddle.class);
+                startActivityForResult(updateMiddle, UPDATE_MIDDLE); // 다시 돌아올 액티비티 콜
                 break;
         }
     }
@@ -236,6 +266,28 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            if(requestCode == UPDATE_MIDDLE && data != null){
+                int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
+                if(result != 0){
+                    // 중심위치 찾기 변경
+                    poiData.removeAllPOIdata(); // 기존 친구 핀 지우기
+                    hotplacePoiData.removeAllPOIdata();  //  기존 핫플레이스 핀 지우기
+                    switch(result){
+                        case 1:
+                            // 평균
+                            settingMiddle = 1;
+                            setMarker();
+                            break;
+                        case 2:
+                            // 멀리사는 친구
+                            settingMiddle = 2;
+                            setMarker();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
             if (requestCode == UPDATE_DISTANCE && data != null) {
                 int result = Integer.parseInt(data.getStringExtra(UpdateMapDistance.INTENT_RESULT));
                 if(result != 0){
@@ -389,12 +441,17 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
         int spotId = NMapPOIflagType.SPOT;
         int hotspotId = NMapPOIflagType.HOTSPOT;
 
-
-        int size = mapApptfriendList.size() + 1;
         if (mapApptNonList != null) {
-            size += mapApptNonList.size();
+            mapApptfriendList.addAll(mapApptNonList);
         }
-        memberCount = size - 1;
+
+        int size = mapApptfriendList.size();
+        memberCount = size;
+        TextView tv = findViewById(R.id.tv_appt_cnt_map);
+        String setCnt = size + " 명";
+        tv.setText(setCnt);
+        size += 1; // 중심위치 추가
+
 
         // set POI data
         poiData = new NMapPOIdata(size, nMapResourceProvider);
@@ -416,25 +473,43 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 spotCount++;
             }
         }
-        if (mapApptNonList != null) {
-            // 비회원 마크
-            for (int i = 0; i < mapApptNonList.size(); i++) {
-                MapApptfriend mapApptfriend = mapApptNonList.get(i);
+
+        // 중심지점
+        if(settingMiddle == 2){
+            // 멀리사는 친구로 구하기
+            NGeoPoint newMiddlePoint = new NGeoPoint();
+            double MaxX = mapApptfriendList.get(0).getPoint().x;
+            double MaxY = mapApptfriendList.get(0).getPoint().y;
+
+            double MinX = mapApptfriendList.get(0).getPoint().x;
+            double MinY = mapApptfriendList.get(0).getPoint().y;
+
+            for(int i=0; i<mapApptfriendList.size(); i++) {
+                MapApptfriend mapApptfriend = mapApptfriendList.get(i);
+
                 double coordX = mapApptfriend.getPoint().x;
                 double coordY = mapApptfriend.getPoint().y;
-                if (coordX > 126.375924 && coordX < 127.859605 && coordY > 36.889164 && coordY < 38.313650) {  // 경기, 서울로 마크 표시 제한
-                    poiData.addPOIitem(coordX, coordY, mapApptfriend.userNickname, markerId, 0);
-                    middleSpot.longitude += coordX;
-                    middleSpot.latitude += coordY;
-                    spotCount++;
+
+                if(MaxX+MaxY < coordX+coordY){
+                    MaxX = coordX; MaxY = coordY;
+                }
+
+                if(MinX+MinY > coordX+coordY){
+                    MinX = coordX; MinY = coordY;
                 }
             }
-        }
-        middleSpot.longitude = middleSpot.longitude / spotCount;
-        middleSpot.latitude = middleSpot.latitude / spotCount;
 
-        poiData.addPOIitem(middleSpot.longitude, middleSpot.latitude, "중간지점", spotId, 0);
-        poiData.endPOIdata();
+            newMiddlePoint.latitude = (MaxX+MinX)/2.0;
+            newMiddlePoint.longitude = (MaxY+MinY)/2.0;
+            poiData.addPOIitem(newMiddlePoint.longitude, newMiddlePoint.latitude,"중간지점", spotId, 0);
+        }else{
+            // 평균으로 구하기
+            middleSpot.longitude = middleSpot.longitude / spotCount;
+            middleSpot.latitude = middleSpot.latitude / spotCount;
+            poiData.addPOIitem(middleSpot.longitude, middleSpot.latitude, "중간지점", spotId, 0);
+        }
+
+            poiData.endPOIdata();
 
         for(int i=0; i<hotplaceList.length(); i++){
             try{

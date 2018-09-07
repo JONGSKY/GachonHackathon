@@ -6,24 +6,70 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
+    <RelativeLayout
+        android:id="@+id/rl_header_map"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/actionbar_gradation">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/tv_appt_name_map"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:text="채팅방이름"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/tv_appt_cnt_map"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/tv_appt_name_map"
+                android:text="0 명"
+                android:textColor="#ffffff"
+                tools:ignore="HardcodedText" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/settingPlace"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_settings_black_24dp"
+            android:background="@android:color/transparent"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
     <EditText
         android:id="@+id/et_center_place"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp"
         android:background="@drawable/border_white"
         android:hint="ex)강동구 암사동"
         android:textSize="14sp"
         android:paddingStart="8dp"
         android:imeOptions="actionDone"
         android:inputType="text"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText,RtlSymmetry" />
 
     <ImageButton
         android:id="@+id/ib_center_place"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_search_black_24dp"
         android:tint="@color/colorPrimaryMoreDark"
@@ -38,7 +84,7 @@
         android:text="중간위치 다시찾기"
         android:textSize="12sp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="128dp"
         android:layout_marginRight="8dp"
         android:padding="4dp"
         android:background="@drawable/border_white"
@@ -48,6 +94,7 @@
 
     <com.nhn.android.maps.NMapView
         android:id="@+id/map_view"
+        android:layout_below="@+id/rl_header_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

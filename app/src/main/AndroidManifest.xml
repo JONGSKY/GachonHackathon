@@ -58,6 +58,9 @@
         <activity android:name=".UpdateMapDistance"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"/>
+        <activity android:name=".UpdateMapMiddle"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"/>
         <activity android:name=".UpdateMapPersonNon"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"/>

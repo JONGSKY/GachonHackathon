@@ -76,8 +76,6 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
             String friendID, friendNickname, userNickname, friendAddress;
             while (count < jsonArray.length()) {
                 JSONObject object = jsonArray.getJSONObject(count);
-//                friendID = object.getString("friendID");
-//                friendNickname = object.getString("friendNickname");
                 friendID = null;
                 friendNickname = null;
                 userNickname = object.getString("userNickname");
@@ -95,7 +93,6 @@ class LoadFriendaddress extends AsyncTask<String, Void, Void> {
 //            MapApptfriend mapApptfriend = new MapApptfriend(MyApplication.userID, null, "나", MyApplication.Address, point);
 //            Log.w("BugTest", String.valueOf(mapApptfriend));
 //            mapApptfriendList.add(mapApptfriend);
-
             Log.w("ApptMemberNumber", String.valueOf(mapApptfriendList));
             Log.w("ApptMember", mapApptfriendList.get(0).friendID +" "+
                     mapApptfriendList.get(0).friendAddress +" "+ mapApptfriendList.get(0).point.x +" "+ mapApptfriendList.get(0).point.y);
