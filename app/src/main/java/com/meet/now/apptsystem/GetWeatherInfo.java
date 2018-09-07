@@ -52,7 +52,7 @@ public class GetWeatherInfo extends AsyncTask<String, Void, Void> {
                 return null;
 
             Date now = new Date();
-            SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String nowStr = simpleFormatter.format(now);
             String nowDate = nowStr.split(" ")[0];
             String nowTime = nowStr.split(" ")[1];
