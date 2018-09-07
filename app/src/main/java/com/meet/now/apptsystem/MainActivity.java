@@ -40,15 +40,19 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSION_STORAGE = 1111;
+    private static final int MY_PERMISSION_CAMERA = 2222;
+
 
     private DdayAdapter adapter;
     private List<Dday> ddayList;
     String userID;
     String userAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermisson();
         userID = MyApplication.userID;
         userAddress = MyApplication.Address;
 
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent addfreindintent = new Intent(MainActivity.this, FriendlistActivity.class);
-                addfreindintent.putExtra("apptNo","false");
+                addfreindintent.putExtra("apptNo", "false");
                 addfreindintent.putExtra("userID", userID);
                 MainActivity.this.startActivity(addfreindintent);
                 finish();
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(System.currentTimeMillis() - lastTimeBackPressed < 1500){
+        if (System.currentTimeMillis() - lastTimeBackPressed < 1500) {
             finish();
             return;
         }
@@ -140,18 +144,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            target="http://brad903.cafe24.com/DdayList.php";
+            target = "http://brad903.cafe24.com/DdayList.php";
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            try{
+            try {
                 URL url = new URL(target);
-                Map<String,Object> params = new LinkedHashMap<>();
+                Map<String, Object> params = new LinkedHashMap<>();
                 params.put("userID", userID);
 
                 StringBuilder postData = new StringBuilder();
-                for (Map.Entry<String,Object> param : params.entrySet()) {
+                for (Map.Entry<String, Object> param : params.entrySet()) {
                     if (postData.length() != 0) postData.append('&');
                     postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
                     postData.append('=');
@@ -159,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
-                HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
@@ -169,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
                 StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
+                for (int c; (c = in.read()) >= 0; )
+                    sb.append((char) c);
                 String response = sb.toString().trim();
 
                 in.close();
@@ -178,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
                 return response;
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -234,9 +238,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void checkPermisson(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+    private void checkPermisson() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 new AlertDialog.Builder(this)
                         .setTitle("알림")
                         .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
@@ -258,26 +262,61 @@ public class MainActivity extends AppCompatActivity {
                         .create()
                         .show();
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_STORAGE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_CAMERA);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("알림")
+                        .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
+                        .setNeutralButton("설정", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.setData(Uri.parse("package:" + getPackageName()));
+                                startActivity(intent);
+                            }
+                        })
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA}, MY_PERMISSION_CAMERA);
             }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case MY_PERMISSION_STORAGE:
-                for(int i=0; i<grantResults.length; i++){
+                for (int i = 0; i < grantResults.length; i++) {
                     // grantResult[] : 허용된 권한은 0, 거부한 권한은 -1
-                    if(grantResults[i] < 0){
+                    if (grantResults[i] < 0) {
                         Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
                 // 허용했다면
                 break;
+
+            case MY_PERMISSION_CAMERA:
+                for (int i = 0; i < grantResults.length; i++) {
+                    // grantResult[] : 허용된 권한은 0, 거부한 권한은 -1
+                    if (grantResults[i] < 0) {
+                        Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                break;
+
         }
-
-
     }
 }

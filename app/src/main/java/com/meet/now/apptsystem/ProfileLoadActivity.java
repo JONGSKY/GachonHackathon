@@ -240,7 +240,6 @@ public class ProfileLoadActivity extends AppCompatActivity {
         ibEditImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentManager fm = getSupportFragmentManager();
                 updateProfilePhoto = new UpdateProfilePhoto();
 
