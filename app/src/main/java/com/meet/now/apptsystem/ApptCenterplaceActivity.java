@@ -492,18 +492,18 @@ public class ApptCenterplaceActivity extends NMapActivity implements View.OnClic
                 double coordX = mapApptfriend.getPoint().x;
                 double coordY = mapApptfriend.getPoint().y;
 
-                if(MaxX+MaxY < coordX+coordY){
+                if(MaxX+MaxY*1.3022 < coordX+coordY*1.3022){
                     MaxX = coordX; MaxY = coordY;
                 }
 
-                if(MinX+MinY > coordX+coordY){
+                if(MinX+MinY*1.3022 > coordX+coordY*1.3022){
                     MinX = coordX; MinY = coordY;
                 }
             }
 
             newMiddlePoint.latitude = (MaxX+MinX)/2.0;
             newMiddlePoint.longitude = (MaxY+MinY)/2.0;
-            poiData.addPOIitem(newMiddlePoint.latitude,newMiddlePoint.longitude, "중간지점", spotId, 0);
+            poiData.addPOIitem(newMiddlePoint.latitude, newMiddlePoint.longitude, "중간지점", spotId, 0);
         }else{
             // 평균으로 구하기
             middleSpot.longitude = middleSpot.longitude / spotCount;
