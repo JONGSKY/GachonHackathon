@@ -151,8 +151,8 @@ public class StoreListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finalApptPlace  = storeListAdapter.GetFinalApptPlace();
         try {
+            finalApptPlace  = storeListAdapter.GetFinalApptPlace();
             Intent intent = new Intent();
             intent.putExtra("finalApptPlace", finalApptPlace);
             setResult(RESULT_OK, intent);
